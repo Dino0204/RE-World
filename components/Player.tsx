@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { PointerLockControls } from "@react-three/drei";
 
 // TODO: Player의 상태 타입 정의
 interface PlayerState {
@@ -84,6 +85,8 @@ const initialState: PlayerState = {
 export default function Player() {
   const [state, dispatch] = useReducer(playerReducer, initialState);
   const rbRef = useRef<RapierRigidBody>(null);
+  const { camera } = useThree();
+  const controlsRef = useRef<any>(null);
 
   // TODO: 키보드 입력 처리 (useEffect + addEventListener)
   useEffect(() => {
@@ -131,14 +134,21 @@ export default function Player() {
     };
 
     rbRef.current.setLinvel(velocity, true);
+
+    // 카메라를 플레이어 위치로 이동 (1인칭 시점)
+    const position = rbRef.current.translation();
+    camera.position.set(position.x, position.y + 0.5, position.z);  // 캡슐 중간 높이
   })
 
   return (
-    <RigidBody ref={rbRef}>
-      <mesh>
-        <capsuleGeometry args={[0.5, 0.5]} />
-        <meshStandardMaterial color="hotpink" />
-      </mesh>
-    </RigidBody>
+    <>
+      <PointerLockControls ref={controlsRef} />
+      <RigidBody ref={rbRef} lockRotations>
+        <mesh>
+          <capsuleGeometry args={[0.5, 0.5]} />
+          <meshStandardMaterial color="hotpink" />
+        </mesh>
+      </RigidBody>
+    </>
   )
 }
