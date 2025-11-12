@@ -142,7 +142,7 @@ export default function Player() {
     // 입력에 따라 이동 방향 계산
     const moveDirection = new THREE.Vector3();
     moveDirection.addScaledVector(direction, -state.direction.z);  // 앞/뒤
-    moveDirection.addScaledVector(right, state.direction.x);  // 좌/우
+    moveDirection.addScaledVector(right, -state.direction.x);  // 좌/우
 
     const velocity = {
       x: moveDirection.x * speed,
