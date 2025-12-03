@@ -26,6 +26,7 @@ type PlayerAction =
 
 // TODO: Reducer 함수 구현
 const playerReducer = (state: PlayerState, action: PlayerAction): PlayerState => {
+  // console.log(action.type);
   switch (action.type) {
     case 'MOVE_FORWARD':
       return {
@@ -63,6 +64,11 @@ const playerReducer = (state: PlayerState, action: PlayerAction): PlayerState =>
           x: 1  // 오른쪽 (x축 양수)
         }
       };
+    case 'JUMP':
+      return {
+        ...state,
+        isJumping: true
+      };
     case 'STOP':
       return {
         ...state,
@@ -92,6 +98,7 @@ export default function Player() {
   // TODO: 키보드 입력 처리 (useEffect + addEventListener)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // console.log(event.key);
       switch (event.key) {
         case 'w':
           dispatch({ type: 'MOVE_FORWARD' });
@@ -105,11 +112,14 @@ export default function Player() {
         case 'd':
           dispatch({ type: 'MOVE_RIGHT' });
           break;
+        case ' ':
+          dispatch({ type: 'JUMP' });
+          break;
       }
     }
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (['w', 's', 'a', 'd'].includes(event.key)) {
+      if (['w', 's', 'a', 'd', ' '].includes(event.key)) {
         dispatch({ type: 'STOP' });
       }
     }
