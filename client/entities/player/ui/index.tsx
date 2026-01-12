@@ -90,22 +90,25 @@ export default function Player() {
     };
   }, []);
 
+  /* New Ref for Mesh Rotation */
+  const meshRef = useRef<THREE.Mesh>(null);
+
   useFrame(() => {
     if (!rbRef.current) return;
 
-    // 카메라가 보는 방향 계산
-    const direction = new THREE.Vector3();
-    camera.getWorldDirection(direction);
-    direction.y = 0;
-    direction.normalize();
+    // 카메라가 보는 방향 계산 (월드 기준)
+    const cameraWorldDirection = new THREE.Vector3();
+    camera.getWorldDirection(cameraWorldDirection);
+    cameraWorldDirection.y = 0;
+    cameraWorldDirection.normalize();
 
     // 카메라 오른쪽 방향 계산
     const right = new THREE.Vector3();
-    right.crossVectors(camera.up, direction).normalize();
+    right.crossVectors(camera.up, cameraWorldDirection).normalize();
 
-    // 입력에 따라 이동 방향 계산
+    // 입력에 따라 이동 방향(Velocity) 계산
     const moveDirection = new THREE.Vector3();
-    moveDirection.addScaledVector(direction, -state.direction.z);
+    moveDirection.addScaledVector(cameraWorldDirection, -state.direction.z);
     moveDirection.addScaledVector(right, -state.direction.x);
 
     // 현재 y 속도 가져오기
@@ -114,11 +117,9 @@ export default function Player() {
     // 점프 처리
     if (state.isJumping) {
       if (isOnFloor.current) {
-        // 바닥에 있으면 점프 실행
         yVelocity = initialState.jumpForce;
         isOnFloor.current = false;
       }
-      // 바닥에 있든 없든 점프 입력 소비 (공중 점프 입력 무시)
       dispatch({ type: "RESET_JUMP" });
     }
 
@@ -130,13 +131,64 @@ export default function Player() {
 
     rbRef.current.setLinvel(velocity, true);
 
-    // 카메라를 플레이어 위치로 이동 (1인칭 시점)
     const position = rbRef.current.translation();
+
+    // 캐릭터 메쉬 회전 처리 (이동 방향 바라보기)
+    if (meshRef.current) {
+      // 이동 중일 때만 회전 업데이트
+      if (state.isMoving && (moveDirection.x !== 0 || moveDirection.z !== 0)) {
+        // RigidBody는 회전이 잠겨있으므로, 내부 Mesh를 회전시킵니다.
+        // moveDirection은 월드 기준 이동 방향입니다.
+        // Local Space에서의 Target Point를 계산합니다 (RB Rotation이 Identity라고 가정).
+        const lookTarget = new THREE.Vector3(
+          moveDirection.x,
+          0,
+          moveDirection.z
+        );
+
+        // 부드러운 회전을 위해 slerp 사용
+        const currentQuaternion = meshRef.current.quaternion.clone();
+        meshRef.current.lookAt(lookTarget);
+        const targetQuaternion = meshRef.current.quaternion.clone();
+
+        meshRef.current.quaternion.copy(currentQuaternion); // 원래대로 돌리고
+        meshRef.current.quaternion.slerp(targetQuaternion, 0.2); // 0.2 factor로 부드럽게 보간
+      }
+    }
+
+    // 카메라 처리
     if (cameraMode === "FIRST_PERSON") {
       camera.position.set(position.x, position.y + 0.5, position.z);
     } else {
-      camera.position.set(position.x + 5, position.y + 5, position.z);
-      camera.lookAt(position.x, position.y + 0.5, position.z);
+      // 3인칭 (PUBG 스타일)
+      // 카메라는 마우스 회전(PointerLockControls) 값인 quaternion을 따릅니다.
+      // 플레이어 위치를 기준으로 카메라의 quaternion 방향 '뒤쪽'으로 일정 거리만큼 떨어뜨립니다.
+
+      const cameraDistance = 3;
+      const cameraHeight = 1.6; // 캐릭터 어깨/머리 높이
+
+      // 카메라의 후방 벡터 계산 (Z축이 후방)
+      // 단, PointerLockControls가 카메라 회전을 제어하므로 camera.quaternion을 사용
+      const backVector = new THREE.Vector3(0, 0, 1).applyQuaternion(
+        camera.quaternion
+      );
+
+      // 타겟 위치 (플레이어) + 높이 오프셋 + 후방 거리 오프셋
+      const targetPos = new THREE.Vector3(
+        position.x,
+        position.y + cameraHeight,
+        position.z
+      );
+      const cameraPos = targetPos
+        .clone()
+        .add(backVector.multiplyScalar(cameraDistance));
+
+      // 벽 뚫기 방지 (Raycast) 등을 추후 추가할 수 있음. 현재는 단순 거리 유지.
+
+      camera.position.copy(cameraPos);
+
+      // 카메라는 이미 PointerLockControls에 의해 회전이 제어되므로 lookAt을 호출할 필요가 없습니다.
+      // 하지만 위치만 옮기면 됩니다.
     }
   });
 
@@ -150,7 +202,7 @@ export default function Player() {
           isOnFloor.current = true;
         }}
       >
-        <mesh>
+        <mesh ref={meshRef}>
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
