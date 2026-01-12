@@ -1,9 +1,9 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 import * as THREE from "three";
-import { PlayerState, PlayerAction } from "../model/player";
+import { PlayerState, PlayerAction, CameraMode } from "../model/player";
 
 const playerReducer = (
   state: PlayerState,
@@ -37,13 +37,14 @@ const initialState: PlayerState = {
   direction: { x: 0, z: 0 },
   velocity: { x: 0, y: 0, z: 0 },
   speed: 5,
-  jumpForce: 8,
+  jumpForce: 6,
 };
 
 export default function Player() {
   const [state, dispatch] = useReducer(playerReducer, initialState);
   const { camera } = useThree();
   const controlsRef = useRef(null);
+  const [cameraMode, setCameraMode] = useState<CameraMode>("FIRST_PERSON");
   const rbRef = useRef<RapierRigidBody>(null);
   const keysPressed = useRef(new Set<string>());
   const isOnFloor = useRef(true);
@@ -65,6 +66,10 @@ export default function Player() {
         updateDirection();
       } else if (key === " ") {
         dispatch({ type: "JUMP" });
+      } else if (key === "v") {
+        setCameraMode((prev) =>
+          prev === "FIRST_PERSON" ? "THIRD_PERSON" : "FIRST_PERSON"
+        );
       }
     };
 
@@ -127,7 +132,12 @@ export default function Player() {
 
     // 카메라를 플레이어 위치로 이동 (1인칭 시점)
     const position = rbRef.current.translation();
-    camera.position.set(position.x, position.y + 0.5, position.z);
+    if (cameraMode === "FIRST_PERSON") {
+      camera.position.set(position.x, position.y + 0.5, position.z);
+    } else {
+      camera.position.set(position.x + 5, position.y + 5, position.z);
+      camera.lookAt(position.x, position.y + 0.5, position.z);
+    }
   });
 
   return (

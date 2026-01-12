@@ -11,3 +11,5 @@ export type PlayerAction =
   | { type: "SET_DIRECTION"; direction: { x: number; z: number } }
   | { type: "JUMP" }
   | { type: "RESET_JUMP" };
+
+export type CameraMode = "FIRST_PERSON" | "THIRD_PERSON";
