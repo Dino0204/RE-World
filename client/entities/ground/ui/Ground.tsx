@@ -7,7 +7,10 @@ export default function Ground() {
         <planeGeometry args={[500, 500]} />
         <meshStandardMaterial color="gray" />
       </mesh>
-      <gridHelper args={[500, 500, '#ffffff', '#888888']} position={[0, -5, 0]} />
+      <gridHelper
+        args={[500, 500, "#ffffff", "#888888"]}
+        position={[0, -5, 0]}
+      />
     </RigidBody>
-  )
+  );
 }
