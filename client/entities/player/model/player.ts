@@ -6,9 +6,5 @@ export interface PlayerState {
 }
 
 export type PlayerAction =
-  | { type: "MOVE_FORWARD" }
-  | { type: "MOVE_BACKWARD" }
-  | { type: "MOVE_LEFT" }
-  | { type: "MOVE_RIGHT" }
-  | { type: "JUMP" }
-  | { type: "STOP" };
+  | { type: "SET_DIRECTION"; direction: { x: number; z: number } }
+  | { type: "JUMP" };
