@@ -106,10 +106,14 @@ export default function Player() {
     // 현재 y 속도 가져오기
     let yVelocity = rbRef.current.linvel().y;
 
-    // 점프 처리: 바닥에 있고 점프 상태일 때만
-    if (state.isJumping && isOnFloor.current) {
-      yVelocity = initialState.jumpForce;
-      isOnFloor.current = false;
+    // 점프 처리
+    if (state.isJumping) {
+      if (isOnFloor.current) {
+        // 바닥에 있으면 점프 실행
+        yVelocity = initialState.jumpForce;
+        isOnFloor.current = false;
+      }
+      // 바닥에 있든 없든 점프 입력 소비 (공중 점프 입력 무시)
       dispatch({ type: "RESET_JUMP" });
     }
 
