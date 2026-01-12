@@ -10,52 +10,16 @@ const playerReducer = (
   action: PlayerAction
 ): PlayerState => {
   switch (action.type) {
-    case "MOVE_FORWARD":
+    case "SET_DIRECTION":
       return {
         ...state,
-        isMoving: true,
-        direction: {
-          ...state.direction,
-          z: -1, // 앞으로 (z축 음수)
-        },
-      };
-    case "MOVE_BACKWARD":
-      return {
-        ...state,
-        isMoving: true,
-        direction: {
-          ...state.direction,
-          z: 1, // 뒤로 (z축 양수)
-        },
-      };
-    case "MOVE_LEFT":
-      return {
-        ...state,
-        isMoving: true,
-        direction: {
-          ...state.direction,
-          x: -1, // 왼쪽 (x축 음수)
-        },
-      };
-    case "MOVE_RIGHT":
-      return {
-        ...state,
-        isMoving: true,
-        direction: {
-          ...state.direction,
-          x: 1, // 오른쪽 (x축 양수)
-        },
+        isMoving: action.direction.x !== 0 || action.direction.z !== 0,
+        direction: action.direction,
       };
     case "JUMP":
       return {
         ...state,
         isJumping: true,
-      };
-    case "STOP":
-      return {
-        ...state,
-        isMoving: false,
-        direction: { x: 0, z: 0 },
       };
     default:
       return state;
@@ -71,34 +35,36 @@ const initialState: PlayerState = {
 
 export default function Player() {
   const [state, dispatch] = useReducer(playerReducer, initialState);
-  const rbRef = useRef<RapierRigidBody>(null);
   const { camera } = useThree();
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef(null);
+  const rbRef = useRef<RapierRigidBody>(null);
+  const keysPressed = useRef(new Set<string>());
 
   useEffect(() => {
+    const updateDirection = () => {
+      const keys = keysPressed.current;
+      const direction = {
+        x: (keys.has("d") ? 1 : 0) - (keys.has("a") ? 1 : 0),
+        z: (keys.has("s") ? 1 : 0) - (keys.has("w") ? 1 : 0),
+      };
+      dispatch({ type: "SET_DIRECTION", direction });
+    };
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "w":
-          dispatch({ type: "MOVE_FORWARD" });
-          break;
-        case "s":
-          dispatch({ type: "MOVE_BACKWARD" });
-          break;
-        case "a":
-          dispatch({ type: "MOVE_LEFT" });
-          break;
-        case "d":
-          dispatch({ type: "MOVE_RIGHT" });
-          break;
-        case " ":
-          dispatch({ type: "JUMP" });
-          break;
+      const key = event.key.toLowerCase();
+      if (["w", "a", "s", "d"].includes(key)) {
+        keysPressed.current.add(key);
+        updateDirection();
+      } else if (key === " ") {
+        dispatch({ type: "JUMP" });
       }
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (["w", "s", "a", "d", " "].includes(event.key)) {
-        dispatch({ type: "STOP" });
+      const key = event.key.toLowerCase();
+      if (["w", "a", "s", "d"].includes(key)) {
+        keysPressed.current.delete(key);
+        updateDirection();
       }
     };
 
