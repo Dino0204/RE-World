@@ -21,6 +21,11 @@ const playerReducer = (
         ...state,
         isJumping: true,
       };
+    case "RESET_JUMP":
+      return {
+        ...state,
+        isJumping: false,
+      };
     default:
       return state;
   }
@@ -31,6 +36,8 @@ const initialState: PlayerState = {
   isJumping: false,
   direction: { x: 0, z: 0 },
   velocity: { x: 0, y: 0, z: 0 },
+  speed: 5,
+  jumpForce: 8,
 };
 
 export default function Player() {
@@ -39,6 +46,7 @@ export default function Player() {
   const controlsRef = useRef(null);
   const rbRef = useRef<RapierRigidBody>(null);
   const keysPressed = useRef(new Set<string>());
+  const isOnFloor = useRef(true);
 
   useEffect(() => {
     const updateDirection = () => {
@@ -80,12 +88,10 @@ export default function Player() {
   useFrame(() => {
     if (!rbRef.current) return;
 
-    const speed = 5;
-
     // 카메라가 보는 방향 계산
     const direction = new THREE.Vector3();
     camera.getWorldDirection(direction);
-    direction.y = 0; // y축 제거 (수평 이동만)
+    direction.y = 0;
     direction.normalize();
 
     // 카메라 오른쪽 방향 계산
@@ -94,26 +100,42 @@ export default function Player() {
 
     // 입력에 따라 이동 방향 계산
     const moveDirection = new THREE.Vector3();
-    moveDirection.addScaledVector(direction, -state.direction.z); // 앞/뒤
-    moveDirection.addScaledVector(right, -state.direction.x); // 좌/우
+    moveDirection.addScaledVector(direction, -state.direction.z);
+    moveDirection.addScaledVector(right, -state.direction.x);
+
+    // 현재 y 속도 가져오기
+    let yVelocity = rbRef.current.linvel().y;
+
+    // 점프 처리: 바닥에 있고 점프 상태일 때만
+    if (state.isJumping && isOnFloor.current) {
+      yVelocity = initialState.jumpForce;
+      isOnFloor.current = false;
+      dispatch({ type: "RESET_JUMP" });
+    }
 
     const velocity = {
-      x: moveDirection.x * speed,
-      y: rbRef.current.linvel().y, // 기존 y 속도 유지 (중력)
-      z: moveDirection.z * speed,
+      x: moveDirection.x * initialState.speed,
+      y: yVelocity,
+      z: moveDirection.z * initialState.speed,
     };
 
     rbRef.current.setLinvel(velocity, true);
 
     // 카메라를 플레이어 위치로 이동 (1인칭 시점)
     const position = rbRef.current.translation();
-    camera.position.set(position.x, position.y + 0.5, position.z); // 캡슐 중간 높이
+    camera.position.set(position.x, position.y + 0.5, position.z);
   });
 
   return (
     <>
       <PointerLockControls ref={controlsRef} />
-      <RigidBody ref={rbRef} lockRotations>
+      <RigidBody
+        ref={rbRef}
+        lockRotations
+        onCollisionEnter={() => {
+          isOnFloor.current = true;
+        }}
+      >
         <mesh>
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
