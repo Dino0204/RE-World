@@ -5,6 +5,7 @@ import { PointerLockControls } from "@react-three/drei";
 import * as THREE from "three";
 import { PlayerState, PlayerAction, CameraMode } from "../model/player";
 import { useBulletStore } from "../../bullet/model/store";
+import AR15 from "../../weapon/ui/AR15";
 
 const playerReducer = (
   state: PlayerState,
@@ -249,6 +250,7 @@ export default function Player() {
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
+        {state.equippedItem === "AR15" && <AR15 cameraMode={cameraMode} />}
       </RigidBody>
     </>
   );
