@@ -27,6 +27,11 @@ const playerReducer = (
         ...state,
         isJumping: false,
       };
+    case "EQUIP_ITEM":
+      return {
+        ...state,
+        equippedItem: action.item,
+      };
     default:
       return state;
   }
@@ -39,6 +44,7 @@ const initialState: PlayerState = {
   velocity: { x: 0, y: 0, z: 0 },
   speed: 5,
   jumpForce: 6,
+  equippedItem: null,
 };
 
 export default function Player() {
@@ -71,6 +77,10 @@ export default function Player() {
         setCameraMode((prev) =>
           prev === "FIRST_PERSON" ? "THIRD_PERSON" : "FIRST_PERSON"
         );
+      } else if (key === "1") {
+        dispatch({ type: "EQUIP_ITEM", item: "AR15" });
+      } else if (key === "2") {
+        dispatch({ type: "EQUIP_ITEM", item: null });
       }
     };
 
@@ -96,6 +106,7 @@ export default function Player() {
   useEffect(() => {
     const handleMouseDown = () => {
       if (!rbRef.current) return;
+      if (state.equippedItem !== "AR15") return;
 
       const position = rbRef.current.translation();
       const cameraWorldDirection = new THREE.Vector3();
@@ -120,7 +131,7 @@ export default function Player() {
 
     window.addEventListener("mousedown", handleMouseDown);
     return () => window.removeEventListener("mousedown", handleMouseDown);
-  }, [addBullet, camera]);
+  }, [addBullet, camera, state.equippedItem]);
 
   /* New Ref for Mesh Rotation */
   const meshRef = useRef<THREE.Mesh>(null);
