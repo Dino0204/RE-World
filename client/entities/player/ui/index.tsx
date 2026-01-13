@@ -4,6 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 import * as THREE from "three";
 import { PlayerState, PlayerAction, CameraMode } from "../model/player";
+import { useBulletStore } from "../../bullet/model/store";
 
 const playerReducer = (
   state: PlayerState,
@@ -89,6 +90,37 @@ export default function Player() {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
+  const addBullet = useBulletStore((state) => state.addBullet);
+
+  useEffect(() => {
+    const handleMouseDown = () => {
+      if (!rbRef.current) return;
+
+      const position = rbRef.current.translation();
+      const cameraWorldDirection = new THREE.Vector3();
+      camera.getWorldDirection(cameraWorldDirection);
+
+      const bulletVelocity = cameraWorldDirection.clone().multiplyScalar(20); // 속도 20
+
+      // 총알 발사 위치: 플레이어 위치 + 카메라 방향으로 조금 앞 + 눈 높이
+      // 3인칭의 경우 카메라 위치 고려 로직이 추가될 수 있으나, 일단 플레이어 몸체 기준으로 발사
+      const spawnPos = new THREE.Vector3(
+        position.x,
+        position.y + 0.5,
+        position.z
+      ).add(cameraWorldDirection.clone().multiplyScalar(1.0));
+
+      addBullet({
+        id: Math.random().toString(36).substr(2, 9),
+        position: spawnPos,
+        velocity: bulletVelocity,
+      });
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
+    return () => window.removeEventListener("mousedown", handleMouseDown);
+  }, [addBullet, camera]);
 
   /* New Ref for Mesh Rotation */
   const meshRef = useRef<THREE.Mesh>(null);
