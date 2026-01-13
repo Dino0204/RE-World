@@ -5,6 +5,7 @@ import Player from "@/entities/player/ui";
 import { Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
+import BulletManager from "@/entities/bullet/ui/BulletManager";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <ambientLight intensity={1.5} />
 
         <Physics gravity={[0, -20, 0]}>
+          <BulletManager />
           <RigidBody>
             <mesh position={[0, 3, -5]}>
               <boxGeometry />
