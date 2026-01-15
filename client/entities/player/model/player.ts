@@ -8,12 +8,14 @@ export interface PlayerState {
   speed: number;
   jumpForce: number;
   equippedItems: Weapon[];
+  isAiming: boolean;
 }
 
 export type PlayerAction =
   | { type: "SET_DIRECTION"; direction: { x: number; z: number } }
   | { type: "JUMP" }
   | { type: "RESET_JUMP" }
-  | { type: "EQUIP_ITEM"; item: Weapon };
+  | { type: "EQUIP_ITEM"; item: Weapon }
+  | { type: "SET_AIMING"; isAiming: boolean };
 
 export type CameraMode = "FIRST_PERSON" | "THIRD_PERSON";
