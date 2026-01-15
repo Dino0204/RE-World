@@ -3,13 +3,15 @@ import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useRef } from "react";
 import { CameraMode } from "../../player/model/player";
+import { Weapon as WeaponType } from "../model/weapon";
 
-interface AR15Props {
+interface WeaponProps {
   cameraMode: CameraMode;
+  weapon: WeaponType;
 }
 
-export default function AR15({ cameraMode }: AR15Props) {
-  const { scene } = useGLTF("/models/Rifle.glb");
+export default function Weapon({ cameraMode, weapon }: WeaponProps) {
+  const { scene } = useGLTF(`/models/${weapon.model}.glb`);
   const meshRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -72,5 +74,3 @@ export default function AR15({ cameraMode }: AR15Props) {
 
   return <primitive object={scene} ref={meshRef} scale={1} />;
 }
-
-useGLTF.preload("/models/Rifle.glb");
