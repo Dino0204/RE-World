@@ -23,3 +23,8 @@ React Three Fiber를 사용하여 3D 환경을 구현하고, Bun 런타임 위�
 
 - **Framework**: [Elysia.js](https://elysiajs.com/)
 - **Runtime**: [Bun](https://bun.sh/)
+
+## Start
+
+- Docker Compose를 사용하여 실행합니다.
+- `docker-compose up --build`
