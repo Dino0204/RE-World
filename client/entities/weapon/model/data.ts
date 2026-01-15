@@ -12,6 +12,19 @@ export const M416: Weapon = {
     maxAmount: 30,
   },
   parts: [],
+  recoil: {
+    vertical: 0.02,
+    horizontal: 0.01,
+    pattern: [
+      { x: 0, y: 0.01 },
+      { x: 0.002, y: 0.012 },
+      { x: -0.002, y: 0.015 },
+      { x: 0.005, y: 0.018 },
+      { x: -0.005, y: 0.02 },
+      { x: 0.008, y: 0.022 },
+      { x: -0.008, y: 0.025 },
+    ],
+  },
 };
 
 export const WEAPONS = [M416];
