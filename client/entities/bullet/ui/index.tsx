@@ -32,7 +32,17 @@ export default function Bullet({ data }: BulletProps) {
       gravityScale={0} // 중력 영향 받지 않음 (일직선 발사)
       sensor // 충돌 감지롱, 물리적 반동 없음 (필요시 변경)
       onIntersectionEnter={(payload) => {
-        // 추후 충돌 처리 로직 추가 가능
+        const { other } = payload;
+        const userData = other.rigidBody?.userData as {
+          type?: string;
+          onHit?: () => void;
+        };
+
+        if (userData?.type === "target" && userData.onHit) {
+          userData.onHit();
+        }
+
+        removeBullet(data.id);
       }}
     >
       <mesh>

@@ -1,10 +1,11 @@
 "use client";
 
 import Ground from "@/entities/ground/ui/Ground";
+import Target from "@/entities/target/ui/Target";
 import Player from "@/entities/player/ui";
 import { Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Physics, RigidBody } from "@react-three/rapier";
+import { Physics } from "@react-three/rapier";
 import BulletManager from "@/entities/bullet/ui/BulletManager";
 import LoadingScreen from "@/widgets/Loading/ui";
 
@@ -19,11 +20,9 @@ export default function Home() {
 
         <Physics gravity={[0, -20, 0]}>
           <BulletManager />
-          <RigidBody>
-            <mesh position={[0, 3, -5]}>
-              <boxGeometry />
-            </mesh>
-          </RigidBody>
+          <Target position={[0, -4.5, -10]} />
+          <Target position={[5, -4.5, -15]} />
+          <Target position={[-5, -4.5, -5]} />
           <Player />
           <Ground />
         </Physics>
