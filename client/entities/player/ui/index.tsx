@@ -185,11 +185,36 @@ export default function Player() {
 
     // 반동 적용
     if (pendingRecoil.current.x !== 0 || pendingRecoil.current.y !== 0) {
-      threeState.camera.rotation.x += pendingRecoil.current.y;
-      threeState.camera.rotation.y += pendingRecoil.current.x;
+      if (currentWeapon) {
+        const recoilConfig = currentWeapon.recoil;
 
-      recoilRecoveryOffset.current.x += pendingRecoil.current.x;
-      recoilRecoveryOffset.current.y += pendingRecoil.current.y;
+        // 현재 적용되어 있는 반동 오프셋 확인
+        const currentHorizontalRecoil = recoilRecoveryOffset.current.x;
+        const currentVerticalRecoil = recoilRecoveryOffset.current.y;
+
+        // 추가될 반동이 최대치를 넘지 않도록 제한
+        let kickX = pendingRecoil.current.x;
+        let kickY = pendingRecoil.current.y;
+
+        if (currentVerticalRecoil + kickY > recoilConfig.maxVertical) {
+          kickY = Math.max(0, recoilConfig.maxVertical - currentVerticalRecoil);
+        }
+
+        if (
+          Math.abs(currentHorizontalRecoil + kickX) > recoilConfig.maxHorizontal
+        ) {
+          const targetX =
+            Math.sign(currentHorizontalRecoil + kickX) *
+            recoilConfig.maxHorizontal;
+          kickX = targetX - currentHorizontalRecoil;
+        }
+
+        threeState.camera.rotation.x += kickY;
+        threeState.camera.rotation.y += kickX;
+
+        recoilRecoveryOffset.current.x += kickX;
+        recoilRecoveryOffset.current.y += kickY;
+      }
 
       pendingRecoil.current.x = 0;
       pendingRecoil.current.y = 0;

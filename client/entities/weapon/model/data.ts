@@ -15,6 +15,8 @@ export const M416: Weapon = {
   recoil: {
     vertical: 0.02,
     horizontal: 0.01,
+    maxVertical: 0.3,
+    maxHorizontal: 0.5,
     pattern: [
       { x: 0, y: 0.01 },
       { x: 0.002, y: 0.012 },

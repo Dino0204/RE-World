@@ -35,6 +35,8 @@ export interface Weapon {
   recoil: {
     vertical: number;
     horizontal: number;
+    maxVertical: number;
+    maxHorizontal: number;
     pattern: { x: number; y: number }[];
   };
 }
