@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { PlayerState, PlayerAction, CameraMode } from "../model/player";
 import { useBulletStore } from "../../bullet/model/store";
 import Weapon from "../../weapon/ui/weapon";
-import { M416 } from "../../weapon/model/data";
+import { M416, WEAPONS } from "../../weapon/model/data";
 
 const playerReducer = (
   state: PlayerState,
@@ -226,9 +226,16 @@ export default function Player() {
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
-        {state.equippedItems.length > 0 && (
-          <Weapon cameraMode={cameraMode} weapon={state.equippedItems[0]} />
-        )}
+        {WEAPONS.map((weapon) => (
+          <Weapon
+            key={weapon.name}
+            cameraMode={cameraMode}
+            weapon={weapon}
+            visible={state.equippedItems.some(
+              (item) => item.name === weapon.name
+            )}
+          />
+        ))}
       </RigidBody>
     </>
   );

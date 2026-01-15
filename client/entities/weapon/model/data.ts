@@ -13,3 +13,5 @@ export const M416: Weapon = {
   },
   parts: [],
 };
+
+export const WEAPONS = [M416];

@@ -8,14 +8,15 @@ import { Weapon as WeaponType } from "../model/weapon";
 interface WeaponProps {
   cameraMode: CameraMode;
   weapon: WeaponType;
+  visible: boolean;
 }
 
-export default function Weapon({ cameraMode, weapon }: WeaponProps) {
+export default function Weapon({ cameraMode, weapon, visible }: WeaponProps) {
   const { scene } = useGLTF(`/models/${weapon.model}.glb`);
   const meshRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || !visible) return;
 
     if (cameraMode === "FIRST_PERSON") {
       const camera = state.camera;
@@ -72,5 +73,5 @@ export default function Weapon({ cameraMode, weapon }: WeaponProps) {
     }
   });
 
-  return <primitive object={scene} ref={meshRef} scale={1} />;
+  return <primitive object={scene} ref={meshRef} scale={1} visible={visible} />;
 }
