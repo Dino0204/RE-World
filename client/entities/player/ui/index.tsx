@@ -226,7 +226,9 @@ export default function Player() {
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
-        <Weapon cameraMode={cameraMode} weapon={state.equippedItems[0]} />
+        {state.equippedItems.length > 0 && (
+          <Weapon cameraMode={cameraMode} weapon={state.equippedItems[0]} />
+        )}
       </RigidBody>
     </>
   );
