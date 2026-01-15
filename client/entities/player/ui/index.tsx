@@ -28,11 +28,15 @@ const playerReducer = (
         ...state,
         isJumping: false,
       };
-    case "EQUIP_ITEM":
+    case "EQUIP_ITEM": {
+      const isEquipped = state.equippedItems.includes(action.item);
       return {
         ...state,
-        equippedItem: action.item,
+        equippedItems: isEquipped
+          ? state.equippedItems.filter((i) => i !== action.item)
+          : [...state.equippedItems, action.item],
       };
+    }
     default:
       return state;
   }
@@ -45,7 +49,7 @@ const initialState: PlayerState = {
   velocity: { x: 0, y: 0, z: 0 },
   speed: 5,
   jumpForce: 6,
-  equippedItem: null,
+  equippedItems: [],
 };
 
 export default function Player() {
@@ -80,8 +84,6 @@ export default function Player() {
         );
       } else if (key === "1") {
         dispatch({ type: "EQUIP_ITEM", item: "AR15" });
-      } else if (key === "2") {
-        dispatch({ type: "EQUIP_ITEM", item: null });
       }
     };
 
@@ -107,7 +109,7 @@ export default function Player() {
   useEffect(() => {
     const handleMouseDown = () => {
       if (!rbRef.current) return;
-      if (state.equippedItem !== "AR15") return;
+      if (!state.equippedItems.includes("AR15")) return;
 
       const position = rbRef.current.translation();
       const cameraWorldDirection = new THREE.Vector3();
@@ -132,7 +134,7 @@ export default function Player() {
 
     window.addEventListener("mousedown", handleMouseDown);
     return () => window.removeEventListener("mousedown", handleMouseDown);
-  }, [addBullet, camera, state.equippedItem]);
+  }, [addBullet, camera, state.equippedItems]);
 
   /* New Ref for Mesh Rotation */
   const meshRef = useRef<THREE.Mesh>(null);
@@ -250,7 +252,9 @@ export default function Player() {
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
-        {state.equippedItem === "AR15" && <AR15 cameraMode={cameraMode} />}
+        {state.equippedItems.includes("AR15") && (
+          <AR15 cameraMode={cameraMode} />
+        )}
       </RigidBody>
     </>
   );
