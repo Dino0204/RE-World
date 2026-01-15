@@ -61,6 +61,11 @@ export default function Player() {
   const rigidBodyReference = useRef<RapierRigidBody>(null);
   const pressedKeys = useRef(new Set<string>());
   const isPlayerGrounded = useRef(true);
+  const recoilPatternIndex = useRef(0);
+  const lastShotTimestamp = useRef(0);
+  const recoilRecoveryOffset = useRef({ x: 0, y: 0 });
+  const pendingRecoil = useRef({ x: 0, y: 0 });
+  const isMouseDown = useRef(false);
 
   useEffect(() => {
     const updateDirection = () => {
@@ -108,13 +113,42 @@ export default function Player() {
   const addBullet = useBulletStore((state) => state.addBullet);
 
   useEffect(() => {
-    const handleMousePress = () => {
-      if (!rigidBodyReference.current) return;
-      if (!state.equippedItems.includes(M416)) return;
+    const handleMouseDown = () => {
+      isMouseDown.current = true;
+    };
 
+    const handleMouseUp = () => {
+      isMouseDown.current = false;
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  const meshReference = useRef<THREE.Mesh>(null);
+
+  useFrame((threeState) => {
+    if (!rigidBodyReference.current) return;
+
+    const now = Date.now();
+    if (now - lastShotTimestamp.current > 500) {
+      recoilPatternIndex.current = 0;
+    }
+
+    // 연사 로직
+    const shootInterval = 60000 / M416.fireRate; // M416.fireRate가 600이면 100ms
+    if (
+      isMouseDown.current &&
+      state.equippedItems.includes(M416) &&
+      now - lastShotTimestamp.current >= shootInterval
+    ) {
       const position = rigidBodyReference.current.translation();
       const cameraWorldDirection = new THREE.Vector3();
-      camera.getWorldDirection(cameraWorldDirection);
+      threeState.camera.getWorldDirection(cameraWorldDirection);
 
       const bulletVelocity = cameraWorldDirection.clone().multiplyScalar(20);
 
@@ -129,16 +163,54 @@ export default function Player() {
         position: spawnPosition,
         velocity: bulletVelocity,
       });
-    };
 
-    window.addEventListener("mousedown", handleMousePress);
-    return () => window.removeEventListener("mousedown", handleMousePress);
-  }, [addBullet, camera, state.equippedItems]);
+      // 반동 계산
+      const recoilConfig = M416.recoil;
+      const pattern =
+        recoilConfig.pattern[recoilPatternIndex.current] ||
+        recoilConfig.pattern[recoilConfig.pattern.length - 1];
 
-  const meshReference = useRef<THREE.Mesh>(null);
+      const verticalKick = recoilConfig.vertical + pattern.y;
+      const horizontalKick =
+        (Math.random() - 0.5) * recoilConfig.horizontal + pattern.x;
 
-  useFrame(() => {
-    if (!rigidBodyReference.current) return;
+      pendingRecoil.current.x += horizontalKick;
+      pendingRecoil.current.y += verticalKick;
+
+      recoilPatternIndex.current += 1;
+      lastShotTimestamp.current = now;
+    }
+
+    // 반동 적용
+    if (pendingRecoil.current.x !== 0 || pendingRecoil.current.y !== 0) {
+      threeState.camera.rotation.x += pendingRecoil.current.y;
+      threeState.camera.rotation.y += pendingRecoil.current.x;
+
+      recoilRecoveryOffset.current.x += pendingRecoil.current.x;
+      recoilRecoveryOffset.current.y += pendingRecoil.current.y;
+
+      pendingRecoil.current.x = 0;
+      pendingRecoil.current.y = 0;
+    }
+
+    // 반동 복구 로직
+    if (now - lastShotTimestamp.current > 100) {
+      const recoveryFactor = 0.1;
+      const recoverX = recoilRecoveryOffset.current.x * recoveryFactor;
+      const recoverY = recoilRecoveryOffset.current.y * recoveryFactor;
+
+      threeState.camera.rotation.x -= recoverY;
+      threeState.camera.rotation.y -= recoverX;
+
+      recoilRecoveryOffset.current.x -= recoverX;
+      recoilRecoveryOffset.current.y -= recoverY;
+
+      // 미세한 오차 제거
+      if (Math.abs(recoilRecoveryOffset.current.x) < 0.001)
+        recoilRecoveryOffset.current.x = 0;
+      if (Math.abs(recoilRecoveryOffset.current.y) < 0.001)
+        recoilRecoveryOffset.current.y = 0;
+    }
 
     const cameraWorldDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraWorldDirection);
