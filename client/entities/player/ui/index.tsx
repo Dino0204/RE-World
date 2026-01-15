@@ -140,45 +140,47 @@ export default function Player() {
     }
 
     // 연사 로직
-    const shootInterval = 60000 / M416.fireRate; // M416.fireRate가 600이면 100ms
-    if (
-      isMouseDown.current &&
-      state.equippedItems.includes(M416) &&
-      now - lastShotTimestamp.current >= shootInterval
-    ) {
-      const position = rigidBodyReference.current.translation();
-      const cameraWorldDirection = new THREE.Vector3();
-      threeState.camera.getWorldDirection(cameraWorldDirection);
+    const currentWeapon = state.equippedItems[0];
+    if (currentWeapon) {
+      const shootInterval = 60000 / currentWeapon.fireRate;
+      if (
+        isMouseDown.current &&
+        now - lastShotTimestamp.current >= shootInterval
+      ) {
+        const position = rigidBodyReference.current.translation();
+        const cameraWorldDirection = new THREE.Vector3();
+        threeState.camera.getWorldDirection(cameraWorldDirection);
 
-      const bulletVelocity = cameraWorldDirection.clone().multiplyScalar(20);
+        const bulletVelocity = cameraWorldDirection.clone().multiplyScalar(20);
 
-      const spawnPosition = new THREE.Vector3(
-        position.x,
-        position.y + 0.5,
-        position.z
-      ).add(cameraWorldDirection.clone().multiplyScalar(1.0));
+        const spawnPosition = new THREE.Vector3(
+          position.x,
+          position.y + 0.5,
+          position.z
+        ).add(cameraWorldDirection.clone().multiplyScalar(1.0));
 
-      addBullet({
-        id: Math.random().toString(36).substr(2, 9),
-        position: spawnPosition,
-        velocity: bulletVelocity,
-      });
+        addBullet({
+          id: Math.random().toString(36).substr(2, 9),
+          position: spawnPosition,
+          velocity: bulletVelocity,
+        });
 
-      // 반동 계산
-      const recoilConfig = M416.recoil;
-      const pattern =
-        recoilConfig.pattern[recoilPatternIndex.current] ||
-        recoilConfig.pattern[recoilConfig.pattern.length - 1];
+        // 반동 계산
+        const recoilConfig = currentWeapon.recoil;
+        const pattern =
+          recoilConfig.pattern[recoilPatternIndex.current] ||
+          recoilConfig.pattern[recoilConfig.pattern.length - 1];
 
-      const verticalKick = recoilConfig.vertical + pattern.y;
-      const horizontalKick =
-        (Math.random() - 0.5) * recoilConfig.horizontal + pattern.x;
+        const verticalKick = recoilConfig.vertical + pattern.y;
+        const horizontalKick =
+          (Math.random() - 0.5) * recoilConfig.horizontal + pattern.x;
 
-      pendingRecoil.current.x += horizontalKick;
-      pendingRecoil.current.y += verticalKick;
+        pendingRecoil.current.x += horizontalKick;
+        pendingRecoil.current.y += verticalKick;
 
-      recoilPatternIndex.current += 1;
-      lastShotTimestamp.current = now;
+        recoilPatternIndex.current += 1;
+        lastShotTimestamp.current = now;
+      }
     }
 
     // 반동 적용
