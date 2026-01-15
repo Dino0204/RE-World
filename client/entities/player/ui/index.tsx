@@ -71,6 +71,7 @@ export default function Player() {
   const lastShotTimestamp = useRef(0);
   const recoilRecoveryOffset = useRef({ x: 0, y: 0 });
   const pendingRecoil = useRef({ x: 0, y: 0 });
+  const cameraRotation = useRef({ pitch: 0, yaw: 0 });
   const isMouseDown = useRef(false);
 
   useEffect(() => {
@@ -154,6 +155,15 @@ export default function Player() {
   useFrame((threeState) => {
     if (!rigidBodyReference.current) return;
 
+    // 카메라 회전 순서 설정 (최초 1회 또는 필요시)
+    if (threeState.camera.rotation.order !== "YXZ") {
+      threeState.camera.rotation.order = "YXZ";
+    }
+
+    // 현재 카메라 회전 값을 Pitch/Yaw로 동기화 (마우스 이동 반영)
+    cameraRotation.current.pitch = threeState.camera.rotation.x;
+    cameraRotation.current.yaw = threeState.camera.rotation.y;
+
     const now = Date.now();
     if (now - lastShotTimestamp.current > 500) {
       recoilPatternIndex.current = 0;
@@ -229,8 +239,8 @@ export default function Player() {
           kickX = targetX - currentHorizontalRecoil;
         }
 
-        threeState.camera.rotation.x += kickY;
-        threeState.camera.rotation.y += kickX;
+        cameraRotation.current.pitch += kickY;
+        cameraRotation.current.yaw += kickX;
 
         recoilRecoveryOffset.current.x += kickX;
         recoilRecoveryOffset.current.y += kickY;
@@ -246,8 +256,8 @@ export default function Player() {
       const recoverX = recoilRecoveryOffset.current.x * recoveryFactor;
       const recoverY = recoilRecoveryOffset.current.y * recoveryFactor;
 
-      threeState.camera.rotation.x -= recoverY;
-      threeState.camera.rotation.y -= recoverX;
+      cameraRotation.current.pitch -= recoverY;
+      cameraRotation.current.yaw -= recoverX;
 
       recoilRecoveryOffset.current.x -= recoverX;
       recoilRecoveryOffset.current.y -= recoverY;
@@ -258,6 +268,15 @@ export default function Player() {
       if (Math.abs(recoilRecoveryOffset.current.y) < 0.001)
         recoilRecoveryOffset.current.y = 0;
     }
+
+    // Pitch 제한 (Clamp) 및 최종 카메라 회전 적용
+    cameraRotation.current.pitch = Math.max(
+      -Math.PI / 2,
+      Math.min(Math.PI / 2, cameraRotation.current.pitch)
+    );
+
+    threeState.camera.rotation.x = cameraRotation.current.pitch;
+    threeState.camera.rotation.y = cameraRotation.current.yaw;
 
     // ADS FOV 적용
     const perspectiveCamera = threeState.camera as THREE.PerspectiveCamera;
@@ -306,9 +325,9 @@ export default function Player() {
     if (meshReference.current) {
       if (state.isMoving && (moveDirection.x !== 0 || moveDirection.z !== 0)) {
         const lookTarget = new THREE.Vector3(
-          moveDirection.x,
-          0,
-          moveDirection.z
+          position.x + moveDirection.x,
+          position.y,
+          position.z + moveDirection.z
         );
 
         const currentQuaternion = meshReference.current.quaternion.clone();
