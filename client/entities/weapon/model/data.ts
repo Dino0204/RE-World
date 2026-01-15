@@ -3,7 +3,7 @@ import { Weapon } from "./weapon";
 export const M416: Weapon = {
   name: "M416",
   type: "돌격 소총",
-  model: "m416",
+  model: "M416",
   damage: 20,
   fireRate: 600,
   ammo: {
