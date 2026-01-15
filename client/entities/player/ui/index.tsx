@@ -38,6 +38,11 @@ const playerReducer = (
           : [...state.equippedItems, action.item],
       };
     }
+    case "SET_AIMING":
+      return {
+        ...state,
+        isAiming: action.isAiming,
+      };
     default:
       return state;
   }
@@ -51,6 +56,7 @@ const initialState: PlayerState = {
   speed: 5,
   jumpForce: 6,
   equippedItems: [],
+  isAiming: false,
 };
 
 export default function Player() {
@@ -113,19 +119,33 @@ export default function Player() {
   const addBullet = useBulletStore((state) => state.addBullet);
 
   useEffect(() => {
-    const handleMouseDown = () => {
-      isMouseDown.current = true;
+    const handleMouseDown = (event: MouseEvent) => {
+      if (event.button === 0) {
+        isMouseDown.current = true;
+      } else if (event.button === 2) {
+        dispatch({ type: "SET_AIMING", isAiming: true });
+      }
     };
 
-    const handleMouseUp = () => {
-      isMouseDown.current = false;
+    const handleMouseUp = (event: MouseEvent) => {
+      if (event.button === 0) {
+        isMouseDown.current = false;
+      } else if (event.button === 2) {
+        dispatch({ type: "SET_AIMING", isAiming: false });
+      }
+    };
+
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
     };
 
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("contextmenu", handleContextMenu);
     return () => {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("contextmenu", handleContextMenu);
     };
   }, []);
 
@@ -239,6 +259,18 @@ export default function Player() {
         recoilRecoveryOffset.current.y = 0;
     }
 
+    // ADS FOV 적용
+    const perspectiveCamera = threeState.camera as THREE.PerspectiveCamera;
+    if (perspectiveCamera.isPerspectiveCamera) {
+      const targetFov = state.isAiming ? 45 : 75;
+      perspectiveCamera.fov = THREE.MathUtils.lerp(
+        perspectiveCamera.fov,
+        targetFov,
+        0.2
+      );
+      perspectiveCamera.updateProjectionMatrix();
+    }
+
     const cameraWorldDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraWorldDirection);
     cameraWorldDirection.y = 0;
@@ -330,6 +362,7 @@ export default function Player() {
             key={weapon.name}
             cameraMode={cameraMode}
             weapon={weapon}
+            isAiming={state.isAiming}
             visible={state.equippedItems.some(
               (item) => item.name === weapon.name
             )}
