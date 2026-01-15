@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: re-world-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: re_world
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: re-world-server
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/re_world
+    ports:
+      - "8080:3000"
+    depends_on:
+      - db
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: re-world-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
