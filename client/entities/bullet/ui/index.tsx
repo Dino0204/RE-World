@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
-import { useBulletStore, BulletData } from "../model/store";
+import { useBulletStore } from "../model/store";
+import { BulletData } from "../model/bullet";
 
 interface BulletProps {
   data: BulletData;
