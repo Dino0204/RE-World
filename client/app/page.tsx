@@ -1,6 +1,6 @@
 "use client";
 
-import Ground from "@/entities/ground/ui/Ground";
+import Ground from "@/entities/ground/ui";
 import Target from "@/entities/target/ui/Target";
 import Player from "@/entities/player/ui";
 import { Sky } from "@react-three/drei";
