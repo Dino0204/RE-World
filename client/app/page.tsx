@@ -6,7 +6,7 @@ import Player from "@/entities/player/ui";
 import { Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
-import BulletManager from "@/entities/bullet/ui/BulletManager";
+import BulletManager from "@/widgets/BulletManager/ui";
 import LoadingScreen from "@/widgets/Loading/ui";
 
 export default function Home() {
