@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef } from "react";
+import { RefObject, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
@@ -8,9 +8,9 @@ import { useBulletStore } from "../../bullet/model/store";
 export const usePlayerWeapon = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,
   camera: THREE.Camera,
-  isMouseDownRef: MutableRefObject<boolean>,
-  pendingRecoilRef: MutableRefObject<{ x: number; y: number }>,
-  lastShotTimestampRef: MutableRefObject<number>,
+  isMouseDownRef: RefObject<boolean>,
+  pendingRecoilRef: RefObject<{ x: number; y: number }>,
+  lastShotTimestampRef: RefObject<number>,
 ) => {
   const { equippedItems } = usePlayerStore();
   const addBullet = useBulletStore((state) => state.addBullet);
