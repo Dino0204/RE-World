@@ -23,7 +23,11 @@ export default function Player() {
 
   const { equippedItems, cameraMode, isAiming } = usePlayerStore();
   const { isMouseDown } = usePlayerControls();
-  usePlayerPhysics(rigidBodyRef, meshRef, camera);
+  const { handleCollisionEnter } = usePlayerPhysics(
+    rigidBodyRef,
+    meshRef,
+    camera,
+  );
   usePlayerCamera(
     camera,
     rigidBodyRef,
@@ -41,7 +45,11 @@ export default function Player() {
   return (
     <>
       <PointerLockControls ref={controlsRef} />
-      <RigidBody ref={rigidBodyRef} lockRotations>
+      <RigidBody
+        ref={rigidBodyRef}
+        lockRotations
+        onCollisionEnter={handleCollisionEnter}
+      >
         <mesh ref={meshRef}>
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
