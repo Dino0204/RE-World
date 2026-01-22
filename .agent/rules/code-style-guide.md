@@ -43,3 +43,5 @@ trigger: always_on
 - When writing functions, use pure functions whenever possible.
 
 - Do not add comments except for essential ones.
+
+- Do not use Berrel Export
