@@ -1,5 +1,5 @@
 {
-  "name": "re-world",
+  "name": "re-world-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -21,7 +21,6 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
-    "elysia": "*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
