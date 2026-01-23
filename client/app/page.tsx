@@ -8,6 +8,7 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import BulletManager from "@/widgets/BulletManager/ui";
 import LoadingScreen from "@/widgets/Loading/ui";
+import MultiplayerManager from "@/widgets/Game/ui/MultiplayerManager";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
 
         <Physics gravity={[0, -20, 0]}>
           <BulletManager />
+          <MultiplayerManager />
           <Target position={[0, -4.5, -10]} />
           <Target position={[5, -4.5, -15]} />
           <Target position={[-5, -4.5, -5]} />
