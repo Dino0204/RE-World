@@ -10,47 +10,49 @@ import { usePlayerControls } from "../lib/usePlayerControls";
 import { usePlayerPhysics } from "../lib/usePlayerPhysics";
 import { usePlayerCamera } from "../lib/usePlayerCamera";
 import { usePlayerWeapon } from "../lib/usePlayerWeapon";
+import { useMultiplayerSync } from "../lib/useMultiplayerSync";
 
 export default function Player() {
   const { camera } = useThree();
 
-  const rigidBodyRef = useRef<RapierRigidBody>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
-  const controlsRef = useRef(null);
-  const recoilRecoveryOffsetRef = useRef({ x: 0, y: 0 });
-  const pendingRecoilRef = useRef({ x: 0, y: 0 });
-  const lastShotTimestampRef = useRef(0);
+  const rigidBodyReference = useRef<RapierRigidBody>(null);
+  const meshReference = useRef<THREE.Mesh>(null);
+  const controlsReference = useRef(null);
+  const recoilRecoveryOffsetReference = useRef({ x: 0, y: 0 });
+  const pendingRecoilReference = useRef({ x: 0, y: 0 });
+  const lastShotTimestampReference = useRef(0);
 
   const { equippedItems, cameraMode, isAiming } = usePlayerStore();
   const { isMouseDown } = usePlayerControls();
   const { handleCollisionEnter } = usePlayerPhysics(
-    rigidBodyRef,
-    meshRef,
+    rigidBodyReference,
+    meshReference,
     camera,
   );
   usePlayerCamera(
     camera,
-    rigidBodyRef,
-    recoilRecoveryOffsetRef,
-    pendingRecoilRef,
+    rigidBodyReference,
+    recoilRecoveryOffsetReference,
+    pendingRecoilReference,
   );
   usePlayerWeapon(
-    rigidBodyRef,
+    rigidBodyReference,
     camera,
     isMouseDown,
-    pendingRecoilRef,
-    lastShotTimestampRef,
+    pendingRecoilReference,
+    lastShotTimestampReference,
   );
+  useMultiplayerSync(rigidBodyReference, meshReference);
 
   return (
     <>
-      <PointerLockControls ref={controlsRef} />
+      <PointerLockControls ref={controlsReference} />
       <RigidBody
-        ref={rigidBodyRef}
+        ref={rigidBodyReference}
         lockRotations
         onCollisionEnter={handleCollisionEnter}
       >
-        <mesh ref={meshRef}>
+        <mesh ref={meshReference}>
           <capsuleGeometry args={[0.5, 0.5]} />
           <meshStandardMaterial color="hotpink" />
         </mesh>
