@@ -5,6 +5,11 @@ server/node_modules
 client/.next
 server/dist
 
+
+# tests
+playwright-report/
+test-results/
+
 # locks
 client/bun.lock
 server/bun.lock
