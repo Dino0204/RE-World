@@ -34,6 +34,7 @@ export default function Player() {
     rigidBodyReference,
     recoilRecoveryOffsetReference,
     pendingRecoilReference,
+    lastShotTimestampReference,
   );
   usePlayerWeapon(
     rigidBodyReference,
