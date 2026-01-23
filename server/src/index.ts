@@ -7,18 +7,35 @@ const getTimestamp = () => {
 
 const app = new Elysia()
   .use(cors())
-  .ws("/chat", {
-    body: t.String(),
-    response: t.String(),
-    message(ws, message) {
-      console.log(`[${getTimestamp()}] 메시지 수신: ${message}`);
-      ws.send(message);
+  .ws("/game", {
+    body: t.Object({
+      identifier: t.String(),
+      position: t.Object({
+        x: t.Number(),
+        y: t.Number(),
+        z: t.Number(),
+      }),
+      rotation: t.Object({
+        x: t.Number(),
+        y: t.Number(),
+        z: t.Number(),
+        w: t.Number(),
+      }),
+    }),
+    open(websocket) {
+      console.log(
+        `[${getTimestamp()}] 게임 클라이언트 연결됨: ${websocket.id}`,
+      );
+      websocket.subscribe("global");
     },
-    open(ws) {
-      console.log(`[${getTimestamp()}] 클라이언트 연결됨`);
+    message(websocket, message) {
+      websocket.publish("global", message);
     },
-    close(ws) {
-      console.log(`[${getTimestamp()}] 클라이언트 연결 종료됨`);
+    close(websocket) {
+      console.log(
+        `[${getTimestamp()}] 게임 클라이언트 연결 종료됨: ${websocket.id}`,
+      );
+      websocket.unsubscribe("global");
     },
   })
   .listen(3001);
