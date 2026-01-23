@@ -10,11 +10,9 @@ export default function MultiplayerManager() {
   useEffect(() => {
     const websocket = getGameWebsocket();
 
-    const connectionCheckInterval = setInterval(() => {
-      // Eden Treaty는 내부적으로 소켓을 열기 때문에 수동 체크
+    websocket.on("open", () => {
       setServerConnected(true);
-      clearInterval(connectionCheckInterval);
-    }, 500);
+    });
 
     websocket.subscribe((websocketMessage) => {
       const playerStateData = websocketMessage.data;
@@ -38,10 +36,6 @@ export default function MultiplayerManager() {
         }
       }
     });
-
-    return () => {
-      clearInterval(connectionCheckInterval);
-    };
   }, [updatePlayer, setServerConnected]);
 
   return (
