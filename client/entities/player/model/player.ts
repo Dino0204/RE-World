@@ -1,14 +1,21 @@
+import { Weapon } from "@/entities/weapon/model/weapon";
+
 export interface PlayerState {
   isMoving: boolean;
   isJumping: boolean;
   direction: { x: number; z: number };
   velocity: { x: number; y: number; z: number };
+  speed: number;
+  jumpForce: number;
+  equippedItems: Weapon[];
+  isAiming: boolean;
 }
 
 export type PlayerAction =
-  | { type: "MOVE_FORWARD" }
-  | { type: "MOVE_BACKWARD" }
-  | { type: "MOVE_LEFT" }
-  | { type: "MOVE_RIGHT" }
+  | { type: "SET_DIRECTION"; direction: { x: number; z: number } }
   | { type: "JUMP" }
-  | { type: "STOP" };
+  | { type: "RESET_JUMP" }
+  | { type: "EQUIP_ITEM"; item: Weapon }
+  | { type: "SET_AIMING"; isAiming: boolean };
+
+export type CameraMode = "FIRST_PERSON" | "THIRD_PERSON";
