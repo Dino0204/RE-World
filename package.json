@@ -8,7 +8,10 @@
   "scripts": {
     "dev:client": "cd client && bun dev",
     "dev:server": "cd server && bun dev",
-    "dev": "concurrently 'bun run dev:client' 'bun run dev:server'"
+    "dev": "concurrently 'bun run dev:client' 'bun run dev:server'",
+    "lint:client": "cd client && bun lint",
+    "lint:server": "cd server && bun lint",
+    "lint": "concurrently 'bun run lint:client' 'bun run lint:server'"
   },
   "devDependencies": {
     "elysia": "^1.4.22",
