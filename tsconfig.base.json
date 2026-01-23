@@ -11,7 +11,7 @@
     "noEmit": true,
     "paths": {
       "@server/*": ["./server/src/*"],
-      "@client/*": ["./client/src/*"]
+      "@client/*": ["./client/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
