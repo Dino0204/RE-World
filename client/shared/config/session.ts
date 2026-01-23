@@ -1,1 +1,1 @@
-export const SESSION_IDENTIFIER = Math.random().toString(36).substring(2, 11);
+export const SESSION_IDENTIFIER = crypto.randomUUID();

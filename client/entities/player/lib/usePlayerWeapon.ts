@@ -45,7 +45,7 @@ export const usePlayerWeapon = (
         ).add(cameraWorldDirection.clone().multiplyScalar(1.0));
 
         addBullet({
-          id: Math.random().toString(36).substr(2, 9),
+          id: crypto.randomUUID(),
           position: spawnPosition,
           velocity: bulletVelocity,
         });
