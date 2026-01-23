@@ -9,10 +9,10 @@ export const usePlayerCamera = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,
   recoilRecoveryOffsetRef: React.RefObject<{ x: number; y: number }>,
   pendingRecoilRef: React.RefObject<{ x: number; y: number }>,
+  lastShotTimestampRef: React.RefObject<number>,
 ) => {
   const { isAiming, cameraMode } = usePlayerStore();
   const cameraRotation = useRef({ pitch: 0, yaw: 0 });
-  const lastShotTimestamp = useRef(0);
 
   // 재사용 가능한 벡터들 (GC 압박 제거)
   const backVector = useRef(new THREE.Vector3());
@@ -49,7 +49,7 @@ export const usePlayerCamera = (
     }
 
     // ===== 반동 복구 =====
-    if (now - lastShotTimestamp.current > 100) {
+    if (now - lastShotTimestampRef.current > 100) {
       const recoveryFactor = 0.1;
       const recoverX = recoilRecoveryOffsetRef.current.x * recoveryFactor;
       const recoverY = recoilRecoveryOffsetRef.current.y * recoveryFactor;
@@ -119,6 +119,4 @@ export const usePlayerCamera = (
       );
     }
   });
-
-  return { lastShotTimestamp };
 };
