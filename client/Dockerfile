@@ -1,33 +1,36 @@
-# Stage 1: Install dependencies
-FROM oven/bun:latest AS deps
-WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
-
-# Stage 2: Build the application
+# Stage 1: Build the application
 FROM oven/bun:latest AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+# Copy all files for workspace support and type imports
 COPY . .
-# Set environment variables if needed
-# ENV NEXT_TELEMETRY_DISABLED 1
+
+# Install all dependencies
+RUN bun install
+
+# Build the client
+WORKDIR /app/client
 RUN bun run build
 
-# Stage 3: Production server
+# Stage 2: Production server
 FROM oven/bun:latest AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-# ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy necessary files from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/package.json /app/bun.lock ./
-
-RUN bun install --production --frozen-lockfile
-
+# Copy build artifacts and necessary config
+COPY --from=builder /app/client/public ./client/public
+COPY --from=builder /app/client/.next ./client/.next
+COPY --from=builder /app/client/package.json ./client/
+COPY --from=builder /app/server/package.json ./server/
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/bun.lock ./
+
+# Install production dependencies
+RUN bun install --production
+
+# Move to client directory for execution
+WORKDIR /app/client
 
 EXPOSE 3000
 

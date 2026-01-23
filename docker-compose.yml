@@ -15,20 +15,20 @@ services:
 
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server/Dockerfile
     container_name: re-world-server
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/re_world
     ports:
-      - "8080:3001"
+      - "3001:3001"
     depends_on:
       - db
 
   client:
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: client/Dockerfile
     container_name: re-world-client
     ports:
       - "3000:3000"
