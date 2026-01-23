@@ -44,4 +44,4 @@ trigger: always_on
 
 - Do not add comments except for essential ones.
 
-- Do not use Berrel Export
+- Do not use Barrel Export
