@@ -7,6 +7,7 @@ import { Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import BulletManager from "@/widgets/BulletManager/ui";
+import ImpactManager from "@/widgets/ImpactManager/ui";
 import LoadingScreen from "@/widgets/Loading/ui";
 import MultiplayerManager from "@/widgets/Game/ui/MultiplayerManager";
 
@@ -21,6 +22,7 @@ export default function Home() {
 
         <Physics gravity={[0, -20, 0]}>
           <BulletManager />
+          <ImpactManager />
           <MultiplayerManager />
           <Target position={[0, -4.5, -10]} />
           <Target position={[5, -4.5, -15]} />

@@ -20,7 +20,7 @@ export default function Target({ position }: TargetProps) {
       position={position}
       type="fixed"
       colliders="cuboid"
-      userData={{ type: "target", onHit: handleHit }}
+      userData={{ type: "target", onHit: handleHit, material: "wood" }}
     >
       <mesh>
         <boxGeometry args={[1, 1, 1]} />
