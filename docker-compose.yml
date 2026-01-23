@@ -21,7 +21,7 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/re_world
     ports:
-      - "8080:3000"
+      - "8080:3001"
     depends_on:
       - db
 

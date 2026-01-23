@@ -15,7 +15,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # Expose the server port (default 3000, adjust if needed)
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the server
 CMD ["bun", "run", "dev"]

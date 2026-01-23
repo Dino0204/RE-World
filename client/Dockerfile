@@ -23,7 +23,7 @@ ENV NODE_ENV production
 # Copy necessary files from builder
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/package.json /app/bun.lockb ./
+COPY --from=builder /app/package.json /app/bun.lock ./
 
 RUN bun install --production --frozen-lockfile
 
