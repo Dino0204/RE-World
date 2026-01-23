@@ -2,17 +2,19 @@
 
 import { useProgress } from "@react-three/drei";
 import { useEffect, useState } from "react";
+import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 export default function LoadingScreen() {
   const { progress, active } = useProgress();
+  const { isServerConnected } = useMultiplayerStore();
   const [shown, setShown] = useState(true);
 
   useEffect(() => {
-    if (!active && progress === 100) {
+    if (!active && progress === 100 && isServerConnected) {
       const timeout = setTimeout(() => setShown(false), 500);
       return () => clearTimeout(timeout);
     }
-  }, [progress, active]);
+  }, [progress, active, isServerConnected]);
 
   if (!shown) return null;
 
@@ -31,7 +33,11 @@ export default function LoadingScreen() {
         />
       </div>
       <h1 className="text-white text-sm font-light tracking-[0.2em] m-0 font-sans uppercase">
-        {progress.toFixed(0)}% Loading Assets
+        {progress < 100
+          ? `${progress.toFixed(0)}% Loading Assets`
+          : !isServerConnected
+            ? "Connecting to Server..."
+            : "Ready"}
       </h1>
     </div>
   );
