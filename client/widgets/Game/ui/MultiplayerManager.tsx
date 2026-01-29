@@ -15,10 +15,11 @@ import type {
   TargetMessage,
   PlayerStateMessage,
   PlayerActionMessage,
+  PlayerDisconnectMessage,
 } from "re-world-shared";
 
 export default function MultiplayerManager() {
-  const { updatePlayer, updatePlayerFromAction, players, setServerConnected } =
+  const { updatePlayer, updatePlayerFromAction, removePlayer, players, setServerConnected } =
     useMultiplayerStore();
 
   useEffect(() => {
@@ -85,6 +86,13 @@ export default function MultiplayerManager() {
         }
         return;
       }
+      if ("type" in data && data.type === "PLAYER_DISCONNECT") {
+        const msg = data as PlayerDisconnectMessage;
+        if (msg.identifier !== SESSION_IDENTIFIER) {
+          removePlayer(msg.identifier);
+        }
+        return;
+      }
 
       const playerStateData = data as GameMessage;
       if ("identifier" in playerStateData && "position" in playerStateData) {
@@ -94,7 +102,7 @@ export default function MultiplayerManager() {
         }
       }
     });
-  }, [updatePlayer, updatePlayerFromAction, setServerConnected]);
+  }, [updatePlayer, updatePlayerFromAction, removePlayer, setServerConnected]);
 
   return (
     <>
