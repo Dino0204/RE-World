@@ -12,7 +12,8 @@
     "lint:client": "cd client && bun lint",
     "lint:server": "cd server && bun lint",
     "lint": "concurrently 'bun run lint:client' 'bun run lint:server'",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "devDependencies": {
     "@elysiajs/eden": "^1.4.6",
