@@ -7,13 +7,25 @@ interface TargetProps {
 
 export default function Target({ position }: TargetProps) {
   const [hitColor, setHitColor] = useState<string>("red");
+  const [currentHealth, setCurrentHealth] = useState<number>(100);
 
-  const handleHit = () => {
+  const handleHit = (damage: number) => {
+    setCurrentHealth((prev) => {
+      const newHealth = prev - damage;
+      if (newHealth <= 0) {
+        console.log("Target destroyed!");
+        // 여기에서 파괴 로직 추가 (예: visible state 변경 등)
+      }
+      return newHealth;
+    });
+
     setHitColor("white");
     setTimeout(() => {
       setHitColor("red");
     }, 100);
   };
+
+  if (currentHealth <= 0) return null; // 파괴되면 렌더링 안 함
 
   return (
     <RigidBody
