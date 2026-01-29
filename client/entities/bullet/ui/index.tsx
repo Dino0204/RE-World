@@ -42,10 +42,10 @@ export default function Bullet({ data }: BulletProps) {
           onHit?: (damage: number) => void;
         };
 
-        // 충돌 지점 (총알의 현재 위치를 사용)
+        // 원격 총알은 Impact 생성하지 않음 (발사자만 생성)
         if (rbRef.current) {
           const impactPosition = rbRef.current.translation();
-          const material = userData?.material || "concrete"; // 기본 재질은 concrete
+          const material = userData?.material || "concrete";
           addImpact(impactPosition, material);
         }
 

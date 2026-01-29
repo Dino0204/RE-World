@@ -7,6 +7,7 @@ import { useMultiplayerStore } from "@/shared/store/multiplayer";
 interface BulletStore {
   bullets: BulletData[];
   addBullet: (bullet: BulletData) => void;
+  addBulletFromRemote: (bullet: BulletData) => void;
   removeBullet: (id: string) => void;
 }
 
@@ -24,8 +25,18 @@ export const useBulletStore = create<BulletStore>((set) => ({
       });
     }
   },
+  addBulletFromRemote: (data) => {
+    set((state) => {
+      if (state.bullets.some((bullet) => bullet.id === bullet.id)) {
+        return state;
+      }
+      return {
+        bullets: [...state.bullets, data],
+      };
+    });
+  },
   removeBullet: (id) =>
-    set((state) => ({
-      bullets: state.bullets.filter((b) => b.id !== id),
+  set((state) => ({
+      bullets: state.bullets.filter((bullet) => bullet.id !== id),
     })),
 }));

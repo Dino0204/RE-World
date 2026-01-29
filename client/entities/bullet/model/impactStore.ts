@@ -42,9 +42,14 @@ export const useImpactStore = create<ImpactStore>((set) => ({
     }, 1000);
   },
   addImpactFromRemote: (data) => {
-    set((state) => ({
-      impacts: [...state.impacts, data],
-    }));
+    set((state) => {
+      if (state.impacts.some((impact) => impact.id === data.id)) {
+        return state;
+      }
+      return {
+        impacts: [...state.impacts, data],
+      };
+    });
     setTimeout(() => {
       set((state) => ({
         impacts: state.impacts.filter((impact) => impact.id !== data.id),
