@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useThree } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
@@ -25,14 +25,21 @@ export default function Player() {
   const { equippedItems, cameraMode, isAiming } = usePlayerStore();
   const { isMouseDown } = usePlayerControls();
 
+  const handleHitRef = useRef<(damage: number) => void>(null);
+  useEffect(() => {
+    handleHitRef.current = (damage: number) => {
+      const { currentHealth, setHealth } = usePlayerStore.getState();
+      const newHealth = Math.max(0, currentHealth - damage);
+      setHealth(newHealth);
+      console.log(`Player hit! Damage: ${damage}, Health: ${currentHealth} -> ${newHealth}`);
+      if (newHealth <= 0) {
+        console.log("Player died!");
+      }
+    };
+  });
+
   const handleHit = useCallback((damage: number) => {
-    const { currentHealth, setHealth } = usePlayerStore.getState();
-    const newHealth = Math.max(0, currentHealth - damage);
-    setHealth(newHealth);
-    console.log(`Player hit! Damage: ${damage}, Health: ${currentHealth} -> ${newHealth}`);
-    if (newHealth <= 0) {
-      console.log("Player died!");
-    }
+    handleHitRef.current?.(damage);
   }, []);
 
   const { handleCollisionEnter } = usePlayerPhysics(

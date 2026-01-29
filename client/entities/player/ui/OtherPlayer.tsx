@@ -1,16 +1,15 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import type { GameMessage } from "@/entities/player/model/player";
 import type { RemotePlayerState } from "@/shared/store/multiplayer";
+import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 type OtherPlayerProps = Pick<
   RemotePlayerState,
   "identifier" | "position" | "rotation" | "direction" | "isJumping" | "equippedItems" | "isAiming" | "currentHealth" | "maxHealth"
-> & {
-  onHealthChange?: (identifier: string, newHealth: number) => void;
-};
+>;
 
 export default function OtherPlayer({
   identifier,
@@ -22,20 +21,29 @@ export default function OtherPlayer({
   isAiming,
   currentHealth = 100,
   maxHealth = 100,
-  onHealthChange,
 }: OtherPlayerProps) {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const groupRef = useRef<THREE.Group>(null);
   const weaponRef = useRef<THREE.Mesh>(null);
 
+  const handleHitRef = useRef<(damage: number) => void>(null);
+  useEffect(() => {
+    handleHitRef.current = (damage: number) => {
+      const { players, updatePlayer } = useMultiplayerStore.getState();
+      const player = players.get(identifier);
+      const health = player?.currentHealth ?? currentHealth;
+      const newHealth = Math.max(0, health - damage);
+      console.log(`OtherPlayer ${identifier} hit! Damage: ${damage}, Health: ${health} -> ${newHealth}`);
+      updatePlayer(identifier, { currentHealth: newHealth });
+      if (newHealth <= 0) {
+        console.log(`OtherPlayer ${identifier} died!`);
+      }
+    };
+  });
+
   const handleHit = useCallback((damage: number) => {
-    const newHealth = Math.max(0, currentHealth - damage);
-    console.log(`OtherPlayer ${identifier} hit! Damage: ${damage}, Health: ${currentHealth} -> ${newHealth}`);
-    onHealthChange?.(identifier, newHealth);
-    if (newHealth <= 0) {
-      console.log(`OtherPlayer ${identifier} died!`);
-    }
-  }, [identifier, currentHealth, onHealthChange]);
+    handleHitRef.current?.(damage);
+  }, []);
 
   useFrame(() => {
     if (rigidBodyRef.current) {
