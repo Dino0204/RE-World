@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { getGameWebsocket } from "@/shared/api/gameSocket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
+import type { GameMessage } from "@/entities/player/model/player";
 
 export const useMultiplayerSync = (
   rigidBodyReference: React.RefObject<RapierRigidBody | null>,
@@ -23,20 +24,12 @@ export const useMultiplayerSync = (
 
         const gameWebsocket = getGameWebsocket();
 
-        gameWebsocket.send({
+        const message: GameMessage = {
           identifier: SESSION_IDENTIFIER,
-          position: {
-            x: position.x,
-            y: position.y,
-            z: position.z,
-          },
-          rotation: {
-            x: rotation.x,
-            y: rotation.y,
-            z: rotation.z,
-            w: rotation.w,
-          },
-        });
+          position: { x: position.x, y: position.y, z: position.z },
+          rotation: { x: rotation.x, y: rotation.y, z: rotation.z, w: rotation.w },
+        };
+        gameWebsocket.send(message);
 
         lastUpdateTime.current = currentTime;
       }

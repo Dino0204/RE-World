@@ -1,5 +1,10 @@
-import { Entity } from "@/entities/entity/model/entity";
+import { t } from "elysia";
+import type { Static } from "elysia";
 
-export interface Target extends Entity {
-  type: "target";
-}
+export const TargetSchema = t.Object({
+  id: t.String(),
+  currentHealth: t.Number(),
+  maxHealth: t.Number(),
+  type: t.Literal("target"),
+});
+export type Target = Static<typeof TargetSchema>;

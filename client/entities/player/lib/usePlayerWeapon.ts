@@ -36,9 +36,8 @@ export const usePlayerWeapon = (
         const cameraWorldDirection = new THREE.Vector3();
         state.camera.getWorldDirection(cameraWorldDirection);
 
-        const bulletVelocity = cameraWorldDirection.clone().multiplyScalar(20);
-
-        const spawnPosition = new THREE.Vector3(
+        const vel = cameraWorldDirection.clone().multiplyScalar(20);
+        const spawn = new THREE.Vector3(
           position.x,
           position.y + 0.5,
           position.z,
@@ -46,8 +45,8 @@ export const usePlayerWeapon = (
 
         addBullet({
           id: crypto.randomUUID(),
-          position: spawnPosition,
-          velocity: bulletVelocity,
+          position: { x: spawn.x, y: spawn.y, z: spawn.z },
+          velocity: { x: vel.x, y: vel.y, z: vel.z },
           damage: currentWeapon.damage,
         });
 

@@ -1,16 +1,11 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import type { GameMessage } from "@/entities/player/model/player";
 
-interface OtherPlayerProperties {
-  position: { x: number; y: number; z: number };
-  rotation: { x: number; y: number; z: number; w: number };
-}
+type OtherPlayerProps = Pick<GameMessage, "position" | "rotation">;
 
-export default function OtherPlayer({
-  position,
-  rotation,
-}: OtherPlayerProperties) {
+export default function OtherPlayer({ position, rotation }: OtherPlayerProps) {
   const meshReference = useRef<THREE.Mesh>(null);
 
   useFrame(() => {

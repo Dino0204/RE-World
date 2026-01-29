@@ -1,20 +1,43 @@
-import { Weapon } from "@/entities/weapon/model/weapon";
-import { Entity } from "@/entities/entity/model/entity";
+import { t } from "elysia";
+import type { Static } from "elysia";
+import {
+  Vector3Schema,
+  QuaternionSchema,
+  DirectionSchema,
+} from "@/entities/entity/model/primitives";
+import { WeaponSchema } from "@/entities/weapon/model/weapon";
 
-export interface PlayerState extends Entity {
-  isMoving: boolean;
-  isJumping: boolean;
-  direction: { x: number; z: number };
-  equippedItems: Weapon[];
-  isAiming: boolean;
-  cameraMode: "FIRST_PERSON" | "THIRD_PERSON";
-}
+export const GameMessageSchema = t.Object({
+  identifier: t.String(),
+  position: Vector3Schema,
+  rotation: QuaternionSchema,
+});
+export type GameMessage = Static<typeof GameMessageSchema>;
 
-export type PlayerAction =
-  | { type: "SET_DIRECTION"; direction: { x: number; z: number } }
-  | { type: "JUMP" }
-  | { type: "RESET_JUMP" }
-  | { type: "EQUIP_ITEM"; item: Weapon }
-  | { type: "SET_AIMING"; isAiming: boolean };
+export const CameraModeSchema = t.UnionEnum([
+  "FIRST_PERSON",
+  "THIRD_PERSON",
+]);
+export type CameraMode = Static<typeof CameraModeSchema>;
 
-export type CameraMode = "FIRST_PERSON" | "THIRD_PERSON";
+export const PlayerStateSchema = t.Object({
+  id: t.String(),
+  currentHealth: t.Number(),
+  maxHealth: t.Number(),
+  isMoving: t.Boolean(),
+  isJumping: t.Boolean(),
+  direction: DirectionSchema,
+  equippedItems: t.Array(WeaponSchema),
+  isAiming: t.Boolean(),
+  cameraMode: CameraModeSchema,
+});
+export type PlayerState = Static<typeof PlayerStateSchema>;
+
+export const PlayerActionSchema = t.Union([
+  t.Object({ type: t.Literal("SET_DIRECTION"), direction: DirectionSchema }),
+  t.Object({ type: t.Literal("JUMP") }),
+  t.Object({ type: t.Literal("RESET_JUMP") }),
+  t.Object({ type: t.Literal("EQUIP_ITEM"), item: WeaponSchema }),
+  t.Object({ type: t.Literal("SET_AIMING"), isAiming: t.Boolean() }),
+]);
+export type PlayerAction = Static<typeof PlayerActionSchema>;
