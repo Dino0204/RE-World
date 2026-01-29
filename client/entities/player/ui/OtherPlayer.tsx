@@ -1,36 +1,50 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
+import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import type { GameMessage } from "@/entities/player/model/player";
 import type { RemotePlayerState } from "@/shared/store/multiplayer";
 
 type OtherPlayerProps = Pick<
   RemotePlayerState,
-  "position" | "rotation" | "direction" | "isJumping" | "equippedItems" | "isAiming"
->;
+  "identifier" | "position" | "rotation" | "direction" | "isJumping" | "equippedItems" | "isAiming" | "currentHealth" | "maxHealth"
+> & {
+  onHealthChange?: (identifier: string, newHealth: number) => void;
+};
 
 export default function OtherPlayer({
+  identifier,
   position,
   rotation,
   direction,
   isJumping,
   equippedItems,
   isAiming,
+  currentHealth = 100,
+  maxHealth = 100,
+  onHealthChange,
 }: OtherPlayerProps) {
+  const rigidBodyRef = useRef<RapierRigidBody>(null);
   const groupRef = useRef<THREE.Group>(null);
   const weaponRef = useRef<THREE.Mesh>(null);
 
+  const handleHit = useCallback((damage: number) => {
+    const newHealth = Math.max(0, currentHealth - damage);
+    console.log(`OtherPlayer ${identifier} hit! Damage: ${damage}, Health: ${currentHealth} -> ${newHealth}`);
+    onHealthChange?.(identifier, newHealth);
+    if (newHealth <= 0) {
+      console.log(`OtherPlayer ${identifier} died!`);
+    }
+  }, [identifier, currentHealth, onHealthChange]);
+
   useFrame(() => {
-    if (groupRef.current) {
+    if (rigidBodyRef.current) {
       const baseY = position.y + (isJumping ? 0.3 : 0);
-      groupRef.current.position.lerp(
-        new THREE.Vector3(position.x, baseY, position.z),
-        0.1,
-      );
-      groupRef.current.quaternion.slerp(
-        new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w),
-        0.1,
-      );
+      const targetPosition = new THREE.Vector3(position.x, baseY, position.z);
+      rigidBodyRef.current.setTranslation(targetPosition, true);
+      
+      const targetRotation = new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+      rigidBodyRef.current.setRotation(targetRotation, true);
     }
     if (weaponRef.current && equippedItems?.length) {
       const aimZ = isAiming ? -0.4 : -0.25;
@@ -43,18 +57,28 @@ export default function OtherPlayer({
 
   const hasWeapon = equippedItems && equippedItems.length > 0;
 
+  if (currentHealth <= 0) return null;
+
   return (
-    <group ref={groupRef}>
-      <mesh>
-        <capsuleGeometry args={[0.5, 0.5]} />
-        <meshStandardMaterial color="cyan" />
-      </mesh>
-      {hasWeapon && (
-        <mesh ref={weaponRef} position={[0.25, 0.4, -0.25]}>
-          <boxGeometry args={[0.15, 0.08, 0.35]} />
-          <meshStandardMaterial color="#333" />
+    <RigidBody
+      ref={rigidBodyRef}
+      type="kinematicPosition"
+      colliders="cuboid"
+      position={[position.x, position.y, position.z]}
+      userData={{ type: "player", onHit: handleHit, material: "concrete" }}
+    >
+      <group ref={groupRef}>
+        <mesh>
+          <capsuleGeometry args={[0.5, 0.5]} />
+          <meshStandardMaterial color="cyan" />
         </mesh>
-      )}
-    </group>
+        {hasWeapon && (
+          <mesh ref={weaponRef} position={[0.25, 0.4, -0.25]}>
+            <boxGeometry args={[0.15, 0.08, 0.35]} />
+            <meshStandardMaterial color="#333" />
+          </mesh>
+        )}
+      </group>
+    </RigidBody>
   );
 }

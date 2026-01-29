@@ -49,7 +49,7 @@ export default function Bullet({ data }: BulletProps) {
           addImpact(impactPosition, material);
         }
 
-        if (userData?.type === "target" && userData.onHit) {
+        if ((userData?.type === "target" || userData?.type === "player") && userData.onHit) {
           userData.onHit(data.damage);
         }
 
