@@ -216,6 +216,12 @@ export const PlayerActionMessageSchema = t.Object({
 });
 export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
 
+export const PlayerDisconnectMessageSchema = t.Object({
+  type: t.Literal("PLAYER_DISCONNECT"),
+  identifier: t.String(),
+});
+export type PlayerDisconnectMessage = Static<typeof PlayerDisconnectMessageSchema>;
+
 export const GameMessageUnionSchema = t.Union([
   GameMessageSchema,
   BulletMessageSchema,
@@ -224,5 +230,6 @@ export const GameMessageUnionSchema = t.Union([
   TargetMessageSchema,
   PlayerStateMessageSchema,
   PlayerActionMessageSchema,
+  PlayerDisconnectMessageSchema,
 ]);
 export type GameMessageUnion = Static<typeof GameMessageUnionSchema>;
