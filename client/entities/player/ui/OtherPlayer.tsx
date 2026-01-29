@@ -46,6 +46,7 @@ export default function OtherPlayer({
   }, []);
 
   useFrame(() => {
+    if (currentHealth <= 0) return;
     if (rigidBodyRef.current) {
       const baseY = position.y + (isJumping ? 0.3 : 0);
       const targetPosition = new THREE.Vector3(position.x, baseY, position.z);
