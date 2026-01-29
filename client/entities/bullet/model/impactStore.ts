@@ -1,23 +1,5 @@
 import { create } from "zustand";
-import { t } from "elysia";
-import type { Static } from "elysia";
-import { Vector3Schema } from "@/entities/entity/model/primitives";
-
-export const ImpactMaterialSchema = t.UnionEnum([
-  "concrete",
-  "wood",
-  "metal",
-  "dirt",
-]);
-export type ImpactMaterial = Static<typeof ImpactMaterialSchema>;
-
-export const ImpactDataSchema = t.Object({
-  id: t.String(),
-  position: Vector3Schema,
-  material: ImpactMaterialSchema,
-  timestamp: t.Number(),
-});
-export type ImpactData = Static<typeof ImpactDataSchema>;
+import type { ImpactData, ImpactMaterial } from "re-world-shared";
 
 interface ImpactStore {
   impacts: ImpactData[];
@@ -54,3 +36,5 @@ export const useImpactStore = create<ImpactStore>((set) => ({
       impacts: state.impacts.filter((impact) => impact.id !== id),
     })),
 }));
+
+export type { ImpactMaterial, ImpactData } from "re-world-shared";

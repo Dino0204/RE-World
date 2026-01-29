@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { GameMessageSchema } from "@client/entities/player/model/player";
+import { GameMessageSchema } from "re-world-shared";
 
 const getTimestamp = () => {
   return new Date().toLocaleTimeString("ko-KR");
