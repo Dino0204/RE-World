@@ -5,7 +5,7 @@ const getTimestamp = () => {
   return new Date().toLocaleTimeString("ko-KR");
 };
 
-const app = new Elysia()
+export const app = new Elysia()
   .use(cors())
   .ws("/game", {
     body: t.Object({
