@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { GameMessageSchema } from "re-world-shared";
+import { GameMessageUnionSchema } from "re-world-shared";
 
 const getTimestamp = () => {
   return new Date().toLocaleTimeString("ko-KR");
@@ -9,7 +9,7 @@ const getTimestamp = () => {
 export const app = new Elysia()
   .use(cors())
   .ws("/game", {
-    body: GameMessageSchema,
+    body: GameMessageUnionSchema,
     open(websocket) {
       console.log(
         `[${getTimestamp()}] 게임 클라이언트 연결됨: ${websocket.id}`,

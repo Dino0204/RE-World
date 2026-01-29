@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import type { ImpactData, ImpactMaterial } from "re-world-shared";
+import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 interface ImpactStore {
   impacts: ImpactData[];
@@ -7,6 +9,7 @@ interface ImpactStore {
     position: { x: number; y: number; z: number },
     material: ImpactMaterial,
   ) => void;
+  addImpactFromRemote: (data: ImpactData) => void;
   removeImpact: (id: string) => void;
 }
 
@@ -25,9 +28,26 @@ export const useImpactStore = create<ImpactStore>((set) => ({
       impacts: [...state.impacts, newImpact],
     }));
 
+    if (useMultiplayerStore.getState().isServerConnected) {
+      getGameWebsocket().send({
+        type: "IMPACT",
+        data: newImpact,
+      });
+    }
+
     setTimeout(() => {
       set((state) => ({
         impacts: state.impacts.filter((impact) => impact.id !== id),
+      }));
+    }, 1000);
+  },
+  addImpactFromRemote: (data) => {
+    set((state) => ({
+      impacts: [...state.impacts, data],
+    }));
+    setTimeout(() => {
+      set((state) => ({
+        impacts: state.impacts.filter((impact) => impact.id !== data.id),
       }));
     }, 1000);
   },
