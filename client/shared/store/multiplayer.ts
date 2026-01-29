@@ -1,15 +1,10 @@
 import { create } from "zustand";
-
-interface PlayerState {
-  identifier: string;
-  position: { x: number; y: number; z: number };
-  rotation: { x: number; y: number; z: number; w: number };
-}
+import type { GameMessage } from "@/entities/player/model/player";
 
 interface MultiplayerStore {
-  players: Map<string, PlayerState>;
+  players: Map<string, GameMessage>;
   isServerConnected: boolean;
-  updatePlayer: (identifier: string, state: PlayerState) => void;
+  updatePlayer: (identifier: string, state: GameMessage) => void;
   removePlayer: (identifier: string) => void;
   setServerConnected: (isServerConnected: boolean) => void;
 }

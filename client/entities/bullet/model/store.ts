@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BulletData } from "./bullet";
+import type { BulletData } from "./bullet";
 
 interface BulletStore {
   bullets: BulletData[];

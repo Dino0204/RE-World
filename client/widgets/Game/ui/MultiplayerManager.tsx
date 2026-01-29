@@ -3,6 +3,7 @@ import { useMultiplayerStore } from "@/shared/store/multiplayer";
 import { getGameWebsocket } from "@/shared/api/gameSocket";
 import OtherPlayer from "@/entities/player/ui/OtherPlayer";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
+import type { GameMessage } from "@/entities/player/model/player";
 
 export default function MultiplayerManager() {
   const { updatePlayer, players, setServerConnected } = useMultiplayerStore();
@@ -15,24 +16,16 @@ export default function MultiplayerManager() {
     });
 
     websocket.subscribe((websocketMessage) => {
-      const playerStateData = websocketMessage.data;
+      const playerStateData = websocketMessage.data as GameMessage | undefined;
 
       if (
         playerStateData &&
         typeof playerStateData === "object" &&
         "identifier" in playerStateData
       ) {
-        const { identifier, position, rotation } = playerStateData as {
-          identifier: string;
-          position: { x: number; y: number; z: number };
-          rotation: { x: number; y: number; z: number; w: number };
-        };
+        const { identifier, position, rotation } = playerStateData;
         if (identifier !== SESSION_IDENTIFIER) {
-          updatePlayer(identifier, {
-            identifier,
-            position,
-            rotation,
-          });
+          updatePlayer(identifier, { identifier, position, rotation });
         }
       }
     });
