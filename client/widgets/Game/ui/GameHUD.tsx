@@ -4,9 +4,7 @@ import { usePlayerStore } from "@/entities/player/model/store";
 
 export default function GameHUD() {
   const { currentHealth, maxHealth } = usePlayerStore();
-
-  const healthRatio =
-    maxHealth > 0 ? Math.max(0, Math.min(1, currentHealth / maxHealth)) : 0;
+  const healthRatio = maxHealth > 0 ? Math.max(0, Math.min(1, currentHealth / maxHealth)) : 0;
   const healthPercentage = Math.round(healthRatio * 100);
 
   return (

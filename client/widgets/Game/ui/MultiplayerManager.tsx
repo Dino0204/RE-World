@@ -109,12 +109,15 @@ export default function MultiplayerManager() {
       {Array.from(players.entries()).map(([identifier, state]) => (
         <OtherPlayer
           key={identifier}
+          identifier={identifier}
           position={state.position}
           rotation={state.rotation}
           direction={state.direction}
           isJumping={state.isJumping}
           equippedItems={state.equippedItems}
           isAiming={state.isAiming}
+          currentHealth={state.currentHealth}
+          maxHealth={state.maxHealth}
         />
       ))}
     </>
