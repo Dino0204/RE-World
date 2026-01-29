@@ -27,7 +27,7 @@ export const useBulletStore = create<BulletStore>((set) => ({
   },
   addBulletFromRemote: (data) => {
     set((state) => {
-      if (state.bullets.some((bullet) => bullet.id === bullet.id)) {
+      if (state.bullets.some((bullet) => bullet.id === data.id)) {
         return state;
       }
       return {
