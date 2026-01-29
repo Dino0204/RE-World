@@ -165,3 +165,64 @@ export const TargetSchema = t.Object({
   type: t.Literal("target"),
 });
 export type Target = Static<typeof TargetSchema>;
+
+// --- Game WebSocket Message Types (discriminated by type) ---
+export const BulletMessageSchema = t.Object({
+  type: t.Literal("BULLET"),
+  identifier: t.String(),
+  data: BulletDataSchema,
+});
+export type BulletMessage = Static<typeof BulletMessageSchema>;
+
+export const ImpactMessageSchema = t.Object({
+  type: t.Literal("IMPACT"),
+  data: ImpactDataSchema,
+});
+export type ImpactMessage = Static<typeof ImpactMessageSchema>;
+
+export const WeaponMessageSchema = t.Object({
+  type: t.Literal("WEAPON"),
+  identifier: t.String(),
+  weapon: WeaponSchema,
+});
+export type WeaponMessage = Static<typeof WeaponMessageSchema>;
+
+export const TargetMessageSchema = t.Object({
+  type: t.Literal("TARGET"),
+  data: TargetSchema,
+});
+export type TargetMessage = Static<typeof TargetMessageSchema>;
+
+export const PlayerStateMessageSchema = t.Object({
+  type: t.Literal("PLAYER_STATE"),
+  identifier: t.String(),
+  position: Vector3Schema,
+  rotation: QuaternionSchema,
+  currentHealth: t.Number(),
+  maxHealth: t.Number(),
+  isMoving: t.Boolean(),
+  isJumping: t.Boolean(),
+  direction: DirectionSchema,
+  equippedItems: t.Array(WeaponSchema),
+  isAiming: t.Boolean(),
+  cameraMode: CameraModeSchema,
+});
+export type PlayerStateMessage = Static<typeof PlayerStateMessageSchema>;
+
+export const PlayerActionMessageSchema = t.Object({
+  type: t.Literal("PLAYER_ACTION"),
+  identifier: t.String(),
+  action: PlayerActionSchema,
+});
+export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
+
+export const GameMessageUnionSchema = t.Union([
+  GameMessageSchema,
+  BulletMessageSchema,
+  ImpactMessageSchema,
+  WeaponMessageSchema,
+  TargetMessageSchema,
+  PlayerStateMessageSchema,
+  PlayerActionMessageSchema,
+]);
+export type GameMessageUnion = Static<typeof GameMessageUnionSchema>;

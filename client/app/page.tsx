@@ -26,9 +26,9 @@ export default function Home() {
           <BulletManager />
           <ImpactManager />
           <MultiplayerManager />
-          <Target position={[0, -4.5, -10]} />
-          <Target position={[5, -4.5, -15]} />
-          <Target position={[-5, -4.5, -5]} />
+          <Target id="target-1" position={[0, -4.5, -10]} />
+          <Target id="target-2" position={[5, -4.5, -15]} />
+          <Target id="target-3" position={[-5, -4.5, -5]} />
           <Player />
           <Ground />
         </Physics>
