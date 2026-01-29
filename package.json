@@ -3,9 +3,11 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
+    "build:shared": "cd shared && tsc -b",
     "dev:client": "cd client && bun dev",
     "dev:server": "cd server && bun dev",
     "dev": "concurrently 'bun run dev:client' 'bun run dev:server'",
