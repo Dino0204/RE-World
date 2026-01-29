@@ -1,6 +1,7 @@
 import { Weapon } from "@/entities/weapon/model/weapon";
+import { Entity } from "@/entities/entity/model/entity";
 
-export interface PlayerState {
+export interface PlayerState extends Entity {
   isMoving: boolean;
   isJumping: boolean;
   direction: { x: number; z: number };
