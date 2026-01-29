@@ -8,6 +8,8 @@ interface PlayerState {
   equippedItems: Weapon[];
   isAiming: boolean;
   cameraMode: "FIRST_PERSON" | "THIRD_PERSON";
+  currentHealth: number;
+  maxHealth: number;
 }
 
 interface PlayerActions {
@@ -16,6 +18,7 @@ interface PlayerActions {
   equipItem: (item: Weapon) => void;
   setAiming: (isAiming: boolean) => void;
   toggleCameraMode: () => void;
+  setHealth: (currentHealth: number, maxHealth?: number) => void;
 }
 
 const initialState: PlayerState = {
@@ -25,6 +28,8 @@ const initialState: PlayerState = {
   equippedItems: [],
   isAiming: false,
   cameraMode: "FIRST_PERSON",
+  currentHealth: 100,
+  maxHealth: 100,
 };
 
 export const usePlayerStore = create<PlayerState & PlayerActions>((set) => ({
@@ -49,5 +54,10 @@ export const usePlayerStore = create<PlayerState & PlayerActions>((set) => ({
     set((state) => ({
       cameraMode:
         state.cameraMode === "FIRST_PERSON" ? "THIRD_PERSON" : "FIRST_PERSON",
+    })),
+  setHealth: (currentHealth, maxHealth) =>
+    set((state) => ({
+      currentHealth,
+      maxHealth: maxHealth ?? state.maxHealth,
     })),
 }));
