@@ -5,11 +5,9 @@ export interface PlayerState extends Entity {
   isMoving: boolean;
   isJumping: boolean;
   direction: { x: number; z: number };
-  velocity: { x: number; y: number; z: number };
-  speed: number;
-  jumpForce: number;
   equippedItems: Weapon[];
   isAiming: boolean;
+  cameraMode: "FIRST_PERSON" | "THIRD_PERSON";
 }
 
 export type PlayerAction =

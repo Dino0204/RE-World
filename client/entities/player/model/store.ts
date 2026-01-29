@@ -1,16 +1,6 @@
 import { create } from "zustand";
 import { Weapon } from "@/entities/weapon/model/weapon";
-
-interface PlayerState {
-  isMoving: boolean;
-  isJumping: boolean;
-  direction: { x: number; z: number };
-  equippedItems: Weapon[];
-  isAiming: boolean;
-  cameraMode: "FIRST_PERSON" | "THIRD_PERSON";
-  currentHealth: number;
-  maxHealth: number;
-}
+import { PlayerState } from "./player";
 
 interface PlayerActions {
   setDirection: (direction: { x: number; z: number }) => void;
@@ -22,6 +12,7 @@ interface PlayerActions {
 }
 
 const initialState: PlayerState = {
+  id: "player",
   isMoving: false,
   isJumping: false,
   direction: { x: 0, z: 0 },
