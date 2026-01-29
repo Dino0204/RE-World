@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RigidBody } from "@react-three/rapier";
 import { getGameWebsocket } from "@/shared/api/gameSocket";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
@@ -18,17 +18,13 @@ export default function Target({
   maxHealth = DEFAULT_MAX_HEALTH,
 }: TargetProps) {
   const [hitColor, setHitColor] = useState<string>("red");
-  const [currentHealth, setCurrentHealth] = useState<number>(maxHealth);
+  const [localHealth, setLocalHealth] = useState<number>(maxHealth);
   const remoteTarget = useTargetStore((state) => state.targets.get(id));
 
-  useEffect(() => {
-    if (remoteTarget !== undefined) {
-      setCurrentHealth(remoteTarget.currentHealth);
-    }
-  }, [id, remoteTarget]);
+  const currentHealth = remoteTarget !== undefined ? remoteTarget.currentHealth : localHealth;
 
   const handleHit = (damage: number) => {
-    setCurrentHealth((prev) => {
+    setLocalHealth((prev) => {
       const newHealth = prev - damage;
       if (newHealth <= 0) {
         console.log("Target destroyed!");
