@@ -48,6 +48,7 @@ export const usePlayerWeapon = (
           id: crypto.randomUUID(),
           position: spawnPosition,
           velocity: bulletVelocity,
+          damage: currentWeapon.damage,
         });
 
         // Recoil Calculation
