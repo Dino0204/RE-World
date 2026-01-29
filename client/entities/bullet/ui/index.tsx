@@ -39,7 +39,7 @@ export default function Bullet({ data }: BulletProps) {
         const userData = other.rigidBody?.userData as {
           type?: string;
           material?: ImpactMaterial;
-          onHit?: () => void;
+          onHit?: (damage: number) => void;
         };
 
         // 충돌 지점 (총알의 현재 위치를 사용)
@@ -50,7 +50,7 @@ export default function Bullet({ data }: BulletProps) {
         }
 
         if (userData?.type === "target" && userData.onHit) {
-          userData.onHit();
+          userData.onHit(data.damage);
         }
 
         removeBullet(data.id);
