@@ -35,7 +35,7 @@ export default function MultiplayerManager() {
       if ("type" in data && data.type === "BULLET") {
         const msg = data as BulletMessage;
         if (msg.identifier !== SESSION_IDENTIFIER) {
-          useBulletStore.getState().addBullet(msg.data);
+          useBulletStore.getState().addBulletFromRemote(msg.data);
         }
         return;
       }
