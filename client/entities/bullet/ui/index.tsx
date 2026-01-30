@@ -13,12 +13,11 @@ export default function Bullet({ data }: BulletProps) {
   const removeBullet = useBulletStore((state) => state.removeBullet);
   const addImpact = useImpactStore((state) => state.addImpact);
 
+  // 총알 수명 (2초 후 제거)
   useEffect(() => {
-    // 총알 수명 (2초 후 제거)
     const timeout = setTimeout(() => {
       removeBullet(data.id);
     }, 2000);
-
     return () => clearTimeout(timeout);
   }, [data.id, removeBullet]);
 
@@ -46,7 +45,12 @@ export default function Bullet({ data }: BulletProps) {
         if (rbRef.current) {
           const impactPosition = rbRef.current.translation();
           const material = userData?.material || "concrete";
-          addImpact(impactPosition, material);
+          addImpact({
+            id: crypto.randomUUID(),
+            position: { x: impactPosition.x, y: impactPosition.y, z: impactPosition.z },
+            material,
+            timestamp: Date.now(),
+          });
         }
 
         if ((userData?.type === "target" || userData?.type === "player") && userData.onHit) {

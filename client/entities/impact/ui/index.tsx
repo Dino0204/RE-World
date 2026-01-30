@@ -1,22 +1,30 @@
 import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { ImpactMaterial } from "../model/store";
+import { useImpactStore } from "../model/store";
+import { ImpactData } from "../model/impact";
 
 interface ImpactEffectProps {
-  position: [number, number, number];
-  material: ImpactMaterial;
+  data: ImpactData;
 }
 
 export default function ImpactEffect({
-  position,
-  material,
+  data,
 }: ImpactEffectProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const particleCount = 20;
+  const removeImpact = useImpactStore((state) => state.removeImpact);
+
+  // Impact 수명 (1초 후 제거)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      removeImpact(data.id);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [data.id, removeImpact]);
 
   const color = useMemo(() => {
-    switch (material) {
+    switch (data.material) {
       case "concrete":
         return new THREE.Color("#d3d3d3");
       case "wood":
@@ -28,7 +36,7 @@ export default function ImpactEffect({
       default:
         return new THREE.Color("#ffffff");
     }
-  }, [material]);
+  }, [data.material]);
 
   const velocities = useRef(new Float32Array(particleCount * 3));
   const initialPositions = useMemo(
@@ -71,7 +79,7 @@ export default function ImpactEffect({
   });
 
   return (
-    <points ref={pointsRef} position={position}>
+    <points ref={pointsRef} position={[data.position.x, data.position.y, data.position.z]}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
