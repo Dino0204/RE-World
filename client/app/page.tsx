@@ -1,6 +1,6 @@
 "use client";
 
-import Ground from "@/entities/ground/ui";
+import FlatGround from "@/widgets/Ground/ui/flat";
 import Target from "@/entities/target/ui/Target";
 import Player from "@/entities/player/ui";
 import { Sky } from "@react-three/drei";
@@ -29,7 +29,7 @@ export default function Home() {
           <Target id="target-2" position={[5, -4.5, -15]} />
           <Target id="target-3" position={[-5, -4.5, -5]} />
           <Player />
-          <Ground />
+          <FlatGround />
         </Physics>
       </Canvas>
     </div>

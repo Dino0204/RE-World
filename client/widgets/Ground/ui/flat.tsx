@@ -1,6 +1,6 @@
 import { RigidBody } from "@react-three/rapier";
 
-export default function Ground() {
+export default function FlatGround() {
   return (
     <RigidBody userData={{ material: "concrete" }}>
       <mesh position={[0, -5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
