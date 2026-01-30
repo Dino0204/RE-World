@@ -1,6 +1,7 @@
 import { t } from "elysia";
 import type { Static } from "elysia";
 import { Vector3Schema, QuaternionSchema } from "./primitives";
+import { PlayerStateSchema } from "./player";
 import { BulletMessageSchema } from "./bullet";
 import { ImpactMessageSchema } from "./impact";
 import { WeaponMessageSchema } from "./weapon";
@@ -13,7 +14,7 @@ import {
 
 // --- Game Message (Legacy) ---
 export const GameMessageSchema = t.Object({
-  identifier: t.String(),
+  playerId: PlayerStateSchema.properties.id,
   position: Vector3Schema,
   rotation: QuaternionSchema,
 });

@@ -37,7 +37,7 @@ export type PlayerAction = Static<typeof PlayerActionSchema>;
 // --- Player State Message ---
 export const PlayerStateMessageSchema = t.Object({
   type: t.Literal("PLAYER_STATE"),
-  identifier: t.String(),
+  playerId: PlayerStateSchema.properties.id,
   position: Vector3Schema,
   rotation: QuaternionSchema,
   currentHealth: t.Number(),
@@ -54,7 +54,7 @@ export type PlayerStateMessage = Static<typeof PlayerStateMessageSchema>;
 // --- Player Action Message ---
 export const PlayerActionMessageSchema = t.Object({
   type: t.Literal("PLAYER_ACTION"),
-  identifier: t.String(),
+  playerId: PlayerStateSchema.properties.id,
   action: PlayerActionSchema,
 });
 export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
@@ -62,6 +62,6 @@ export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
 // --- Player Disconnect Message ---
 export const PlayerDisconnectMessageSchema = t.Object({
   type: t.Literal("PLAYER_DISCONNECT"),
-  identifier: t.String(),
+  playerId: PlayerStateSchema.properties.id,
 });
 export type PlayerDisconnectMessage = Static<typeof PlayerDisconnectMessageSchema>;
