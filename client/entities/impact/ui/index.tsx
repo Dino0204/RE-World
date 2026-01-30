@@ -1,7 +1,7 @@
 import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { ImpactMaterial } from "../model/impactStore";
+import { ImpactMaterial } from "../model/store";
 
 interface ImpactEffectProps {
   position: [number, number, number];
