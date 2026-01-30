@@ -2,7 +2,7 @@ import { useState } from "react";
 import { RigidBody } from "@react-three/rapier";
 import { getGameWebsocket } from "@/shared/api/gameSocket";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
-import { useTargetStore } from "@/shared/store/target";
+import { useTargetStore } from "@/entities/target/model/store";
 
 interface TargetProps {
   id: string;
