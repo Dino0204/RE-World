@@ -1,3 +1,10 @@
+// --- WebSocket Message ---
+export {
+  WebSocketMessageTypeSchema,
+  WebSocketMessageSchema,
+} from "./message";
+export type { WebSocketMessageType, WebSocketMessage } from "./message";
+
 // --- Primitives ---
 export {
   Vector3Schema,
@@ -63,6 +70,25 @@ export type {
 // --- Target ---
 export { TargetSchema, TargetMessageSchema } from "./target";
 export type { Target, TargetMessage } from "./target";
+
+// --- Room ---
+export {
+  ROOM_MAX_PLAYERS,
+  RoomInfoSchema,
+  JoinRoomRequestSchema,
+  JoinRoomResponseSchema,
+  RoomPlayerJoinedSchema,
+  RoomPlayerLeftSchema,
+  RoomMessageUnionSchema,
+} from "./room";
+export type {
+  RoomInfo,
+  JoinRoomRequest,
+  JoinRoomResponse,
+  RoomPlayerJoined,
+  RoomPlayerLeft,
+  RoomMessageUnion,
+} from "./room";
 
 // --- Game ---
 export { GameMessageSchema, GameMessageUnionSchema } from "./game";

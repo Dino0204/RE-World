@@ -1,67 +1,67 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
 import { Vector3Schema, QuaternionSchema, DirectionSchema } from "./primitives";
 import { WeaponSchema } from "./weapon";
+import { WebSocketMessageSchema } from "./message";
 
 // --- Camera Mode ---
-export const CameraModeSchema = t.UnionEnum([
+export const CameraModeSchema = z.enum([
   "FIRST_PERSON",
   "THIRD_PERSON",
 ]);
-export type CameraMode = Static<typeof CameraModeSchema>;
+export type CameraMode = z.infer<typeof CameraModeSchema>;
 
 // --- Player State ---
-export const PlayerStateSchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  isMoving: t.Boolean(),
-  isJumping: t.Boolean(),
+export const PlayerStateSchema = z.object({
+  id: z.string(),
+  currentHealth: z.number(),
+  maxHealth: z.number(),
+  isMoving: z.boolean(),
+  isJumping: z.boolean(),
   direction: DirectionSchema,
-  equippedItems: t.Array(WeaponSchema),
-  isAiming: t.Boolean(),
+  equippedItems: z.array(WeaponSchema),
+  isAiming: z.boolean(),
   cameraMode: CameraModeSchema,
 });
-export type PlayerState = Static<typeof PlayerStateSchema>;
+export type PlayerState = z.infer<typeof PlayerStateSchema>;
 
 // --- Player Action ---
-export const PlayerActionSchema = t.Union([
-  t.Object({ type: t.Literal("SET_DIRECTION"), direction: DirectionSchema }),
-  t.Object({ type: t.Literal("JUMP") }),
-  t.Object({ type: t.Literal("RESET_JUMP") }),
-  t.Object({ type: t.Literal("EQUIP_ITEM"), item: WeaponSchema }),
-  t.Object({ type: t.Literal("SET_AIMING"), isAiming: t.Boolean() }),
+export const PlayerActionSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("SET_DIRECTION"), direction: DirectionSchema }),
+  z.object({ type: z.literal("JUMP") }),
+  z.object({ type: z.literal("RESET_JUMP") }),
+  z.object({ type: z.literal("EQUIP_ITEM"), item: WeaponSchema }),
+  z.object({ type: z.literal("SET_AIMING"), isAiming: z.boolean() }),
 ]);
-export type PlayerAction = Static<typeof PlayerActionSchema>;
+export type PlayerAction = z.infer<typeof PlayerActionSchema>;
 
 // --- Player State Message ---
-export const PlayerStateMessageSchema = t.Object({
-  type: t.Literal("PLAYER_STATE"),
-  playerId: PlayerStateSchema.properties.id,
+export const PlayerStateMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("PLAYER_STATE"),
+  playerId: z.string(),
   position: Vector3Schema,
   rotation: QuaternionSchema,
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  isMoving: t.Boolean(),
-  isJumping: t.Boolean(),
+  currentHealth: z.number(),
+  maxHealth: z.number(),
+  isMoving: z.boolean(),
+  isJumping: z.boolean(),
   direction: DirectionSchema,
-  equippedItems: t.Array(WeaponSchema),
-  isAiming: t.Boolean(),
+  equippedItems: z.array(WeaponSchema),
+  isAiming: z.boolean(),
   cameraMode: CameraModeSchema,
 });
-export type PlayerStateMessage = Static<typeof PlayerStateMessageSchema>;
+export type PlayerStateMessage = z.infer<typeof PlayerStateMessageSchema>;
 
 // --- Player Action Message ---
-export const PlayerActionMessageSchema = t.Object({
-  type: t.Literal("PLAYER_ACTION"),
-  playerId: PlayerStateSchema.properties.id,
+export const PlayerActionMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("PLAYER_ACTION"),
+  playerId: z.string(),
   action: PlayerActionSchema,
 });
-export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
+export type PlayerActionMessage = z.infer<typeof PlayerActionMessageSchema>;
 
 // --- Player Disconnect Message ---
-export const PlayerDisconnectMessageSchema = t.Object({
-  type: t.Literal("PLAYER_DISCONNECT"),
-  playerId: t.String(),
+export const PlayerDisconnectMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("PLAYER_DISCONNECT"),
+  playerId: z.string(),
 });
-export type PlayerDisconnectMessage = Static<typeof PlayerDisconnectMessageSchema>;
+export type PlayerDisconnectMessage = z.infer<typeof PlayerDisconnectMessageSchema>;

@@ -1,10 +1,9 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
 
 // --- Entity ---
-export const EntitySchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
+export const EntitySchema = z.object({
+  id: z.string(),
+  currentHealth: z.number(),
+  maxHealth: z.number(),
 });
-export type Entity = Static<typeof EntitySchema>;
+export type Entity = z.infer<typeof EntitySchema>;

@@ -1,28 +1,28 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
 import { Vector3Schema } from "./primitives";
+import { WebSocketMessageSchema } from "./message";
 
 // --- Impact Material ---
-export const ImpactMaterialSchema = t.UnionEnum([
+export const ImpactMaterialSchema = z.enum([
   "concrete",
   "wood",
   "metal",
   "dirt",
 ]);
-export type ImpactMaterial = Static<typeof ImpactMaterialSchema>;
+export type ImpactMaterial = z.infer<typeof ImpactMaterialSchema>;
 
 // --- Impact Data ---
-export const ImpactDataSchema = t.Object({
-  id: t.String(),
+export const ImpactDataSchema = z.object({
+  id: z.string(),
   position: Vector3Schema,
   material: ImpactMaterialSchema,
-  timestamp: t.Number(),
+  timestamp: z.number(),
 });
-export type ImpactData = Static<typeof ImpactDataSchema>;
+export type ImpactData = z.infer<typeof ImpactDataSchema>;
 
 // --- Impact Message ---
-export const ImpactMessageSchema = t.Object({
-  type: t.Literal("IMPACT"),
+export const ImpactMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("IMPACT"),
   data: ImpactDataSchema,
 });
-export type ImpactMessage = Static<typeof ImpactMessageSchema>;
+export type ImpactMessage = z.infer<typeof ImpactMessageSchema>;

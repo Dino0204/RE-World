@@ -1,7 +1,6 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
 import { Vector3Schema, QuaternionSchema } from "./primitives";
-import { PlayerStateSchema } from "./player";
+import { WebSocketMessageSchema } from "./message";
 import { BulletMessageSchema } from "./bullet";
 import { ImpactMessageSchema } from "./impact";
 import { WeaponMessageSchema } from "./weapon";
@@ -11,17 +10,24 @@ import {
   PlayerActionMessageSchema,
   PlayerDisconnectMessageSchema,
 } from "./player";
+import {
+  JoinRoomRequestSchema,
+  JoinRoomResponseSchema,
+  RoomPlayerJoinedSchema,
+  RoomPlayerLeftSchema,
+} from "./room";
 
 // --- Game Message (Legacy) ---
-export const GameMessageSchema = t.Object({
-  playerId: PlayerStateSchema.properties.id,
+export const GameMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("GAME"),
+  playerId: z.string(),
   position: Vector3Schema,
   rotation: QuaternionSchema,
 });
-export type GameMessage = Static<typeof GameMessageSchema>;
+export type GameMessage = z.infer<typeof GameMessageSchema>;
 
 // --- Game Message Union ---
-export const GameMessageUnionSchema = t.Union([
+export const GameMessageUnionSchema = z.union([
   GameMessageSchema,
   BulletMessageSchema,
   ImpactMessageSchema,
@@ -30,5 +36,9 @@ export const GameMessageUnionSchema = t.Union([
   PlayerStateMessageSchema,
   PlayerActionMessageSchema,
   PlayerDisconnectMessageSchema,
+  JoinRoomRequestSchema,
+  JoinRoomResponseSchema,
+  RoomPlayerJoinedSchema,
+  RoomPlayerLeftSchema,
 ]);
-export type GameMessageUnion = Static<typeof GameMessageUnionSchema>;
+export type GameMessageUnion = z.infer<typeof GameMessageUnionSchema>;
