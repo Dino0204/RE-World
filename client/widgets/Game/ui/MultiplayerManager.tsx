@@ -5,7 +5,7 @@ import { getGameWebsocket } from "@/shared/api/gameSocket";
 import OtherPlayer from "@/entities/player/ui/OtherPlayer";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useBulletStore } from "@/entities/bullet/model/store";
-import { useImpactStore } from "@/entities/bullet/model/impactStore";
+import { useImpactStore } from "@/entities/impact/model/store";
 import type { GameMessage } from "@/entities/player/model/player";
 import type {
   GameMessageUnion,

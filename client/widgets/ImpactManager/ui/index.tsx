@@ -1,5 +1,5 @@
-import { useImpactStore } from "../../../entities/bullet/model/impactStore";
-import ImpactEffect from "../../../entities/bullet/ui/ImpactEffect";
+import { useImpactStore } from "../../../entities/impact/model/store";
+import ImpactEffect from "../../../entities/impact/ui";
 
 export default function ImpactManager() {
   const impacts = useImpactStore((state) => state.impacts);
