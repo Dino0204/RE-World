@@ -1,45 +1,29 @@
 import { create } from "zustand";
-import type { ImpactData, ImpactMaterial } from "re-world-shared";
+import type { ImpactData } from "./impact";
 import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 interface ImpactStore {
   impacts: ImpactData[];
-  addImpact: (
-    position: { x: number; y: number; z: number },
-    material: ImpactMaterial,
-  ) => void;
-  addImpactFromRemote: (data: ImpactData) => void;
+  addImpact: (impact: ImpactData) => void;
+  addImpactFromRemote: (impact: ImpactData) => void;
   removeImpact: (id: string) => void;
 }
 
 export const useImpactStore = create<ImpactStore>((set) => ({
   impacts: [],
-  addImpact: (position, material) => {
-    const id = crypto.randomUUID();
-    const newImpact: ImpactData = {
-      id,
-      position,
-      material,
-      timestamp: Date.now(),
-    };
-
+  addImpact: (impact) => {
     set((state) => ({
-      impacts: [...state.impacts, newImpact],
+      impacts: [...state.impacts, impact],
     }));
-
     if (useMultiplayerStore.getState().isServerConnected) {
       getGameWebsocket().send({
         type: "IMPACT",
-        data: newImpact,
+        playerId: SESSION_IDENTIFIER,
+        data: impact,
       });
     }
-
-    setTimeout(() => {
-      set((state) => ({
-        impacts: state.impacts.filter((impact) => impact.id !== id),
-      }));
-    }, 1000);
   },
   addImpactFromRemote: (data) => {
     set((state) => {
@@ -50,16 +34,12 @@ export const useImpactStore = create<ImpactStore>((set) => ({
         impacts: [...state.impacts, data],
       };
     });
-    setTimeout(() => {
-      set((state) => ({
-        impacts: state.impacts.filter((impact) => impact.id !== data.id),
-      }));
-    }, 1000);
   },
-  removeImpact: (id) =>
+  removeImpact: (id) => {
     set((state) => ({
       impacts: state.impacts.filter((impact) => impact.id !== id),
-    })),
+    }))
+  }
 }));
 
 export type { ImpactMaterial, ImpactData } from "re-world-shared";

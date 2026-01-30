@@ -9,8 +9,7 @@ export default function ImpactManager() {
       {impacts.map((impact) => (
         <ImpactEffect
           key={impact.id}
-          position={[impact.position.x, impact.position.y, impact.position.z]}
-          material={impact.material}
+          data={impact}
         />
       ))}
     </>
