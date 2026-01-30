@@ -20,13 +20,13 @@ export default function LoadingScreen() {
 
   return (
     <div
-      className={`fixed inset-0 flex flex-col items-center justify-center z-[1000] transition-opacity duration-500 bg-[radial-gradient(circle,_#1a1a1a_0%,_#000000_100%)] ${
+      className={`fixed inset-0 flex flex-col items-center justify-center z-1000 transition-opacity duration-500 bg-[radial-gradient(circle,#1a1a1a_0%,#000000_100%)] ${
         active || progress < 100
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="w-[300px] h-[2px] bg-white/10 rounded-full overflow-hidden mb-5">
+      <div className="w-75 h-0.5 bg-white/10 rounded-full overflow-hidden mb-5">
         <div
           className="h-full bg-white shadow-[0_0_10px_#ffffff] transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
