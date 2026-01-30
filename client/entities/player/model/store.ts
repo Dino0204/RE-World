@@ -19,7 +19,7 @@ const sendPlayerAction = (action: PlayerAction) => {
   if (!useMultiplayerStore.getState().isServerConnected) return;
   getGameWebsocket().send({
     type: "PLAYER_ACTION",
-    identifier: SESSION_IDENTIFIER,
+    playerId: SESSION_IDENTIFIER,
     action,
   });
 };

@@ -8,11 +8,11 @@ import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 type OtherPlayerProps = Pick<
   RemotePlayerState,
-  "identifier" | "position" | "rotation" | "direction" | "isJumping" | "equippedItems" | "isAiming" | "currentHealth" | "maxHealth"
+  "playerId" | "position" | "rotation" | "direction" | "isJumping" | "equippedItems" | "isAiming" | "currentHealth" | "maxHealth"
 >;
 
 export default function OtherPlayer({
-  identifier,
+  playerId,
   position,
   rotation,
   direction,
@@ -30,13 +30,13 @@ export default function OtherPlayer({
   useEffect(() => {
     handleHitRef.current = (damage: number) => {
       const { players, updatePlayer } = useMultiplayerStore.getState();
-      const player = players.get(identifier);
+      const player = players.get(playerId);
       const health = player?.currentHealth ?? currentHealth;
       const newHealth = Math.max(0, health - damage);
-      console.log(`OtherPlayer ${identifier} hit! Damage: ${damage}, Health: ${health} -> ${newHealth}`);
-      updatePlayer(identifier, { currentHealth: newHealth });
+      console.log(`OtherPlayer ${playerId} hit! Damage: ${damage}, Health: ${health} -> ${newHealth}`);
+      updatePlayer(playerId, { currentHealth: newHealth });
       if (newHealth <= 0) {
-        console.log(`OtherPlayer ${identifier} died!`);
+        console.log(`OtherPlayer ${playerId} died!`);
       }
     };
   });
