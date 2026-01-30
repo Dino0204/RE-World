@@ -1,235 +1,69 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
-
 // --- Primitives ---
-export const Vector3Schema = t.Object({
-  x: t.Number(),
-  y: t.Number(),
-  z: t.Number(),
-});
-export type Vector3 = Static<typeof Vector3Schema>;
-
-export const QuaternionSchema = t.Object({
-  x: t.Number(),
-  y: t.Number(),
-  z: t.Number(),
-  w: t.Number(),
-});
-export type Quaternion = Static<typeof QuaternionSchema>;
-
-export const DirectionSchema = t.Object({
-  x: t.Number(),
-  z: t.Number(),
-});
-export type Direction = Static<typeof DirectionSchema>;
-
-// --- Game WebSocket ---
-export const GameMessageSchema = t.Object({
-  identifier: t.String(),
-  position: Vector3Schema,
-  rotation: QuaternionSchema,
-});
-export type GameMessage = Static<typeof GameMessageSchema>;
-
-// --- Bullet ---
-export const BulletTypeSchema = t.UnionEnum([
-  "5.56mm",
-  "7.62mm",
-  "9mm",
-  "12Gauge",
-  "Other",
-]);
-export type BulletType = Static<typeof BulletTypeSchema>;
-
-export const BulletDataSchema = t.Object({
-  id: t.String(),
-  position: Vector3Schema,
-  velocity: Vector3Schema,
-  damage: t.Number(),
-});
-export type BulletData = Static<typeof BulletDataSchema>;
-
-// --- Impact ---
-export const ImpactMaterialSchema = t.UnionEnum([
-  "concrete",
-  "wood",
-  "metal",
-  "dirt",
-]);
-export type ImpactMaterial = Static<typeof ImpactMaterialSchema>;
-
-export const ImpactDataSchema = t.Object({
-  id: t.String(),
-  position: Vector3Schema,
-  material: ImpactMaterialSchema,
-  timestamp: t.Number(),
-});
-export type ImpactData = Static<typeof ImpactDataSchema>;
+export {
+  Vector3Schema,
+  QuaternionSchema,
+  DirectionSchema,
+} from "./primitives";
+export type { Vector3, Quaternion, Direction } from "./primitives";
 
 // --- Entity ---
-export const EntitySchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-});
-export type Entity = Static<typeof EntitySchema>;
+export { EntitySchema } from "./entity";
+export type { Entity } from "./entity";
+
+// --- Bullet ---
+export {
+  BulletTypeSchema,
+  BulletDataSchema,
+  BulletMessageSchema,
+} from "./bullet";
+export type { BulletType, BulletData, BulletMessage } from "./bullet";
+
+// --- Impact ---
+export {
+  ImpactMaterialSchema,
+  ImpactDataSchema,
+  ImpactMessageSchema,
+} from "./impact";
+export type { ImpactMaterial, ImpactData, ImpactMessage } from "./impact";
 
 // --- Weapon ---
-export const WeaponTypeSchema = t.UnionEnum([
-  "돌격 소총",
-  "지정 사수 소총",
-  "저격 소총",
-  "기관 단총",
-  "산탄총",
-  "경기관총",
-  "기타",
-  "권총",
-  "근접무기",
-  "투척무기",
-]);
-export type WeaponType = Static<typeof WeaponTypeSchema>;
-
-export const WeaponPartTypeSchema = t.UnionEnum([
-  "총구",
-  "조준경",
-  "손잡이",
-  "탄창",
-  "개머리판",
-  "기타",
-]);
-export type WeaponPartType = Static<typeof WeaponPartTypeSchema>;
-
-export const WeaponPartSchema = t.Object({
-  name: t.String(),
-  type: WeaponPartTypeSchema,
-  model: t.String(),
-});
-export type WeaponPart = Static<typeof WeaponPartSchema>;
-
-export const WeaponSchema = t.Object({
-  name: t.String(),
-  type: WeaponTypeSchema,
-  model: t.String(),
-  damage: t.Number(),
-  fireRate: t.Number(),
-  ammo: t.Object({
-    type: BulletTypeSchema,
-    amount: t.Number(),
-    maxAmount: t.Number(),
-  }),
-  parts: t.Array(WeaponPartSchema),
-  recoil: t.Object({
-    vertical: t.Number(),
-    horizontal: t.Number(),
-    maxVertical: t.Number(),
-    maxHorizontal: t.Number(),
-    pattern: t.Array(t.Object({ x: t.Number(), y: t.Number() })),
-  }),
-});
-export type Weapon = Static<typeof WeaponSchema>;
+export {
+  WeaponTypeSchema,
+  WeaponPartTypeSchema,
+  WeaponPartSchema,
+  WeaponSchema,
+  WeaponMessageSchema,
+} from "./weapon";
+export type {
+  WeaponType,
+  WeaponPartType,
+  WeaponPart,
+  Weapon,
+  WeaponMessage,
+} from "./weapon";
 
 // --- Player ---
-export const CameraModeSchema = t.UnionEnum([
-  "FIRST_PERSON",
-  "THIRD_PERSON",
-]);
-export type CameraMode = Static<typeof CameraModeSchema>;
-
-export const PlayerStateSchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  isMoving: t.Boolean(),
-  isJumping: t.Boolean(),
-  direction: DirectionSchema,
-  equippedItems: t.Array(WeaponSchema),
-  isAiming: t.Boolean(),
-  cameraMode: CameraModeSchema,
-});
-export type PlayerState = Static<typeof PlayerStateSchema>;
-
-export const PlayerActionSchema = t.Union([
-  t.Object({ type: t.Literal("SET_DIRECTION"), direction: DirectionSchema }),
-  t.Object({ type: t.Literal("JUMP") }),
-  t.Object({ type: t.Literal("RESET_JUMP") }),
-  t.Object({ type: t.Literal("EQUIP_ITEM"), item: WeaponSchema }),
-  t.Object({ type: t.Literal("SET_AIMING"), isAiming: t.Boolean() }),
-]);
-export type PlayerAction = Static<typeof PlayerActionSchema>;
-
-// --- Target ---
-export const TargetSchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  type: t.Literal("target"),
-});
-export type Target = Static<typeof TargetSchema>;
-
-// --- Game WebSocket Message Types (discriminated by type) ---
-export const BulletMessageSchema = t.Object({
-  type: t.Literal("BULLET"),
-  identifier: t.String(),
-  data: BulletDataSchema,
-});
-export type BulletMessage = Static<typeof BulletMessageSchema>;
-
-export const ImpactMessageSchema = t.Object({
-  type: t.Literal("IMPACT"),
-  data: ImpactDataSchema,
-});
-export type ImpactMessage = Static<typeof ImpactMessageSchema>;
-
-export const WeaponMessageSchema = t.Object({
-  type: t.Literal("WEAPON"),
-  identifier: t.String(),
-  weapon: WeaponSchema,
-});
-export type WeaponMessage = Static<typeof WeaponMessageSchema>;
-
-export const TargetMessageSchema = t.Object({
-  type: t.Literal("TARGET"),
-  data: TargetSchema,
-});
-export type TargetMessage = Static<typeof TargetMessageSchema>;
-
-export const PlayerStateMessageSchema = t.Object({
-  type: t.Literal("PLAYER_STATE"),
-  identifier: t.String(),
-  position: Vector3Schema,
-  rotation: QuaternionSchema,
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  isMoving: t.Boolean(),
-  isJumping: t.Boolean(),
-  direction: DirectionSchema,
-  equippedItems: t.Array(WeaponSchema),
-  isAiming: t.Boolean(),
-  cameraMode: CameraModeSchema,
-});
-export type PlayerStateMessage = Static<typeof PlayerStateMessageSchema>;
-
-export const PlayerActionMessageSchema = t.Object({
-  type: t.Literal("PLAYER_ACTION"),
-  identifier: t.String(),
-  action: PlayerActionSchema,
-});
-export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
-
-export const PlayerDisconnectMessageSchema = t.Object({
-  type: t.Literal("PLAYER_DISCONNECT"),
-  identifier: t.String(),
-});
-export type PlayerDisconnectMessage = Static<typeof PlayerDisconnectMessageSchema>;
-
-export const GameMessageUnionSchema = t.Union([
-  GameMessageSchema,
-  BulletMessageSchema,
-  ImpactMessageSchema,
-  WeaponMessageSchema,
-  TargetMessageSchema,
+export {
+  CameraModeSchema,
+  PlayerStateSchema,
+  PlayerActionSchema,
   PlayerStateMessageSchema,
   PlayerActionMessageSchema,
   PlayerDisconnectMessageSchema,
-]);
-export type GameMessageUnion = Static<typeof GameMessageUnionSchema>;
+} from "./player";
+export type {
+  CameraMode,
+  PlayerState,
+  PlayerAction,
+  PlayerStateMessage,
+  PlayerActionMessage,
+  PlayerDisconnectMessage,
+} from "./player";
+
+// --- Target ---
+export { TargetSchema, TargetMessageSchema } from "./target";
+export type { Target, TargetMessage } from "./target";
+
+// --- Game ---
+export { GameMessageSchema, GameMessageUnionSchema } from "./game";
+export type { GameMessage, GameMessageUnion } from "./game";
