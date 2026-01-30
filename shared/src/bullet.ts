@@ -1,7 +1,6 @@
 import { t } from "elysia";
 import type { Static } from "elysia";
 import { Vector3Schema } from "./primitives";
-import { PlayerStateSchema } from "./player";
 
 // --- Bullet Type ---
 export const BulletTypeSchema = t.UnionEnum([
@@ -25,7 +24,7 @@ export type BulletData = Static<typeof BulletDataSchema>;
 // --- Bullet Message ---
 export const BulletMessageSchema = t.Object({
   type: t.Literal("BULLET"),
-  playerId: PlayerStateSchema.properties.id,
+  playerId: t.String(),
   data: BulletDataSchema,
 });
 export type BulletMessage = Static<typeof BulletMessageSchema>;

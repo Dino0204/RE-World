@@ -62,6 +62,6 @@ export type PlayerActionMessage = Static<typeof PlayerActionMessageSchema>;
 // --- Player Disconnect Message ---
 export const PlayerDisconnectMessageSchema = t.Object({
   type: t.Literal("PLAYER_DISCONNECT"),
-  playerId: PlayerStateSchema.properties.id,
+  playerId: t.String(),
 });
 export type PlayerDisconnectMessage = Static<typeof PlayerDisconnectMessageSchema>;
