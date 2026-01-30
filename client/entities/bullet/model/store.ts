@@ -20,7 +20,7 @@ export const useBulletStore = create<BulletStore>((set) => ({
     if (useMultiplayerStore.getState().isServerConnected) {
       getGameWebsocket().send({
         type: "BULLET",
-        identifier: SESSION_IDENTIFIER,
+        playerId: SESSION_IDENTIFIER,
         data: bullet,
       });
     }
@@ -35,8 +35,9 @@ export const useBulletStore = create<BulletStore>((set) => ({
       };
     });
   },
-  removeBullet: (id) =>
-  set((state) => ({
+  removeBullet: (id) => {
+    set((state) => ({
       bullets: state.bullets.filter((bullet) => bullet.id !== id),
-    })),
+    }))
+  }
 }));

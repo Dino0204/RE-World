@@ -38,7 +38,7 @@ export const useMultiplayerSync = (
 
     if (currentTime - lastUpdateTime.current > 0.05) {
       const message: GameMessage = {
-        identifier: SESSION_IDENTIFIER,
+        playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
         rotation: { x: rotation.x, y: rotation.y, z: rotation.z, w: rotation.w },
       };
@@ -49,7 +49,7 @@ export const useMultiplayerSync = (
     if (currentTime - lastPlayerStateUpdateTime.current > 0.2) {
       const stateMessage: PlayerStateMessage = {
         type: "PLAYER_STATE",
-        identifier: SESSION_IDENTIFIER,
+        playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
         rotation: { x: rotation.x, y: rotation.y, z: rotation.z, w: rotation.w },
         currentHealth,
