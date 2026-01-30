@@ -13,9 +13,7 @@ export const app = new Elysia()
   .ws("/game", {
     body: GameMessageUnionSchema,
     open(websocket) {
-      console.log(
-        `[${getTimestamp()}] 게임 클라이언트 연결됨: ${websocket.id}`,
-      );
+      console.log(`[${getTimestamp()}] 게임 클라이언트 연결됨: ${websocket.id}`);
       websocket.subscribe("global");
     },
     message(websocket, message) {
@@ -25,9 +23,7 @@ export const app = new Elysia()
       websocket.publish("global", message);
     },
     close(websocket) {
-      console.log(
-        `[${getTimestamp()}] 게임 클라이언트 연결 종료됨: ${websocket.id}`,
-      );
+      console.log(`[${getTimestamp()}] 게임 클라이언트 연결 종료됨: ${websocket.id}`);
       const identifier = playerIdentifiers.get(websocket.id);
       if (identifier) {
         websocket.publish("global", {
