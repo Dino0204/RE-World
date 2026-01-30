@@ -1,7 +1,6 @@
 import { t } from "elysia";
 import type { Static } from "elysia";
 import { BulletTypeSchema } from "./bullet";
-import { PlayerStateSchema } from "./player";
 
 // --- Weapon Type ---
 export const WeaponTypeSchema = t.UnionEnum([
@@ -63,7 +62,7 @@ export type Weapon = Static<typeof WeaponSchema>;
 // --- Weapon Message ---
 export const WeaponMessageSchema = t.Object({
   type: t.Literal("WEAPON"),
-  playerId: PlayerStateSchema.properties.id,
+  playerId: t.String(),
   weapon: WeaponSchema,
 });
 export type WeaponMessage = Static<typeof WeaponMessageSchema>;
