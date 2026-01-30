@@ -1,26 +1,25 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
 
 // --- Vector3 ---
-export const Vector3Schema = t.Object({
-  x: t.Number(),
-  y: t.Number(),
-  z: t.Number(),
+export const Vector3Schema = z.object({
+  x: z.number(),
+  y: z.number(),
+  z: z.number(),
 });
-export type Vector3 = Static<typeof Vector3Schema>;
+export type Vector3 = z.infer<typeof Vector3Schema>;
 
 // --- Quaternion ---
-export const QuaternionSchema = t.Object({
-  x: t.Number(),
-  y: t.Number(),
-  z: t.Number(),
-  w: t.Number(),
+export const QuaternionSchema = z.object({
+  x: z.number(),
+  y: z.number(),
+  z: z.number(),
+  w: z.number(),
 });
-export type Quaternion = Static<typeof QuaternionSchema>;
+export type Quaternion = z.infer<typeof QuaternionSchema>;
 
 // --- Direction ---
-export const DirectionSchema = t.Object({
-  x: t.Number(),
-  z: t.Number(),
+export const DirectionSchema = z.object({
+  x: z.number(),
+  z: z.number(),
 });
-export type Direction = Static<typeof DirectionSchema>;
+export type Direction = z.infer<typeof DirectionSchema>;

@@ -1,18 +1,18 @@
-import { t } from "elysia";
-import type { Static } from "elysia";
+import { z } from "zod";
+import { WebSocketMessageSchema } from "./message";
 
 // --- Target ---
-export const TargetSchema = t.Object({
-  id: t.String(),
-  currentHealth: t.Number(),
-  maxHealth: t.Number(),
-  type: t.Literal("target"),
+export const TargetSchema = z.object({
+  id: z.string(),
+  currentHealth: z.number(),
+  maxHealth: z.number(),
+  type: z.literal("target"),
 });
-export type Target = Static<typeof TargetSchema>;
+export type Target = z.infer<typeof TargetSchema>;
 
 // --- Target Message ---
-export const TargetMessageSchema = t.Object({
-  type: t.Literal("TARGET"),
+export const TargetMessageSchema = WebSocketMessageSchema.extend({
+  type: z.literal("TARGET"),
   data: TargetSchema,
 });
-export type TargetMessage = Static<typeof TargetMessageSchema>;
+export type TargetMessage = z.infer<typeof TargetMessageSchema>;
