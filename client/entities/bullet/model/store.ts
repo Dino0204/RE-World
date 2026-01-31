@@ -38,6 +38,6 @@ export const useBulletStore = create<BulletStore>((set) => ({
   removeBullet: (id) => {
     set((state) => ({
       bullets: state.bullets.filter((bullet) => bullet.id !== id),
-    }))
-  }
+    }));
+  },
 }));
