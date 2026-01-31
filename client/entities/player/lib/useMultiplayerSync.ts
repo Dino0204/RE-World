@@ -30,7 +30,12 @@ export const useMultiplayerSync = (
   useFrame(({ clock }) => {
     const currentTime = clock.getElapsedTime();
 
-    if (!isServerConnected || !rigidBodyReference.current || !meshReference.current) return;
+    if (
+      !isServerConnected ||
+      !rigidBodyReference.current ||
+      !meshReference.current
+    )
+      return;
 
     const gameWebsocket = getGameWebsocket();
     const position = rigidBodyReference.current.translation();
@@ -38,9 +43,15 @@ export const useMultiplayerSync = (
 
     if (currentTime - lastUpdateTime.current > 0.05) {
       const message: GameMessage = {
+        type: "GAME",
         playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
-        rotation: { x: rotation.x, y: rotation.y, z: rotation.z, w: rotation.w },
+        rotation: {
+          x: rotation.x,
+          y: rotation.y,
+          z: rotation.z,
+          w: rotation.w,
+        },
       };
       gameWebsocket.send(message);
       lastUpdateTime.current = currentTime;
@@ -51,7 +62,12 @@ export const useMultiplayerSync = (
         type: "PLAYER_STATE",
         playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
-        rotation: { x: rotation.x, y: rotation.y, z: rotation.z, w: rotation.w },
+        rotation: {
+          x: rotation.x,
+          y: rotation.y,
+          z: rotation.z,
+          w: rotation.w,
+        },
         currentHealth,
         maxHealth,
         isMoving,
