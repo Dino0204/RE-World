@@ -21,6 +21,8 @@ trigger: always_on
 - "dev:client": "cd client && bun dev",
 - "dev:server": "cd server && bun dev",
 - "dev": "concurrently 'bun run dev:client' 'bun run dev:server'"
+- "lint": "concurrently 'bun run lint:client' 'bun run lint:server'",
+- "test:e2e": "playwright test",
 
 ## Tech Stack
 
