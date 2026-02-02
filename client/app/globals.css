@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-beige: #d9d3c1;
+  --color-brand-beige-deep: #9e988b;
+  --color-brand-beige-dark: #b5b0a3;
+  --color-brand-beige-mid: #cfc9b8;
+  --color-brand-beige-light: #cdc7b6;
+  --color-brand-beige-hover: #c4bea8;
+  --color-brand-charcoal: #38352f;
+  --color-brand-charcoal-light: #757166;
+  --color-brand-charcoal-muted: #5c584e;
+  --color-brand-charcoal-dark: #2b2924;
+
+  --transition-timing-function-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
 @keyframes blink {
   0%,
   50% {

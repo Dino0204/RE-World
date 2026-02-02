@@ -13,13 +13,13 @@ export function BootSequenceOverlay({ bootStage }: BootSequenceOverlayProps) {
   return (
     <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center">
       <div
-        className={`h-px bg-white/80 transition-all duration-700 ease-in-out
+        className={`h-px bg-brand-charcoal/80 transition-all duration-700 ease-in-out
           ${isInitStage ? "w-0 opacity-0" : "w-full opacity-100"}
           ${isUIStage ? "opacity-0" : ""}
         `}
       />
       <div
-        className={`absolute w-full bg-black transition-all duration-1000 ease-expo
+        className={`absolute w-full bg-brand-beige transition-all duration-1000 ease-expo
           ${isInitStage || isLineStage ? "h-0" : ""}
           ${isExpandStage ? "h-full" : ""}
           ${isUIStage ? "h-full opacity-0" : ""}

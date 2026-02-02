@@ -1,37 +1,36 @@
 "use client";
 
-import FlatGround from "@/widgets/Ground/ui/flat";
-import Target from "@/entities/target/ui/Target";
-import Player from "@/entities/player/ui";
-import { Sky } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Physics } from "@react-three/rapier";
-import BulletManager from "@/widgets/BulletManager/ui";
-import ImpactManager from "@/widgets/ImpactManager/ui";
-import LoadingScreen from "@/widgets/Loading/ui";
-import MultiplayerManager from "@/widgets/Game/ui/MultiplayerManager";
-import GameHUD from "@/widgets/Game/ui/GameHUD";
+import { useBootSequence } from "@/widgets/HeroSection/model/useBootSequence";
+import { useTypingEffect } from "@/widgets/HeroSection/model/useTypingEffect";
+import { BootSequenceOverlay } from "@/widgets/HeroSection/ui/BootSequenceOverlay";
+import { StaticOverlays } from "@/widgets/HeroSection/ui/StaticOverlay";
+import { HeroHUD } from "@/widgets/HeroSection/ui/HeroHUD";
+
+const FULL_TITLE = "RE-World";
+const BACKGROUND_VIDEO_SRC = "/videos/planet_remix.webm";
 
 export default function Home() {
+  const bootStage = useBootSequence();
+  const titleText = useTypingEffect(FULL_TITLE, bootStage === "ui");
+  const isBootComplete = bootStage === "ui";
+
   return (
-    <div className="w-screen h-screen">
-      <LoadingScreen />
-      <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 rounded-full transform-3d -translate-0.5 border border-white z-20 " />
-      <GameHUD />
-      <Canvas>
-        <Sky sunPosition={[100, 20, 100]} />
-        <ambientLight intensity={1.5} />
-        <Physics gravity={[0, -20, 0]}>
-          <BulletManager />
-          <ImpactManager />
-          <MultiplayerManager />
-          <Target id="target-1" position={[0, -4.5, -10]} />
-          <Target id="target-2" position={[5, -4.5, -15]} />
-          <Target id="target-3" position={[-5, -4.5, -5]} />
-          <Player />
-          <FlatGround />
-        </Physics>
-      </Canvas>
+    <div className="relative w-full h-screen bg-brand-beige text-brand-charcoal overflow-hidden font-mono select-none">
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover grayscale opacity-60"
+        >
+          <source src={BACKGROUND_VIDEO_SRC} type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-brand-beige/30" />
+      </div>
+      <BootSequenceOverlay bootStage={bootStage} />
+      <StaticOverlays visible={isBootComplete} />
+      <HeroHUD visible={isBootComplete} titleText={titleText} />
     </div>
   );
 }
