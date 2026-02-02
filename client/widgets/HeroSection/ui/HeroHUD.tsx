@@ -53,7 +53,7 @@ export function HeroHUD({ visible, titleText }: HeroHUDProps) {
         </div>
 
         <Link
-          href="/lobby-test"
+          href="/lobby"
           className="group relative px-16 py-5 bg-transparent border border-brand-charcoal/20 overflow-hidden hover:border-brand-charcoal transition-all duration-300"
         >
           <div className="absolute inset-0 bg-brand-charcoal translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
