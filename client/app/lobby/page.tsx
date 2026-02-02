@@ -77,9 +77,9 @@ export default function Lobby() {
               key={item}
               onClick={() => setActiveTab(item)}
               className={`
-                     relative px-6 h-10 flex items-center justify-center text-xs tracking-widest transition-all duration-300 font-bold group
-                     ${activeTab === item ? "bg-brand-charcoal text-brand-beige" : "bg-brand-beige-mid text-brand-charcoal-light hover:bg-brand-beige-hover hover:text-brand-charcoal"}
-                  `}
+                relative px-6 h-10 flex items-center justify-center text-xs tracking-widest transition-all duration-300 font-bold group
+                ${activeTab === item ? "bg-brand-charcoal text-brand-beige" : "bg-brand-beige-mid text-brand-charcoal-light hover:bg-brand-beige-hover hover:text-brand-charcoal"}
+              `}
             >
               {/* Decorative square */}
               <div
@@ -123,9 +123,9 @@ export default function Lobby() {
                       key={mode}
                       onClick={() => setSelectedMode(mode)}
                       className={`
-                                 text-left px-3 py-2 text-sm border-l-4 transition-all flex justify-between items-center font-bold
-                                 ${selectedMode === mode ? "border-brand-charcoal bg-brand-beige-hover text-brand-charcoal" : "border-transparent text-brand-charcoal-light hover:bg-brand-beige-hover/50"}
-                              `}
+                        text-left px-3 py-2 text-sm border-l-4 transition-all flex justify-between items-center font-bold
+                        ${selectedMode === mode ? "border-brand-charcoal bg-brand-beige-hover text-brand-charcoal" : "border-transparent text-brand-charcoal-light hover:bg-brand-beige-hover/50"}
+                      `}
                     >
                       {mode}
                       {selectedMode === mode && (
@@ -268,11 +268,11 @@ export default function Lobby() {
       {/* 4. Bottom Decorative Bar */}
       <div className="relative z-20 w-full h-12 border-t-2 border-brand-beige-dark bg-brand-beige-mid/50 flex items-center justify-center backdrop-blur-sm">
         {/* Decorative Pattern Line on Top */}
-        <div className="absolute top-[-6px] left-0 w-full h-[6px] flex overflow-hidden opacity-40">
+        <div className="absolute -top-1.5 left-0 w-full h-1.5 flex overflow-hidden opacity-40">
           {[...Array(100)].map((_, i) => (
             <div
               key={i}
-              className="w-3 h-3 border-l border-b border-brand-charcoal transform rotate-45 -translate-y-[6px] shrink-0 mx-[2px]"
+              className="w-3 h-3 border-l border-b border-brand-charcoal transform rotate-45 -translate-y-1.5 shrink-0 mx-0.5"
             ></div>
           ))}
         </div>
