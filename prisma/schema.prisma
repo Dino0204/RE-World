@@ -6,9 +6,29 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "./generated/prisma"
+  engineType = "client"
+	runtime = "bun"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+generator prismabox { 
+  provider = "prismabox"
+  typeboxImportDependencyName = "elysia"
+  typeboxImportVariableName = "t"
+  inputModel = true
+  output   = "./generated/prismabox"
+} 
+
+model User {
+  id        Int      @id @default(autoincrement())
+  googleId  String   @unique
+  email     String   @unique
+  name      String
+  picture   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
