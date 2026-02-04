@@ -6,6 +6,7 @@ import { joinRoom, leaveRoom, getPlayerRoomId } from "./entities/room/lib/room";
 import openapi from "@elysiajs/openapi";
 import { PrismaClient } from "../../prisma/generated/prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
+import cookie from "@elysiajs/cookie";
 
 const prisma = new PrismaClient({
   accelerateUrl: process.env.DATABASE_URL!,
@@ -18,7 +19,12 @@ const getTimestamp = () => {
 const playerIdentifiers = new Map<string, string>();
 
 export const app = new Elysia()
-  .use(cors())
+  .use(
+    cors({
+      credentials: true,
+    }),
+  )
+  .use(cookie())
   .use(openapi({ provider: "swagger-ui", path: "/swagger" }))
   .use(
     jwt({
@@ -30,7 +36,7 @@ export const app = new Elysia()
   )
   .post(
     "/auth/google",
-    async ({ body, jwt }) => {
+    async ({ body, jwt, cookie: { auth } }) => {
       const { code } = body;
 
       // 1. Google OAuth code를 access token으로 교환
@@ -96,9 +102,18 @@ export const app = new Elysia()
         picture: user.picture,
       });
 
+      // 5. 쿠키에 JWT 토큰 설정
+      auth.set({
+        value: token,
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        secure: false,
+        sameSite: "lax",
+      });
+
       return {
         success: true,
-        token,
         user: {
           id: user.id,
           email: user.email,
