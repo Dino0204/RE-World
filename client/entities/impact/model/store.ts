@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { ImpactData } from "./impact";
-import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { getGameWebsocket } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
@@ -38,8 +38,8 @@ export const useImpactStore = create<ImpactStore>((set) => ({
   removeImpact: (id) => {
     set((state) => ({
       impacts: state.impacts.filter((impact) => impact.id !== id),
-    }))
-  }
+    }));
+  },
 }));
 
 export type { ImpactMaterial, ImpactData } from "re-world-shared";

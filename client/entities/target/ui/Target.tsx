@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { getGameWebsocket } from "@/shared/api/socket";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 import { useTargetStore } from "@/entities/target/model/store";
 
@@ -21,7 +21,8 @@ export default function Target({
   const [localHealth, setLocalHealth] = useState<number>(maxHealth);
   const remoteTarget = useTargetStore((state) => state.targets.get(id));
 
-  const currentHealth = remoteTarget !== undefined ? remoteTarget.currentHealth : localHealth;
+  const currentHealth =
+    remoteTarget !== undefined ? remoteTarget.currentHealth : localHealth;
 
   const handleHit = (damage: number) => {
     setLocalHealth((prev) => {

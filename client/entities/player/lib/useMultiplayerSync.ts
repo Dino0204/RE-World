@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
-import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { getGameWebsocket } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 import { usePlayerStore } from "@/entities/player/model/store";
