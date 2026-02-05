@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/shared/api/server";
+import { Button } from "@/shared/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
@@ -23,5 +24,9 @@ export default function SignIn() {
     flow: "auth-code",
   });
 
-  return <button onClick={signin}>Sign in with Google</button>;
+  return (
+    <Button onClick={signin} variant="outline" size="md">
+      Sign in with Google
+    </Button>
+  );
 }
