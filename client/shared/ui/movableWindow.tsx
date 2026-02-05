@@ -1,5 +1,6 @@
 "use client";
 
+import SignIn from "@/features/signin/ui";
 import { useMovable } from "../model/useMovable";
 
 export function MovableWindow() {
@@ -12,13 +13,23 @@ export function MovableWindow() {
         transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
       }}
       className={`
-          absolute top-10 left-10 w-64 h-40 bg-white border border-gray-300 shadow-lg rounded-lg
-          cursor-grab active:cursor-grabbing p-4 z-50
+          absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-40 rounded-lg
+          cursor-grab active:cursor-grabbing z-50
+        bg-brand-beige-mid/40 border-2 border-brand-beige-dark p-1 shadow-sm group backdrop-blur-sm
           ${isDragging ? "will-change-transform select-none" : ""}
         `}
     >
-      <div className="font-bold border-b mb-2 pb-1">드래그 핸들</div>
-      <p className="text-sm text-gray-600">이 창을 클릭해서 움직여보세요.</p>
+      <div className="bg-brand-charcoal text-brand-beige px-3 text-xs font-bold tracking-widest mb-1 flex justify-between">
+        <span>Authorize</span>
+      </div>
+      <div className="px-4">
+        <div className="space-y-2">
+          <label className="text-[10px] text-brand-charcoal-light tracking-[0.2em] uppercase font-bold">
+            Operation Mode
+          </label>
+          <SignIn />
+        </div>
+      </div>
     </div>
   );
 }
