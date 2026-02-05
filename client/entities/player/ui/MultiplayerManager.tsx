@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 import { useTargetStore } from "@/entities/target/model/store";
-import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { getGameWebsocket } from "@/shared/api/socket";
 import OtherPlayer from "@/entities/player/ui/OtherPlayer";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useBulletStore } from "@/entities/bullet/model/store";

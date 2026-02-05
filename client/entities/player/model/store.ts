@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Weapon } from "@/entities/weapon/model/weapon";
 import { PlayerState } from "./player";
 import type { PlayerAction } from "re-world-shared";
-import { getGameWebsocket } from "@/shared/api/gameSocket";
+import { getGameWebsocket } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 

@@ -1,5 +1,5 @@
-import { useBulletStore } from "../../../entities/bullet/model/store";
-import Bullet from "../../../entities/bullet/ui/index";
+import { useBulletStore } from "../model/store";
+import Bullet from "./bullet";
 
 export default function BulletManager() {
   const bullets = useBulletStore((state) => state.bullets);
