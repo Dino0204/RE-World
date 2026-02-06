@@ -1,11 +1,14 @@
 "use client";
 
 import SignIn from "@/features/signin/ui";
+import SignOut from "@/features/signout/ui";
 import { requestJoinRoom } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useRoomStore } from "@/shared/store/room";
 import { useMovableContainer } from "@/shared/store/useMovableStore";
+import { Button } from "@/shared/ui/button";
 import { MovableWindow } from "@/shared/ui/movableWindow";
+import { googleLogout } from "@react-oauth/google";
 import { MapPin, Play, Plus, Settings, Signal, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -72,6 +75,7 @@ export const Main = () => {
           </div>
           <div className="flex flex-col py-20 px-4">
             <SignIn />
+            <SignOut />
           </div>
         </div>
       </MovableWindow>
