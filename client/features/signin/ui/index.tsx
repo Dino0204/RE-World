@@ -9,8 +9,8 @@ export default function SignIn() {
   const router = useRouter();
 
   const signin = useGoogleLogin({
-    onSuccess: async (code) => {
-      const { data } = await api.auth.google.post({ code });
+    onSuccess: async (response) => {
+      const { data } = await api.auth.google.post({ code: response.code });
 
       if (data?.success) {
         router.push("/lobby");
