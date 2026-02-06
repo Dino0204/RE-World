@@ -8,14 +8,19 @@ import { useMovableContainer } from "@/shared/store/useMovableStore";
 import { MovableWindow } from "@/shared/ui/movableWindow";
 import { MapPin, Play, Plus, Settings, Signal, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Main = () => {
   const router = useRouter();
   const { setCurrentRoom, setIsJoining, setError } = useRoomStore();
   const [selectedMode, setSelectedMode] = useState("SOLO");
-  const { handleMouseMove, handleMouseUp, handleMouseLeave } =
+  const { handleMouseMove, handleMouseUp, handleMouseLeave, setContainerRef } =
     useMovableContainer();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setContainerRef(containerRef);
+  }, [setContainerRef]);
 
   const handleGameStart = async () => {
     setIsJoining(true);
@@ -54,6 +59,7 @@ export const Main = () => {
 
   return (
     <div
+      ref={containerRef}
       className="relative z-10 flex-1 p-10 grid grid-cols-12 gap-8"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
