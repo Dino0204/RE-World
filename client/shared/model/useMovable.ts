@@ -5,8 +5,14 @@ import { useMovableStore, Position } from "../store/useMovableStore";
 
 // 개별 윈도우용 훅
 export function useMovable(id: string) {
-  const { position, setPosition, isDragging, setIsDragging, offsetRef } =
-    useMovableStore(id);
+  const {
+    position,
+    setPosition,
+    isDragging,
+    setIsDragging,
+    offsetRef,
+    setElementRef,
+  } = useMovableStore(id);
 
   const positionRef = useRef<Position>(position);
 
@@ -34,5 +40,6 @@ export function useMovable(id: string) {
     setIsDragging,
     offsetRef,
     handleMouseDown,
+    setElementRef,
   };
 }

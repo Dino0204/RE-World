@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useMovable } from "../model/useMovable";
 
 interface MovableWindowProps {
@@ -11,10 +12,17 @@ export function MovableWindow({
   id = "default",
   children,
 }: MovableWindowProps) {
-  const { position, isDragging, handleMouseDown } = useMovable(id);
+  const { position, isDragging, handleMouseDown, setElementRef } =
+    useMovable(id);
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setElementRef(elementRef);
+  }, [setElementRef]);
 
   return (
     <div
+      ref={elementRef}
       onMouseDown={handleMouseDown}
       style={{
         transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
