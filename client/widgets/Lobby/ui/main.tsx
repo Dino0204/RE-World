@@ -1,5 +1,6 @@
 "use client";
 
+import SignIn from "@/features/signin/ui";
 import { requestJoinRoom } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useRoomStore } from "@/shared/store/room";
@@ -58,9 +59,16 @@ export const Main = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <MovableWindow id="window-1" />
-      <MovableWindow id="window-2" />
-      <MovableWindow id="window-3" />
+      <MovableWindow id="signin-window">
+        <div className="bg-brand-beige-mid/40 border-2 border-brand-beige-dark p-1 shadow-sm group backdrop-blur-sm">
+          <div className="bg-brand-charcoal text-brand-beige px-3 text-xs font-bold tracking-widest mb-1 flex justify-between">
+            <span>Authorize</span>
+          </div>
+          <div className="flex flex-col py-20 px-4">
+            <SignIn />
+          </div>
+        </div>
+      </MovableWindow>
 
       {/* LEFT COLUMN */}
       <section className="col-span-3 flex flex-col justify-between h-full">
