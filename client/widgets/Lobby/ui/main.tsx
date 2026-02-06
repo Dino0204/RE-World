@@ -2,8 +2,8 @@
 
 import { requestJoinRoom } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useMovable } from "@/shared/model/useMovable";
 import { useRoomStore } from "@/shared/store/room";
+import { useMovableContainer } from "@/shared/store/useMovableStore";
 import { MovableWindow } from "@/shared/ui/movableWindow";
 import { MapPin, Play, Plus, Settings, Signal, User } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,8 +13,8 @@ export const Main = () => {
   const router = useRouter();
   const { setCurrentRoom, setIsJoining, setError } = useRoomStore();
   const [selectedMode, setSelectedMode] = useState("SOLO");
-
-  const { handleMouseMove, handleMouseUp } = useMovable();
+  const { handleMouseMove, handleMouseUp, handleMouseLeave } =
+    useMovableContainer();
 
   const handleGameStart = async () => {
     setIsJoining(true);
@@ -56,9 +56,11 @@ export const Main = () => {
       className="relative z-10 flex-1 p-10 grid grid-cols-12 gap-8"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
-      <MovableWindow />
+      <MovableWindow id="window-1" />
+      <MovableWindow id="window-2" />
+      <MovableWindow id="window-3" />
 
       {/* LEFT COLUMN */}
       <section className="col-span-3 flex flex-col justify-between h-full">
