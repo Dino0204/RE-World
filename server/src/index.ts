@@ -128,6 +128,11 @@ export const app = new Elysia()
       }),
     },
   )
+  .get("auth/signout", ({ cookie: { auth } }) => {
+    auth.remove();
+
+    return { success: true };
+  })
   .ws("/game", {
     open(websocket) {
       console.log(
