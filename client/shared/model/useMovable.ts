@@ -1,47 +1,38 @@
 "use client";
 
-import { useCallback } from "react";
-import { useMovableStore } from "../store/useMovableStore";
+import { useCallback, useEffect, useRef } from "react";
+import { useMovableStore, Position } from "../store/useMovableStore";
 
-export function useMovable() {
+// 개별 윈도우용 훅
+export function useMovable(id: string) {
   const { position, setPosition, isDragging, setIsDragging, offsetRef } =
-    useMovableStore();
+    useMovableStore(id);
 
-  // 1. 마우스 다운: 드래그 시작
+  const positionRef = useRef<Position>(position);
+
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
+
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
       setIsDragging(true);
       offsetRef.current = {
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
+        x: e.clientX - positionRef.current.x,
+        y: e.clientY - positionRef.current.y,
       };
     },
-    [offsetRef, position.x, position.y, setIsDragging],
+    [offsetRef, setIsDragging],
   );
-
-  // 2. 마우스 무브: 부모 컨테이너 위에서 움직일 때 호출
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isDragging) return;
-
-      setPosition({
-        x: e.clientX - offsetRef.current!.x,
-        y: e.clientY - offsetRef.current!.y,
-      });
-    },
-    [isDragging, offsetRef, setPosition],
-  );
-
-  // 3. 마우스 업/리브: 드래그 종료
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, [setIsDragging]);
 
   return {
     position,
     isDragging,
-    handleMouseDown, // 자식(창)에게 전달
-    handleMouseMove, // 부모(컨테이너)에게 전달
-    handleMouseUp, // 부모(컨테이너)에게 전달
+    setPosition,
+    setIsDragging,
+    offsetRef,
+    handleMouseDown,
   };
 }
