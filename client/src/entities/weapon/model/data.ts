@@ -1,4 +1,4 @@
-import { Weapon } from "./weapon";
+import type { Weapon } from "re-world-shared";
 
 export const M416: Weapon = {
   name: "M416",

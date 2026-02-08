@@ -1,4 +1,4 @@
-import { useBulletStore } from "../model/store";
+import { useBulletStore } from "../model/bullet.store";
 import Bullet from "./bullet";
 
 export default function BulletManager() {

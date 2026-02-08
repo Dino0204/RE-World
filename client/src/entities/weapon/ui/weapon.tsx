@@ -2,8 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useRef } from "react";
-import { CameraMode } from "../../player/model/player";
-import { Weapon as WeaponType } from "../model/weapon";
+import type { CameraMode, Weapon as WeaponType } from "re-world-shared";
 
 interface WeaponProps {
   cameraMode: CameraMode;
@@ -40,7 +39,7 @@ export default function Weapon({
 
       const correctionQuat = new THREE.Quaternion().setFromAxisAngle(
         new THREE.Vector3(0, 1, 0),
-        Math.PI
+        Math.PI,
       );
 
       targetWorldQuat.multiply(correctionQuat);
@@ -63,8 +62,8 @@ export default function Weapon({
       targetWorldQuat.multiply(
         new THREE.Quaternion().setFromAxisAngle(
           new THREE.Vector3(0, 1, 0),
-          Math.PI
-        )
+          Math.PI,
+        ),
       );
 
       meshRef.current.position.set(0.3, 0.5, 0.5);
@@ -75,7 +74,7 @@ export default function Weapon({
         parent.getWorldQuaternion(parentWorldQuat);
 
         meshRef.current.quaternion.copy(
-          parentWorldQuat.invert().multiply(targetWorldQuat)
+          parentWorldQuat.invert().multiply(targetWorldQuat),
         );
       } else {
         meshRef.current.quaternion.copy(targetWorldQuat);

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ImpactData } from "./impact";
+import type { ImpactData } from "re-world-shared";
 import { getGameWebsocket } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";

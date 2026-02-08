@@ -2,9 +2,9 @@
 
 import { useBootSequence } from "@/widgets/Hero/model/useBootSequence";
 import { useTypingEffect } from "@/widgets/Hero/model/useTypingEffect";
-import { BootSequenceOverlay } from "@/widgets/Hero/ui/bootSequenceOverlay";
-import { StaticOverlays } from "@/widgets/Hero/ui/staticOverlay";
-import { HeroHUD } from "@/widgets/Hero/ui/heroHUD";
+import { BootSequenceOverlay } from "@/widgets/Hero/ui/boot-sequence-overlay";
+import { StaticOverlays } from "@/widgets/Hero/ui/static-overlay";
+import { HeroHUD } from "@/widgets/Hero/ui/hero-hud";
 
 const FULL_TITLE = "RE-World";
 const BACKGROUND_VIDEO_SRC = "/videos/planet_remix.webm";

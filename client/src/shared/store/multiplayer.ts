@@ -1,12 +1,11 @@
 import { create } from "zustand";
-import type { GameMessage } from "@/entities/player/model/player";
-import type {
-  PlayerStateMessage,
-  PlayerAction,
-  Weapon,
-} from "re-world-shared";
+import type { GameMessage } from "re-world-shared";
+import type { PlayerStateMessage, PlayerAction, Weapon } from "re-world-shared";
 
-export type RemotePlayerState = GameMessage & Partial<Omit<PlayerStateMessage, "type" | "playerId" | "position" | "rotation">> & { playerId?: string };
+export type RemotePlayerState = GameMessage &
+  Partial<
+    Omit<PlayerStateMessage, "type" | "playerId" | "position" | "rotation">
+  > & { playerId?: string };
 
 interface MultiplayerStore {
   players: Map<string, RemotePlayerState>;
@@ -56,7 +55,9 @@ export const useMultiplayerStore = create<MultiplayerStore>((set, get) => ({
       set((prev) => {
         const next = new Map(prev.players);
         const equipped = current.equippedItems ?? [];
-        const isEquipped = equipped.some((i: Weapon) => i.name === action.item.name);
+        const isEquipped = equipped.some(
+          (i: Weapon) => i.name === action.item.name,
+        );
         next.set(playerId, {
           ...current,
           equippedItems: isEquipped

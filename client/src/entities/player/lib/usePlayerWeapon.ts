@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 import { usePlayerStore } from "../model/store";
-import { useBulletStore } from "../../bullet/model/store";
+import { useBulletStore } from "../../bullet/model/bullet.store";
 
 export const usePlayerWeapon = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,
