@@ -6,7 +6,7 @@ import { getGameWebsocket } from "@/shared/api/socket";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useMultiplayerStore } from "@/shared/store/multiplayer";
 import { usePlayerStore } from "@/entities/player/model/store";
-import type { GameMessage } from "@/entities/player/model/player";
+import type { GameMessage } from "re-world-shared";
 import type { PlayerStateMessage } from "re-world-shared";
 
 export const useMultiplayerSync = (

@@ -1,8 +1,8 @@
 import { useRef, useEffect } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
-import { useBulletStore } from "../model/store";
+import { useBulletStore } from "../model/bullet.store";
 import { useImpactStore, ImpactMaterial } from "../../impact/model/store";
-import { BulletData } from "../model/bullet";
+import { BulletData } from "re-world-shared";
 
 interface BulletProps {
   data: BulletData;
@@ -47,13 +47,20 @@ export default function Bullet({ data }: BulletProps) {
           const material = userData?.material || "concrete";
           addImpact({
             id: crypto.randomUUID(),
-            position: { x: impactPosition.x, y: impactPosition.y, z: impactPosition.z },
+            position: {
+              x: impactPosition.x,
+              y: impactPosition.y,
+              z: impactPosition.z,
+            },
             material,
             timestamp: Date.now(),
           });
         }
 
-        if ((userData?.type === "target" || userData?.type === "player") && userData.onHit) {
+        if (
+          (userData?.type === "target" || userData?.type === "player") &&
+          userData.onHit
+        ) {
           userData.onHit(data.damage);
         }
 

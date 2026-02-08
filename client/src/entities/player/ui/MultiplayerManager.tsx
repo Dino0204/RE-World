@@ -4,7 +4,7 @@ import { useTargetStore } from "@/entities/target/model/store";
 import { getGameWebsocket } from "@/shared/api/socket";
 import OtherPlayer from "@/entities/player/ui/OtherPlayer";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useBulletStore } from "@/entities/bullet/model/store";
+import { useBulletStore } from "@/entities/bullet/model/bullet.store";
 import { useImpactStore } from "@/entities/impact/model/store";
 import type { GameMessageUnion } from "re-world-shared";
 
