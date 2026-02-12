@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { getGameWebsocket } from "@/shared/api/socket";
-import { useMultiplayerStore } from "@/shared/store/multiplayer";
-import { useTargetStore } from "@/entities/target/model/store";
+import { useSocketStore } from "@/shared/model/socket.store";
+
+import { useTargetStore } from "@/entities/target/model/target.store";
 
 interface TargetProps {
   id: string;
@@ -30,8 +30,8 @@ export default function Target({
       if (newHealth <= 0) {
         console.log("Target destroyed!");
       }
-      if (useMultiplayerStore.getState().isServerConnected) {
-        getGameWebsocket().send({
+      if (useSocketStore.getState().isConnected) {
+        useSocketStore.getState().gameWebsocket?.send({
           type: "TARGET",
           data: {
             id,
