@@ -29,7 +29,7 @@ export function MovableWindow({
       }}
       className={`
           absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-max max-h-max rounded-lg
-          cursor-grab active:cursor-grabbing z-50 overflow-hidden
+          cursor-grab active:cursor-grabbing z-50 overflow-hidden border-2 border-brand-beige-dark
           ${isDragging ? "will-change-transform select-none" : ""}
         `}
     >
