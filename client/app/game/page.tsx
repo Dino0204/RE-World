@@ -1,16 +1,16 @@
 "use client";
 
 import FlatGround from "@/entities/world/ui/flat";
-import Target from "@/entities/target/ui/Target";
-import Player from "@/entities/player/ui";
+import Target from "@/entities/target/ui/target";
+import Player from "@/entities/player/ui/player";
 import { Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
-import BulletManager from "@/entities/bullet/ui/manager";
-import ImpactManager from "@/entities/impact/ui/manager";
+import BulletManager from "@/entities/bullet/ui/bullet.manager";
+import ImpactManager from "@/entities/impact/ui/impact.manager";
 import LoadingScreen from "@/shared/ui/loading";
-import MultiplayerManager from "@/entities/player/ui/MultiplayerManager";
-import GameHUD from "@/widgets/Game/ui/hud";
+import MultiplayerManager from "@/entities/multi-player/ui/multi-player.manager";
+import GameHUD from "@/widgets/game/ui/hud";
 
 export default function GamePage() {
   return (
