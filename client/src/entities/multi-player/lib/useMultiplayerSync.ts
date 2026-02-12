@@ -2,10 +2,10 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
-import { getGameWebsocket } from "@/shared/api/socket";
+import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useMultiplayerStore } from "@/shared/store/multiplayer";
-import { usePlayerStore } from "@/entities/player/model/store";
+import { useMultiplayerStore } from "@/entities/multi-player/model/multi-player.store";
+import { usePlayerStore } from "@/entities/player/model/player.store";
 import type { GameMessage } from "re-world-shared";
 import type { PlayerStateMessage } from "re-world-shared";
 
@@ -37,7 +37,9 @@ export const useMultiplayerSync = (
     )
       return;
 
-    const gameWebsocket = getGameWebsocket();
+    const gameWebsocket = useSocketStore.getState().gameWebsocket;
+    if (!gameWebsocket) return;
+
     const position = rigidBodyReference.current.translation();
     const rotation = rigidBodyReference.current.rotation();
 
