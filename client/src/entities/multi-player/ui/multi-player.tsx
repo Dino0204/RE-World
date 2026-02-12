@@ -2,8 +2,8 @@ import { useRef, useCallback, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
-import type { RemotePlayerState } from "@/shared/store/multiplayer";
-import { useMultiplayerStore } from "@/shared/store/multiplayer";
+import type { RemotePlayerState } from "@/entities/multi-player/model/multi-player.store";
+import { useMultiplayerStore } from "@/entities/multi-player/model/multi-player.store";
 
 type OtherPlayerProps = Pick<
   RemotePlayerState,
