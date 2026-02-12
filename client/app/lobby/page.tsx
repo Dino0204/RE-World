@@ -1,7 +1,7 @@
-import { Header } from "@/widgets/Lobby/ui/header";
-import { Footer } from "@/widgets/Lobby/ui/footer";
-import { Main } from "@/widgets/Lobby/ui/main";
-import { Background } from "@/widgets/Lobby/ui/background";
+import { Header } from "@/widgets/lobby/ui/header";
+import { Footer } from "@/widgets/lobby/ui/footer";
+import { Main } from "@/widgets/lobby/ui/main";
+import { Background } from "@/widgets/lobby/ui/background";
 
 export default function Lobby() {
   return (

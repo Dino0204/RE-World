@@ -1,10 +1,10 @@
 "use client";
 
-import { useBootSequence } from "@/widgets/Hero/model/useBootSequence";
-import { useTypingEffect } from "@/widgets/Hero/model/useTypingEffect";
-import { BootSequenceOverlay } from "@/widgets/Hero/ui/boot-sequence-overlay";
-import { StaticOverlays } from "@/widgets/Hero/ui/static-overlay";
-import { HeroHUD } from "@/widgets/Hero/ui/hero-hud";
+import { useBootSequence } from "@/widgets/hero/model/useBootSequence";
+import { useTypingEffect } from "@/widgets/hero/model/useTypingEffect";
+import { BootSequenceOverlay } from "@/widgets/hero/ui/boot-sequence-overlay";
+import { StaticOverlays } from "@/widgets/hero/ui/static-overlay";
+import { HeroHUD } from "@/widgets/hero/ui/hero-hud";
 
 const FULL_TITLE = "RE-World";
 const BACKGROUND_VIDEO_SRC = "/videos/planet_remix.webm";

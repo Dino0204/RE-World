@@ -4,7 +4,7 @@ import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useMultiplayerStore } from "@/entities/multi-player/model/multi-player.store";
+
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import type { GameMessage } from "re-world-shared";
 import type { PlayerStateMessage } from "re-world-shared";
@@ -13,7 +13,7 @@ export const useMultiplayerSync = (
   rigidBodyReference: React.RefObject<RapierRigidBody | null>,
   meshReference: React.RefObject<THREE.Mesh | null>,
 ) => {
-  const { isServerConnected } = useMultiplayerStore();
+  const { isConnected } = useSocketStore();
   const {
     currentHealth,
     maxHealth,
@@ -30,11 +30,7 @@ export const useMultiplayerSync = (
   useFrame(({ clock }) => {
     const currentTime = clock.getElapsedTime();
 
-    if (
-      !isServerConnected ||
-      !rigidBodyReference.current ||
-      !meshReference.current
-    )
+    if (!isConnected || !rigidBodyReference.current || !meshReference.current)
       return;
 
     const gameWebsocket = useSocketStore.getState().gameWebsocket;

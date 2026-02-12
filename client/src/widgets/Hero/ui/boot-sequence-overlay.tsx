@@ -1,4 +1,4 @@
-import type { BootStage } from "@/widgets/HeroSection/model/useBootSequence";
+import type { BootStage } from "@/widgets/hero/model/useBootSequence";
 
 interface BootSequenceOverlayProps {
   bootStage: BootStage;

@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import type { BulletData } from "re-world-shared";
-import { getGameWebsocket } from "@/shared/api/socket";
+import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 interface BulletStore {
   bullets: BulletData[];
@@ -17,8 +16,8 @@ export const useBulletStore = create<BulletStore>((set) => ({
     set((state) => ({
       bullets: [...state.bullets, bullet],
     }));
-    if (useMultiplayerStore.getState().isServerConnected) {
-      getGameWebsocket().send({
+    if (useSocketStore.getState().isConnected) {
+      useSocketStore.getState().gameWebsocket?.send({
         type: "BULLET",
         playerId: SESSION_IDENTIFIER,
         data: bullet,
