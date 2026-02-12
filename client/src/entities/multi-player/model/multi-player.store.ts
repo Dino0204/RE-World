@@ -9,16 +9,13 @@ export type RemotePlayerState = GameMessage &
 
 interface MultiplayerStore {
   players: Map<string, RemotePlayerState>;
-  isServerConnected: boolean;
   updatePlayer: (playerId: string, state: Partial<RemotePlayerState>) => void;
   updatePlayerFromAction: (playerId: string, action: PlayerAction) => void;
   removePlayer: (playerId: string) => void;
-  setServerConnected: (isServerConnected: boolean) => void;
 }
 
 export const useMultiplayerStore = create<MultiplayerStore>((set, get) => ({
   players: new Map(),
-  isServerConnected: false,
   updatePlayer: (playerId, state) =>
     set((previousState) => {
       const newPlayers = new Map(previousState.players);
@@ -80,5 +77,4 @@ export const useMultiplayerStore = create<MultiplayerStore>((set, get) => ({
       newPlayers.delete(playerId);
       return { players: newPlayers };
     }),
-  setServerConnected: (isServerConnected) => set({ isServerConnected }),
 }));

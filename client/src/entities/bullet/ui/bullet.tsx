@@ -1,8 +1,8 @@
 import { useRef, useEffect } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useBulletStore } from "../model/bullet.store";
-import { useImpactStore, ImpactMaterial } from "../../impact/model/store";
-import { BulletData } from "re-world-shared";
+import { useImpactStore } from "../../impact/model/impact.store";
+import { BulletData, ImpactMaterial } from "re-world-shared";
 
 interface BulletProps {
   data: BulletData;
