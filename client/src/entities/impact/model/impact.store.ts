@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import type { ImpactData } from "re-world-shared";
-import { getGameWebsocket } from "@/shared/api/socket";
+import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useMultiplayerStore } from "@/shared/store/multiplayer";
 
 interface ImpactStore {
   impacts: ImpactData[];
@@ -17,8 +16,8 @@ export const useImpactStore = create<ImpactStore>((set) => ({
     set((state) => ({
       impacts: [...state.impacts, impact],
     }));
-    if (useMultiplayerStore.getState().isServerConnected) {
-      getGameWebsocket().send({
+    if (useSocketStore.getState().isConnected) {
+      useSocketStore.getState().gameWebsocket?.send({
         type: "IMPACT",
         playerId: SESSION_IDENTIFIER,
         data: impact,
@@ -41,5 +40,3 @@ export const useImpactStore = create<ImpactStore>((set) => ({
     }));
   },
 }));
-
-export type { ImpactMaterial, ImpactData } from "re-world-shared";

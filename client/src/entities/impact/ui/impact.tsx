@@ -1,16 +1,14 @@
 import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useImpactStore } from "../model/store";
-import { ImpactData } from "../model/impact";
+import { useImpactStore } from "../model/impact.store";
+import type { ImpactData } from "re-world-shared";
 
 interface ImpactEffectProps {
   data: ImpactData;
 }
 
-export default function ImpactEffect({
-  data,
-}: ImpactEffectProps) {
+export default function ImpactEffect({ data }: ImpactEffectProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const particleCount = 20;
   const removeImpact = useImpactStore((state) => state.removeImpact);
@@ -79,7 +77,10 @@ export default function ImpactEffect({
   });
 
   return (
-    <points ref={pointsRef} position={[data.position.x, data.position.y, data.position.z]}>
+    <points
+      ref={pointsRef}
+      position={[data.position.x, data.position.y, data.position.z]}
+    >
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
