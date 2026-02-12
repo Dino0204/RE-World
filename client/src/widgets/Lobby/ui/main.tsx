@@ -2,11 +2,11 @@
 
 import SignIn from "@/features/signin/ui";
 import SignOut from "@/features/signout/ui";
-import { requestJoinRoom } from "@/shared/api/socket";
+import { requestJoinRoom } from "@/shared/api/room";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useRoomStore } from "@/shared/store/room";
-import { useMovableContainer } from "@/shared/store/useMovableStore";
-import { MovableWindow } from "@/shared/ui/movable-window";
+import { useRoomStore } from "@/shared/model/room.store";
+import { useMovableContainer } from "@/features/movable-window/model/useMovableStore";
+import { MovableWindow } from "@/features/movable-window/ui";
 import { MapPin, Play, Plus, Settings, Signal, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -67,7 +67,7 @@ export const Main = () => {
       onMouseLeave={handleMouseLeave}
     >
       <MovableWindow id="signin-window">
-        <div className="bg-brand-beige-mid/40 border-2 border-brand-beige-dark p-1 shadow-sm group backdrop-blur-sm">
+        <div className="bg-brand-beige-mid/40 p-1 shadow-sm group backdrop-blur-sm">
           <div className="bg-brand-charcoal text-brand-beige px-3 text-xs font-bold tracking-widest mb-1 flex justify-between">
             <span>Authorize</span>
           </div>
