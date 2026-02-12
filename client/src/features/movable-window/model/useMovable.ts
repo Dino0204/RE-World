@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useMovableStore, Position } from "../store/useMovableStore";
+import { useMovableStore, Position } from "./useMovableStore";
 
 // 개별 윈도우용 훅
 export function useMovable(id: string) {
