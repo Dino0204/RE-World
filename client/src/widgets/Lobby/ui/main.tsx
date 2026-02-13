@@ -2,8 +2,6 @@
 
 import SignIn from "@/features/signin/ui";
 import SignOut from "@/features/signout/ui";
-import { requestJoinRoom } from "@/entities/room/api/room";
-import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useRoomStore } from "@/entities/room/model/room.store";
 import { useMovableContainer } from "@/features/movable-window/model/useMovableStore";
 import { MovableWindow } from "@/features/movable-window/ui";
@@ -13,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const Main = () => {
   const router = useRouter();
-  const { setCurrentRoom, setIsJoining, setError } = useRoomStore();
+  const { setIsJoining } = useRoomStore();
   const [selectedMode, setSelectedMode] = useState("SOLO");
   const { handleMouseMove, handleMouseUp, handleMouseLeave, setContainerRef } =
     useMovableContainer();
@@ -25,37 +23,7 @@ export const Main = () => {
 
   const handleGameStart = async () => {
     setIsJoining(true);
-
-    try {
-      // 룸 참여 요청
-      const response = await requestJoinRoom(SESSION_IDENTIFIER);
-
-      if (response.success) {
-        // 룸 정보 저장
-        setCurrentRoom({
-          id: response.roomId,
-          playerCount: response.playerCount,
-          maxPlayers: response.maxPlayers,
-          createdAt: Date.now(),
-        });
-
-        console.log(
-          `룸 참여 성공: ${response.roomId} (${response.playerCount}/${response.maxPlayers})`,
-        );
-
-        // 게임 화면으로 이동
-        router.push("/game");
-      } else {
-        throw new Error("룸 참여에 실패했습니다");
-      }
-    } catch (error) {
-      console.error("룸 참여 오류:", error);
-      const message =
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다";
-      setError(message);
-    }
+    router.push("/game");
   };
 
   return (
