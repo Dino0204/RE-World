@@ -11,8 +11,22 @@ import ImpactManager from "@/entities/impact/ui/impact.manager";
 import LoadingScreen from "@/shared/ui/loading";
 import MultiplayerManager from "@/entities/multi-player/ui/multi-player.manager";
 import GameHUD from "@/widgets/game/ui/hud";
+import { useEffect } from "react";
+import { requestJoinRoom } from "@/entities/room/api/room";
+import { SESSION_IDENTIFIER } from "@/shared/config/session";
+import { useSocketStore } from "@/shared/model/socket.store";
 
 export default function GamePage() {
+  const connect = useSocketStore((state) => state.connect);
+
+  useEffect(() => {
+    const handleGameConnect = async () => {
+      connect();
+      await requestJoinRoom(SESSION_IDENTIFIER);
+    };
+    handleGameConnect();
+  }, [connect]);
+
   return (
     <div className="w-screen h-screen">
       <LoadingScreen />
