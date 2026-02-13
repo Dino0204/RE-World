@@ -2,9 +2,9 @@
 
 import SignIn from "@/features/signin/ui";
 import SignOut from "@/features/signout/ui";
-import { requestJoinRoom } from "@/shared/api/room";
+import { requestJoinRoom } from "@/entities/room/api/room";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
-import { useRoomStore } from "@/shared/model/room.store";
+import { useRoomStore } from "@/entities/room/model/room.store";
 import { useMovableContainer } from "@/features/movable-window/model/useMovableStore";
 import { MovableWindow } from "@/features/movable-window/ui";
 import { MapPin, Play, Plus, Settings, Signal, User } from "lucide-react";
