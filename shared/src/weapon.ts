@@ -56,6 +56,10 @@ export const WeaponSchema = z.object({
     maxHorizontal: z.number(),
     pattern: z.array(z.object({ x: z.number(), y: z.number() })),
   }),
+  transform: z.object({
+    rotation: z.tuple([z.number(), z.number(), z.number()]),
+    scale: z.number(),
+  }),
 });
 export type Weapon = z.infer<typeof WeaponSchema>;
 
