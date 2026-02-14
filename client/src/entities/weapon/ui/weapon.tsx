@@ -37,12 +37,12 @@ export default function Weapon({
 
       const targetWorldQuat = camera.quaternion.clone();
 
-      const correctionQuat = new THREE.Quaternion().setFromAxisAngle(
-        new THREE.Vector3(0, 1, 0),
-        Math.PI,
+      const [rotationX, rotationY, rotationZ] = weapon.transform.rotation;
+      targetWorldQuat.multiply(
+        new THREE.Quaternion().setFromEuler(
+          new THREE.Euler(rotationX, rotationY, rotationZ),
+        ),
       );
-
-      targetWorldQuat.multiply(correctionQuat);
 
       if (meshRef.current.parent) {
         const parent = meshRef.current.parent;
@@ -59,10 +59,10 @@ export default function Weapon({
 
       const targetWorldQuat = camera.quaternion.clone();
 
+      const [rotationX, rotationY, rotationZ] = weapon.transform.rotation;
       targetWorldQuat.multiply(
-        new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(0, 1, 0),
-          Math.PI,
+        new THREE.Quaternion().setFromEuler(
+          new THREE.Euler(rotationX, rotationY, rotationZ),
         ),
       );
 
@@ -82,5 +82,12 @@ export default function Weapon({
     }
   });
 
-  return <primitive object={scene} ref={meshRef} scale={1} visible={visible} />;
+  return (
+    <primitive
+      object={scene}
+      ref={meshRef}
+      scale={weapon.transform.scale}
+      visible={visible}
+    />
+  );
 }
