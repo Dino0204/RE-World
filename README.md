@@ -6,7 +6,6 @@ React Three Fiber를 사용하여 3D 환경을 구현하고, Bun 런타임 위�
 ## 📂 프로젝트 개요 (Project Overview)
 
 - 배틀로얄 장르의 FPS 웹 게임 입니다.
-- 아름다움에서 오는 가치를 검증해보기 위해 3D를 사용합니다.
 
 ## 🛠 기술 스택 (Tech Stack)
 
@@ -28,3 +27,7 @@ React Three Fiber를 사용하여 3D 환경을 구현하고, Bun 런타임 위�
 
 - Docker Compose를 사용하여 실행합니다.
 - `docker-compose up --build`
+
+# Docs
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Dino0204/RE-World)
