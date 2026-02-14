@@ -74,6 +74,10 @@ export default function Player() {
     if (M416) {
       setWeaponInSlot(0, M416);
     }
+    const PISTOL = WEAPONS.find((w) => w.name === "PISTOL");
+    if (PISTOL) {
+      setWeaponInSlot(1, PISTOL);
+    }
   }, []);
 
   return (
