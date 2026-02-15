@@ -108,7 +108,7 @@ export const app = new Elysia()
         httpOnly: true,
         path: "/",
         maxAge: 60 * 60 * 24,
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
       });
 
