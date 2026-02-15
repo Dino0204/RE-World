@@ -6,7 +6,7 @@ import OtherPlayer from "@/entities/multi-player/ui/multi-player";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useBulletStore } from "@/entities/bullet/model/bullet.store";
 import { useImpactStore } from "@/entities/impact/model/impact.store";
-import type { GameMessageUnion } from "re-world-shared";
+import { GameMessageUnionSchema } from "re-world-shared";
 
 export default function MultiplayerManager() {
   const { updatePlayer, updatePlayerFromAction, removePlayer, players } =
@@ -18,8 +18,9 @@ export default function MultiplayerManager() {
     if (!gameWebsocket) return;
 
     gameWebsocket.subscribe((websocketMessage) => {
-      const data = websocketMessage.data as GameMessageUnion | undefined;
-      if (!data || typeof data !== "object") return;
+      const result = GameMessageUnionSchema.safeParse(websocketMessage.data);
+      if (!result.success) return;
+      const data = result.data;
 
       switch (data.type) {
         case "BULLET": {
