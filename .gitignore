@@ -28,4 +28,3 @@ server/.env*.local
 
 # misc
 .DS_Store
-/generated/prisma
