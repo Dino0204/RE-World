@@ -29,7 +29,7 @@ export const M416: Weapon = {
   },
   transform: {
     rotation: [0, Math.PI, 0],
-    scale: 100,
+    scale: 1,
   },
 };
 
