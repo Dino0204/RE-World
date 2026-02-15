@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { requestJoinRoom } from "@/entities/room/api/room";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useSocketStore } from "@/shared/model/socket.store";
+import { InventoryHUD } from "@/features/inventory/ui/inventory-hud";
 
 export default function GamePage() {
   const connect = useSocketStore((state) => state.connect);
@@ -32,6 +33,7 @@ export default function GamePage() {
       <LoadingScreen />
       <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 rounded-full transform-3d -translate-0.5 border border-white z-20 " />
       <GameHUD />
+      <InventoryHUD />
       <Canvas>
         <Sky sunPosition={[100, 20, 100]} />
         <ambientLight intensity={1.5} />
