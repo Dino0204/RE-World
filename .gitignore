@@ -5,14 +5,26 @@ server/node_modules
 client/.next
 server/dist
 
+
+# tests
+playwright-report/
+test-results/
+
 # locks
 client/bun.lock
 server/bun.lock
 bun.lock
 
+# prisma
+prisma/migrations/
+prisma/generated/
+
 # env
 client/.env*.local
-server/.env
+server/.env*.local
+.env.local
+.env.*.local
+.env
 
 # misc
 .DS_Store

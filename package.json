@@ -3,19 +3,31 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
+    "build:shared": "cd shared && tsc -b",
     "dev:client": "cd client && bun dev",
     "dev:server": "cd server && bun dev",
     "dev": "concurrently 'bun run dev:client' 'bun run dev:server'",
     "lint:client": "cd client && bun lint",
     "lint:server": "cd server && bun lint",
-    "lint": "concurrently 'bun run lint:client' 'bun run lint:server'"
+    "lint": "concurrently 'bun run lint:client' 'bun run lint:server'",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.3.0",
+    "@prisma/extension-accelerate": "^3.0.1"
   },
   "devDependencies": {
-    "elysia": "^1.4.22",
     "@elysiajs/eden": "^1.4.6",
-    "concurrently": "^9.2.1"
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.10",
+    "concurrently": "^9.2.1",
+    "elysia": "^1.4.22",
+    "prisma": "^7.3.0",
+    "prismabox": "^1.1.26"
   }
 }
