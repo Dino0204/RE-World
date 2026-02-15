@@ -1,12 +1,16 @@
 import { useEffect, useRef } from "react";
 import { usePlayerStore } from "../model/player.store";
+import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export const usePlayerControls = () => {
   const { setDirection, setJump, setAiming, setActiveSlot } = usePlayerStore();
+  const { isOpen } = useInventoryStore();
   const pressedKeys = useRef(new Set<string>());
   const isMouseDown = useRef(false);
 
   useEffect(() => {
+    if (isOpen) return;
+
     // 방향 전환 업데이트
     const updateDirection = () => {
       const keys = pressedKeys.current;
@@ -85,7 +89,7 @@ export const usePlayerControls = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("contextmenu", handleContextMenu);
     };
-  }, [setDirection, setJump, setAiming, setActiveSlot]);
+  }, [setDirection, setJump, setAiming, setActiveSlot, isOpen]);
 
   return { isMouseDown };
 };
