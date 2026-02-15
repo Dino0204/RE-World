@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "bun",
+      "args": [
+        "run",
+        "node_modules/@modelcontextprotocol/server-playwright/dist/index.js"
+      ],
+      "env": {
+        "PLAYWRIGHT_BROWSER": "firefox",
+        "PLAYWRIGHT_HEADLESS": "true",
+        "PLAYWRIGHT_SCREENSHOT_DIR": "./screenshots"
+      }
+    }
+  }
+}
