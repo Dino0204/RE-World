@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import type { Weapon, PlayerState, PlayerAction } from "re-world-shared";
+import type { Weapon } from "re-world-shared/item";
+import type { PlayerState, PlayerAction } from "re-world-shared/player";
 import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 

@@ -1,4 +1,4 @@
-import { ROOM_MAX_PLAYERS } from "re-world-shared";
+import { ROOM_MAX_PLAYERS } from "re-world-shared/room";
 
 // --- Room Interface ---
 export interface Room {
@@ -35,7 +35,7 @@ export const findOrCreateAvailableRoom = (): Room => {
     players: new Set(),
     createdAt: Date.now(),
   };
-  
+
   rooms.set(newRoom.id, newRoom);
   console.log(`[${getTimestamp()}] 새 룸 생성됨: ${newRoom.id}`);
   return newRoom;
@@ -54,11 +54,15 @@ export const joinRoom = (playerId: string): Room => {
   const room = findOrCreateAvailableRoom();
   room.players.add(playerId);
   playerToRoom.set(playerId, room.id);
-  console.log(`[${getTimestamp()}] 플레이어 ${playerId}가 룸 ${room.id}에 참여함 (${room.players.size}/${ROOM_MAX_PLAYERS})`);
+  console.log(
+    `[${getTimestamp()}] 플레이어 ${playerId}가 룸 ${room.id}에 참여함 (${room.players.size}/${ROOM_MAX_PLAYERS})`,
+  );
   return room;
 };
 
-export const leaveRoom = (playerId: string): { room: Room; playerCount: number } | null => {
+export const leaveRoom = (
+  playerId: string,
+): { room: Room; playerCount: number } | null => {
   const roomId = playerToRoom.get(playerId);
   if (!roomId) return null;
 
@@ -67,9 +71,11 @@ export const leaveRoom = (playerId: string): { room: Room; playerCount: number }
 
   room.players.delete(playerId);
   playerToRoom.delete(playerId);
-  
+
   const playerCount = room.players.size;
-  console.log(`[${getTimestamp()}] 플레이어 ${playerId}가 룸 ${room.id}에서 나감 (${playerCount}/${ROOM_MAX_PLAYERS})`);
+  console.log(
+    `[${getTimestamp()}] 플레이어 ${playerId}가 룸 ${room.id}에서 나감 (${playerCount}/${ROOM_MAX_PLAYERS})`,
+  );
 
   // 룸이 비어있으면 삭제
   if (playerCount === 0) {

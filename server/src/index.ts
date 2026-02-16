@@ -1,7 +1,8 @@
 import { Elysia, t } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { jwt } from "@elysiajs/jwt";
-import { GameMessageUnionSchema, ROOM_MAX_PLAYERS } from "re-world-shared";
+import { GameMessageUnionSchema } from "re-world-shared/game";
+import { ROOM_MAX_PLAYERS } from "re-world-shared/room";
 import { joinRoom, leaveRoom, getPlayerRoomId } from "./entities/room/lib/room";
 import openapi from "@elysiajs/openapi";
 import { PrismaClient } from "../../prisma/generated/prisma/client";

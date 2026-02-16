@@ -1,9 +1,9 @@
-import type {
+import { useSocketStore } from "@/shared/model/socket.store";
+import {
   JoinRoomResponse,
   RoomPlayerJoined,
   RoomPlayerLeft,
-} from "re-world-shared";
-import { useSocketStore } from "@/shared/model/socket.store";
+} from "re-world-shared/room";
 
 // 룸 참여 요청
 export const requestJoinRoom = (
