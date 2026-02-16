@@ -13,6 +13,7 @@ import { usePlayerCamera } from "../lib/usePlayerCamera";
 import { usePlayerWeapon } from "../lib/usePlayerWeapon";
 import { usePlayerEquipment } from "../lib/usePlayerEquipment";
 import { useMultiplayerSync } from "../../multi-player/lib/useMultiplayerSync";
+import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export default function Player() {
   const { camera } = useThree();
@@ -29,6 +30,7 @@ export default function Player() {
 
   const { equippedItems, cameraMode, isAiming } = usePlayerStore();
   const { isMouseDown } = usePlayerControls();
+  const { isOpen } = useInventoryStore();
 
   const handleHitRef = useRef<(damage: number) => void>(null);
 
@@ -67,22 +69,9 @@ export default function Player() {
   usePlayerEquipment();
   useMultiplayerSync(rigidBodyRef, meshRef);
 
-  // 임시 테스트: M416을 슬롯 0에 배치
-  useEffect(() => {
-    const { setWeaponInSlot } = usePlayerStore.getState();
-    const M416 = WEAPONS.find((w) => w.name === "M416");
-    if (M416) {
-      setWeaponInSlot(0, M416);
-    }
-    const PISTOL = WEAPONS.find((w) => w.name === "PISTOL");
-    if (PISTOL) {
-      setWeaponInSlot(1, PISTOL);
-    }
-  }, []);
-
   return (
     <>
-      <PointerLockControls ref={controlsRef} />
+      {!isOpen && <PointerLockControls ref={controlsRef} />}
       <RigidBody
         ref={rigidBodyRef}
         lockRotations
