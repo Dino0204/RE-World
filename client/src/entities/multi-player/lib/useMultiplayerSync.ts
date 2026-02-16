@@ -6,8 +6,8 @@ import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 
 import { usePlayerStore } from "@/entities/player/model/player.store";
-import type { GameMessage } from "re-world-shared";
-import type { PlayerStateMessage } from "re-world-shared";
+import { GameMessage } from "re-world-shared/game";
+import { PlayerStateMessage } from "re-world-shared/player";
 
 export const useMultiplayerSync = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,

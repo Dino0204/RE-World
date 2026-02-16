@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { BulletData } from "re-world-shared";
+import type { BulletData } from "re-world-shared/item";
 import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 

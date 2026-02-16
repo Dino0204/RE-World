@@ -6,7 +6,7 @@ import OtherPlayer from "@/entities/multi-player/ui/multi-player";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useBulletStore } from "@/entities/bullet/model/bullet.store";
 import { useImpactStore } from "@/entities/impact/model/impact.store";
-import { GameMessageUnionSchema } from "re-world-shared";
+import { GameMessageUnionSchema } from "re-world-shared/game";
 
 export default function MultiplayerManager() {
   const { updatePlayer, updatePlayerFromAction, removePlayer, players } =

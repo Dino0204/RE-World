@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { RoomInfo } from "re-world-shared";
+import type { RoomInfo } from "re-world-shared/room";
 
 interface RoomStore {
   currentRoom: RoomInfo | null;
