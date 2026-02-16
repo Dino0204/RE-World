@@ -6,6 +6,7 @@ trigger: always_on
 
 **Please respond and work in Korean.**
 **Do not run Docker Compose if testing is only required in the client environment.**
+**Do not perform any tasks that have not been instructed.**
 
 ## Project Overview
 
