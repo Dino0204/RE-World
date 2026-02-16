@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Vector3Schema, QuaternionSchema } from "./primitives";
 import { WebSocketMessageSchema } from "./message";
-import { BulletMessageSchema } from "./bullet";
+import { BulletMessageSchema } from "./item";
 import { ImpactMessageSchema } from "./impact";
-import { WeaponMessageSchema } from "./weapon";
+import { WeaponMessageSchema } from "./item";
 import { TargetMessageSchema } from "./target";
 import {
   PlayerStateMessageSchema,
