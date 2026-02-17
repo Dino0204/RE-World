@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import { usePlayerStore } from "../model/player.store";
+import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export const usePlayerEquipment = () => {
-  const { weaponSlots, activeSlotIndex, equipItem, setEquippedItems } =
-    usePlayerStore();
+  const { setHandItem, setEquippedItems } = usePlayerStore();
+  const { weaponSlots, activeSlotType } = useInventoryStore();
 
   useEffect(() => {
-    // 활성화된 슬롯의 무기를 장착
-    const activeWeapon = weaponSlots[activeSlotIndex];
+    if (!activeSlotType) return;
 
-    // 무기가 있으면 장착, 없으면 장착 해제
+    const activeWeapon = weaponSlots[activeSlotType];
+
     if (activeWeapon) {
-      equipItem(activeWeapon);
+      setHandItem(activeWeapon);
     } else {
-      setEquippedItems([]);
+      setHandItem(null);
     }
-  }, [activeSlotIndex, weaponSlots, equipItem, setEquippedItems]);
+  }, [activeSlotType, weaponSlots, setHandItem, setEquippedItems]);
 };
