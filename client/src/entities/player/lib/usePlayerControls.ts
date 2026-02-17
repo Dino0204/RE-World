@@ -3,14 +3,12 @@ import { usePlayerStore } from "../model/player.store";
 import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export const usePlayerControls = () => {
-  const { setDirection, setJump, setAiming, setActiveSlot } = usePlayerStore();
-  const { isOpen } = useInventoryStore();
+  const { setDirection, setJump, setAiming } = usePlayerStore();
+  const { isOpen, setActiveSlot } = useInventoryStore();
   const pressedKeys = useRef(new Set<string>());
   const isMouseDown = useRef(false);
 
   useEffect(() => {
-    if (isOpen) return;
-
     // 방향 전환 업데이트
     const updateDirection = () => {
       const keys = pressedKeys.current;
@@ -23,6 +21,7 @@ export const usePlayerControls = () => {
 
     // 키 입력 처리
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isOpen) return;
       const key = event.key.toLowerCase();
       if (["w", "a", "s", "d"].includes(key)) {
         pressedKeys.current.add(key);
@@ -32,11 +31,15 @@ export const usePlayerControls = () => {
       } else if (key === "v") {
         usePlayerStore.getState().toggleCameraMode();
       } else if (key === "1") {
-        setActiveSlot(0);
+        setActiveSlot("주무기1");
       } else if (key === "2") {
-        setActiveSlot(1);
+        setActiveSlot("주무기2");
       } else if (key === "3") {
-        setActiveSlot(2);
+        setActiveSlot("보조무기");
+      } else if (key === "4") {
+        setActiveSlot("근접무기");
+      } else if (key === "5") {
+        setActiveSlot("투척무기");
       }
     };
 
