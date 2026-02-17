@@ -103,14 +103,7 @@ export const InventoryHUD = () => {
         );
         return;
       }
-
-      // weapon.data에서 실제 Weapon 객체 찾기
-      const weaponData = WEAPONS.find(
-        (w) => w.name.toLowerCase() === draggedItem.name.toLowerCase(),
-      );
-      if (weaponData) {
-        equipWeapon(weaponData, slotConfig.id);
-      }
+      equipWeapon(draggedItem, slotConfig.id);
       return;
     }
 
