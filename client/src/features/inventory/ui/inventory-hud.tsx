@@ -67,6 +67,37 @@ export const InventoryHUD = () => {
       }
       return;
     }
+
+    // 4. 무기 슬롯 -> 무기 슬롯
+    if (
+      source.droppableId.startsWith("weapon-") &&
+      destination.droppableId.startsWith("weapon-")
+    ) {
+      const fromSlotName = source.droppableId.replace("weapon-", "");
+      const toSlotName = destination.droppableId.replace("weapon-", "");
+      const fromConfig = SLOT_CONFIGS.find((c) => c.id === fromSlotName);
+      const toConfig = SLOT_CONFIGS.find((c) => c.id === toSlotName);
+
+      if (!fromConfig || !toConfig) return;
+
+      const fromWeapon = weaponSlots[fromConfig.id];
+      const toWeapon = weaponSlots[toConfig.id];
+
+      if (!fromWeapon) return;
+
+      if (!toConfig.allowedTypes.includes(fromWeapon.itemType)) return;
+
+      if (toWeapon && !fromConfig.allowedTypes.includes(toWeapon.itemType))
+        return;
+
+      unequipWeapon(fromConfig.id);
+      if (toWeapon) unequipWeapon(toConfig.id);
+
+      equipWeapon(fromWeapon, toConfig.id);
+      if (toWeapon) equipWeapon(toWeapon, fromConfig.id);
+
+      return;
+    }
   };
 
   if (!isOpen) return null;
