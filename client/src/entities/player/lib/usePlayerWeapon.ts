@@ -68,6 +68,11 @@ export const usePlayerWeapon = (
           position: { x: spawn.x, y: spawn.y, z: spawn.z },
           velocity: { x: vel.x, y: vel.y, z: vel.z },
           damage: currentWeapon.damage,
+          category: "BULLET",
+          itemType: currentWeapon.ammo.type,
+          name: "bullet",
+          weight: 1,
+          stackSize: 64,
         });
 
         // 반동 정보
