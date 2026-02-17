@@ -3,7 +3,7 @@ import { usePlayerStore } from "../model/player.store";
 import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export const usePlayerEquipment = () => {
-  const { setHandItem, setEquippedItems } = usePlayerStore();
+  const { setHandItem } = usePlayerStore();
   const { weaponSlots, activeSlotType } = useInventoryStore();
 
   useEffect(() => {
@@ -16,5 +16,5 @@ export const usePlayerEquipment = () => {
     } else {
       setHandItem(null);
     }
-  }, [activeSlotType, weaponSlots, setHandItem, setEquippedItems]);
+  }, [activeSlotType, weaponSlots, setHandItem]);
 };
