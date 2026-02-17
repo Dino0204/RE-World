@@ -2,7 +2,8 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useRef } from "react";
-import type { CameraMode, Weapon as WeaponType } from "re-world-shared";
+import type { CameraMode } from "re-world-shared/player";
+import type { Weapon as WeaponType } from "re-world-shared/item";
 
 interface WeaponProps {
   cameraMode: CameraMode;
@@ -17,7 +18,7 @@ export default function Weapon({
   isAiming,
   visible,
 }: WeaponProps) {
-  const { scene } = useGLTF(`/models/${weapon.model}.glb`);
+  const { scene } = useGLTF(`/models/${weapon.name}.glb`);
   const meshRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {

@@ -1,9 +1,12 @@
-import type { Weapon } from "re-world-shared";
+import type { Weapon } from "re-world-shared/item";
 
 export const M416: Weapon = {
+  id: crypto.randomUUID(),
+  category: "WEAPON",
+  weight: 5,
+  stackSize: 1,
   name: "M416",
-  type: "돌격 소총",
-  model: "M416",
+  itemType: "돌격 소총",
   damage: 20,
   fireRate: 600,
   ammo: {
@@ -11,7 +14,6 @@ export const M416: Weapon = {
     amount: 30,
     maxAmount: 30,
   },
-  parts: [],
   recoil: {
     vertical: 0.02,
     horizontal: 0.01,
@@ -34,9 +36,12 @@ export const M416: Weapon = {
 };
 
 export const PISTOL: Weapon = {
+  id: crypto.randomUUID(),
+  category: "WEAPON",
+  weight: 1,
+  stackSize: 1,
   name: "PISTOL",
-  type: "권총",
-  model: "Pistol",
+  itemType: "권총",
   damage: 20,
   fireRate: 100,
   ammo: {
@@ -44,7 +49,6 @@ export const PISTOL: Weapon = {
     amount: 30,
     maxAmount: 30,
   },
-  parts: [],
   recoil: {
     vertical: 0.02,
     horizontal: 0.01,
