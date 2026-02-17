@@ -2,7 +2,7 @@ import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useImpactStore } from "../model/impact.store";
-import type { ImpactData } from "re-world-shared";
+import { ImpactData } from "re-world-shared/impact";
 
 interface ImpactEffectProps {
   data: ImpactData;

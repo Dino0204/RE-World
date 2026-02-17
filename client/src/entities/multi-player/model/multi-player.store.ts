@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import type { GameMessage } from "re-world-shared";
-import type { PlayerStateMessage, PlayerAction, Weapon } from "re-world-shared";
+import type { GameMessage } from "re-world-shared/game";
+import type { PlayerStateMessage, PlayerAction } from "re-world-shared/player";
+import type { Weapon } from "re-world-shared/item";
 
 export type RemotePlayerState = GameMessage &
   Partial<

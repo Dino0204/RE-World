@@ -1,13 +1,10 @@
 import { z } from "zod";
 import { Vector3Schema, QuaternionSchema, DirectionSchema } from "./primitives";
-import { WeaponSchema } from "./weapon";
+import { WeaponSchema } from "./item";
 import { WebSocketMessageSchema } from "./message";
 
 // --- Camera Mode ---
-export const CameraModeSchema = z.enum([
-  "FIRST_PERSON",
-  "THIRD_PERSON",
-]);
+export const CameraModeSchema = z.enum(["FIRST_PERSON", "THIRD_PERSON"]);
 export type CameraMode = z.infer<typeof CameraModeSchema>;
 
 // --- Player State ---
@@ -64,4 +61,6 @@ export const PlayerDisconnectMessageSchema = WebSocketMessageSchema.extend({
   type: z.literal("PLAYER_DISCONNECT"),
   playerId: z.string(),
 });
-export type PlayerDisconnectMessage = z.infer<typeof PlayerDisconnectMessageSchema>;
+export type PlayerDisconnectMessage = z.infer<
+  typeof PlayerDisconnectMessageSchema
+>;

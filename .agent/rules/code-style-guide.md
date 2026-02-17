@@ -6,6 +6,7 @@ trigger: always_on
 
 **Please respond and work in Korean.**
 **Do not run Docker Compose if testing is only required in the client environment.**
+**Do not perform any tasks that have not been instructed.**
 
 ## Project Overview
 
@@ -39,8 +40,6 @@ trigger: always_on
 ## Coding Rules
 
 - When managing states, unless they are strictly limited to two states (true/false), we avoid managing them as boolean states to ensure code extensibility.
-
-- Do not use abbreviations when writing variable names.
 
 - When writing functions, use pure functions whenever possible.
 

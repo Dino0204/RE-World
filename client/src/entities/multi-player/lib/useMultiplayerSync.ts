@@ -6,12 +6,12 @@ import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 
 import { usePlayerStore } from "@/entities/player/model/player.store";
-import type { GameMessage } from "re-world-shared";
-import type { PlayerStateMessage } from "re-world-shared";
+import { GameMessage } from "re-world-shared/game";
+import { PlayerStateMessage } from "re-world-shared/player";
 
 export const useMultiplayerSync = (
-  rigidBodyReference: React.RefObject<RapierRigidBody | null>,
-  meshReference: React.RefObject<THREE.Mesh | null>,
+  rigidBodyRef: React.RefObject<RapierRigidBody | null>,
+  meshRef: React.RefObject<THREE.Mesh | null>,
 ) => {
   const { isConnected } = useSocketStore();
   const {
@@ -30,14 +30,13 @@ export const useMultiplayerSync = (
   useFrame(({ clock }) => {
     const currentTime = clock.getElapsedTime();
 
-    if (!isConnected || !rigidBodyReference.current || !meshReference.current)
-      return;
+    if (!isConnected || !rigidBodyRef.current || !meshRef.current) return;
 
     const gameWebsocket = useSocketStore.getState().gameWebsocket;
     if (!gameWebsocket) return;
 
-    const position = rigidBodyReference.current.translation();
-    const rotation = rigidBodyReference.current.rotation();
+    const position = rigidBodyRef.current.translation();
+    const rotation = rigidBodyRef.current.rotation();
 
     if (currentTime - lastUpdateTime.current > 0.05) {
       const message: GameMessage = {
