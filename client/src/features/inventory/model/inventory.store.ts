@@ -49,7 +49,7 @@ export const useInventoryStore = create<Inventory>((set) => ({
       if (!weapon) return state;
       return {
         weaponSlots: { ...state.weaponSlots, [slot]: null },
-        items: [...state.items],
+        items: [...state.items, weapon],
       };
     }),
   setActiveSlot: (slot) => set({ activeSlotType: slot }),
