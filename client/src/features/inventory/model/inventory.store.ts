@@ -41,9 +41,7 @@ export const useInventoryStore = create<Inventory>((set) => ({
   equipWeapon: (weapon, slot) =>
     set((state) => ({
       weaponSlots: { ...state.weaponSlots, [slot]: weapon },
-      items: state.items.filter(
-        (item) => item.id !== weapon.name && item.name !== weapon.name,
-      ),
+      items: state.items.filter((item) => item.id !== weapon.id),
     })),
   unequipWeapon: (slot) =>
     set((state) => {
