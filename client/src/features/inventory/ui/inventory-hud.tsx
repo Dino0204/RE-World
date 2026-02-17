@@ -4,7 +4,6 @@ import {
   type WeaponSlotType,
 } from "../model/inventory.store";
 import { useInventory } from "../model/useInventory";
-import { WEAPONS } from "@/entities/weapon/model/weapon.data";
 import { DropResult } from "@hello-pangea/dnd";
 import { WeaponType } from "re-world-shared/item";
 import { WeaponSlot } from "./inventory-weapon-slot";
