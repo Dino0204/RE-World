@@ -1,7 +1,7 @@
 import type { Weapon } from "re-world-shared/item";
 
 export const M416: Weapon = {
-  id: crypto.randomUUID(),
+  id: "m416",
   category: "WEAPON",
   weight: 5,
   stackSize: 1,
@@ -36,7 +36,7 @@ export const M416: Weapon = {
 };
 
 export const PISTOL: Weapon = {
-  id: crypto.randomUUID(),
+  id: "pistol",
   category: "WEAPON",
   weight: 1,
   stackSize: 1,
