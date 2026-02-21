@@ -15,6 +15,8 @@ export const PlayerStateSchema = z.object({
   isMoving: z.boolean(),
   isJumping: z.boolean(),
   direction: DirectionSchema,
+  position: Vector3Schema,
+  rotation: Vector3Schema,
   equippedItems: z.array(WeaponSchema),
   isAiming: z.boolean(),
   cameraMode: CameraModeSchema,
