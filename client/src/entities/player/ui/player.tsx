@@ -1,7 +1,7 @@
 // 마지막 발사 시간이 반동 회복 딜레이를 초과했다면
 import { useRef, useCallback, useEffect } from "react";
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 import * as THREE from "three";
 import Weapon from "../../weapon/ui/weapon";
@@ -28,7 +28,8 @@ export default function Player() {
 
   const lastShotTimestampRef = useRef(0);
 
-  const { equippedItems, cameraMode, isAiming } = usePlayerStore();
+  const { equippedItems, cameraMode, isAiming, setPosition, setRotation } =
+    usePlayerStore();
   const { isMouseDown } = usePlayerControls();
   const { isOpen } = useInventoryStore();
 
@@ -68,6 +69,24 @@ export default function Player() {
   );
   usePlayerEquipment();
   useMultiplayerSync(rigidBodyRef, meshRef);
+
+  const lastSyncTime = useRef(0);
+
+  useFrame(({ clock }) => {
+    if (!rigidBodyRef.current) return;
+
+    // 100ms마다만 스토어 업데이트
+    if (clock.elapsedTime - lastSyncTime.current > 0.1) {
+      const { x, y, z } = rigidBodyRef.current.translation();
+      setPosition(new THREE.Vector3(x, y, z));
+
+      const direction = new THREE.Vector3();
+      camera.getWorldDirection(direction);
+      setRotation(direction);
+
+      lastSyncTime.current = clock.elapsedTime;
+    }
+  });
 
   return (
     <>
