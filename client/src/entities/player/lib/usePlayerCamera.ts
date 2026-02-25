@@ -118,7 +118,6 @@ export const usePlayerCamera = (
     const position = rigidBodyRef.current.translation();
 
     if (cameraMode === "FIRST_PERSON") {
-      // 1인칭 시점
       threeState.camera.position.set(
         position.x,
         position.y + CAMERA_CONFIG.FIRST_PERSON_HEIGHT,

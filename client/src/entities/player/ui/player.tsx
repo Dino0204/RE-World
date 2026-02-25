@@ -18,6 +18,7 @@ import { usePlayerEquipment } from "../lib/usePlayerEquipment";
 import { useMultiplayerSync } from "../../multi-player/lib/useMultiplayerSync";
 import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 import { usePlayerAnimation } from "../lib/usePlayerAnimation";
+import { PLAYER_MODEL_PATH } from "../model/player.constants";
 
 export default function Player() {
   const { camera } = useThree();
@@ -32,7 +33,7 @@ export default function Player() {
 
   const lastShotTimestampRef = useRef(0);
 
-  const { scene, animations } = useGLTF("/models/soldier.glb");
+  const { scene, animations } = useGLTF(PLAYER_MODEL_PATH);
   const { actions } = useAnimations(animations, groupRef);
 
   const { equippedItems, cameraMode, isAiming, setPosition, setRotation } =
@@ -107,7 +108,7 @@ export default function Player() {
         userData={{ type: "player", onHit: handleHit, material: "concrete" }}
       >
         <CapsuleCollider args={[0.5, 0.4]} position={[0, 0.95, 0]} />
-        <group ref={groupRef}>
+        <group ref={groupRef} visible={cameraMode !== "FIRST_PERSON"}>
           <primitive object={scene} />
         </group>
         {WEAPONS.map((weapon) => (
