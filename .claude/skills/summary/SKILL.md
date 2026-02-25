@@ -1,5 +1,4 @@
 ---
-name: summary-work
 description: 작업 사항을 요약하여 Notion 프로젝트 보드에 기록합니다.
 allowed-tools: notion-create-pages, notion-fetch, Bash, Read
 ---
