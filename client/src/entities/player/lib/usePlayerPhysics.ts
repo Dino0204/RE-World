@@ -77,23 +77,18 @@ export const usePlayerPhysics = (
     const position = currentPos;
 
     if (meshRef.current) {
-      // 이동 중이고 방향이 있다면
-      if (isMoving && (moveDirection.x !== 0 || moveDirection.z !== 0)) {
-        // 바라볼 방향 계산
-        const lookTarget = new THREE.Vector3(
-          position.x + moveDirection.x,
-          position.y,
-          position.z + moveDirection.z,
-        );
+      const lookTarget = new THREE.Vector3(
+        position.x + cameraWorldDirection.x,
+        position.y,
+        position.z + cameraWorldDirection.z,
+      );
 
-        // 현재 쿼터니언과 바라볼 방향의 쿼터니언을 부드럽게 보간
-        const currentQuaternion = meshRef.current.quaternion.clone();
-        meshRef.current.lookAt(lookTarget);
-        const targetQuaternion = meshRef.current.quaternion.clone();
+      const currentQuaternion = meshRef.current.quaternion.clone();
+      meshRef.current.lookAt(lookTarget);
+      const targetQuaternion = meshRef.current.quaternion.clone();
 
-        meshRef.current.quaternion.copy(currentQuaternion);
-        meshRef.current.quaternion.slerp(targetQuaternion, 0.2);
-      }
+      meshRef.current.quaternion.copy(currentQuaternion);
+      meshRef.current.quaternion.slerp(targetQuaternion, 0.2);
     }
   });
 };
