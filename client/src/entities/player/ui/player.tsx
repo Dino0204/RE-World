@@ -1,8 +1,11 @@
-// 마지막 발사 시간이 반동 회복 딜레이를 초과했다면
 import { useRef, useCallback, useEffect } from "react";
-import { RigidBody, RapierRigidBody } from "@react-three/rapier";
+import {
+  RigidBody,
+  RapierRigidBody,
+  CapsuleCollider,
+} from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
-import { PointerLockControls } from "@react-three/drei";
+import { PointerLockControls, useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import Weapon from "../../weapon/ui/weapon";
 import { WEAPONS } from "../../weapon/model/weapon.data";
@@ -14,12 +17,13 @@ import { usePlayerWeapon } from "../lib/usePlayerWeapon";
 import { usePlayerEquipment } from "../lib/usePlayerEquipment";
 import { useMultiplayerSync } from "../../multi-player/lib/useMultiplayerSync";
 import { useInventoryStore } from "@/features/inventory/model/inventory.store";
+import { usePlayerAnimation } from "../lib/usePlayerAnimation";
 
 export default function Player() {
   const { camera } = useThree();
 
   const rigidBodyRef = useRef<RapierRigidBody>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   const controlsRef = useRef(null);
 
@@ -27,6 +31,9 @@ export default function Player() {
   const recoilQueueRef = useRef({ x: 0, y: 0 });
 
   const lastShotTimestampRef = useRef(0);
+
+  const { scene, animations } = useGLTF("/models/soldier.glb");
+  const { actions } = useAnimations(animations, groupRef);
 
   const { equippedItems, cameraMode, isAiming, setPosition, setRotation } =
     usePlayerStore();
@@ -54,7 +61,8 @@ export default function Player() {
     handleHitRef.current?.(damage);
   }, []);
 
-  usePlayerPhysics(rigidBodyRef, meshRef, camera);
+  usePlayerAnimation(actions);
+  usePlayerPhysics(rigidBodyRef, groupRef, camera);
   usePlayerCamera(
     rigidBodyRef,
     recoilRecoveryOffsetRef,
@@ -68,7 +76,7 @@ export default function Player() {
     lastShotTimestampRef,
   );
   usePlayerEquipment();
-  useMultiplayerSync(rigidBodyRef, meshRef);
+  useMultiplayerSync(rigidBodyRef, groupRef);
 
   const lastSyncTime = useRef(0);
 
@@ -93,13 +101,15 @@ export default function Player() {
       {!isOpen && <PointerLockControls ref={controlsRef} />}
       <RigidBody
         ref={rigidBodyRef}
+        type="dynamic"
+        colliders={false}
         lockRotations
         userData={{ type: "player", onHit: handleHit, material: "concrete" }}
       >
-        <mesh ref={meshRef}>
-          <capsuleGeometry args={[0.5, 0.5]} />
-          <meshStandardMaterial color="hotpink" />
-        </mesh>
+        <CapsuleCollider args={[0.5, 0.4]} position={[0, 0.95, 0]} />
+        <group ref={groupRef}>
+          <primitive object={scene} />
+        </group>
         {WEAPONS.map((weapon) => (
           <Weapon
             key={weapon.name}

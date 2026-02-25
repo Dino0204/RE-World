@@ -11,7 +11,7 @@ import { PlayerStateMessage } from "re-world-shared/player";
 
 export const useMultiplayerSync = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,
-  meshRef: React.RefObject<THREE.Mesh | null>,
+  meshRef: React.RefObject<THREE.Group | null>,
 ) => {
   const { isConnected } = useSocketStore();
   const {

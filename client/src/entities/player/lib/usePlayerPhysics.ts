@@ -7,7 +7,7 @@ import { PLAYER_PHYSICS } from "../model/player.constants";
 
 export const usePlayerPhysics = (
   rigidBodyRef: RefObject<RapierRigidBody | null>,
-  meshRef: RefObject<THREE.Mesh | null>,
+  meshRef: RefObject<THREE.Group | null>,
   camera: THREE.Camera,
 ) => {
   const { direction, isJumping, isMoving, setJump } = usePlayerStore();
