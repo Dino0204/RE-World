@@ -5,6 +5,7 @@ export enum Controls {
   backward = "backward",
   left = "left",
   right = "right",
+  jump = "jump",
 }
 
 export const PLAYER_PHYSICS = {

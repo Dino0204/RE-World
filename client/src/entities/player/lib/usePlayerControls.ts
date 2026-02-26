@@ -3,7 +3,7 @@ import { usePlayerStore } from "../model/player.store";
 import { useInventoryStore } from "@/features/inventory/model/inventory.store";
 
 export const usePlayerControls = () => {
-  const { setJump, setAiming } = usePlayerStore();
+  const { setAiming } = usePlayerStore();
   const { isOpen, setActiveSlot } = useInventoryStore();
   const isMouseDown = useRef(false);
 
@@ -11,9 +11,7 @@ export const usePlayerControls = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isOpen) return;
       const key = event.key.toLowerCase();
-      if (key === " ") {
-        setJump(true);
-      } else if (key === "v") {
+      if (key === "v") {
         usePlayerStore.getState().toggleCameraMode();
       } else if (key === "1") {
         setActiveSlot("주무기1");
@@ -59,7 +57,7 @@ export const usePlayerControls = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("contextmenu", handleContextMenu);
     };
-  }, [setJump, setAiming, setActiveSlot, isOpen]);
+  }, [setAiming, setActiveSlot, isOpen]);
 
   return { isMouseDown };
 };

@@ -30,6 +30,7 @@ export default function GamePage() {
       { name: Controls.backward, keys: ["KeyS"] },
       { name: Controls.left, keys: ["KeyA"] },
       { name: Controls.right, keys: ["KeyD"] },
+      { name: Controls.jump, keys: ["Space"] },
     ],
     [],
   );
