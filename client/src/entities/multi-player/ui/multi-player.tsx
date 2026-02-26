@@ -13,7 +13,6 @@ type OtherPlayerProps = Pick<
   | "playerId"
   | "position"
   | "rotation"
-  | "direction"
   | "isJumping"
   | "equippedItems"
   | "isAiming"
@@ -25,7 +24,6 @@ export default function OtherPlayer({
   playerId,
   position,
   rotation,
-  direction,
   isJumping,
   equippedItems,
   isAiming,
@@ -36,6 +34,7 @@ export default function OtherPlayer({
   const weaponRef = useRef<THREE.Mesh>(null);
   const cloneRef = useRef<THREE.Group>(null);
   const currentClipRef = useRef<string | null>(null);
+  const prevPositionRef = useRef<THREE.Vector3 | null>(null);
 
   const { scene, animations } = useGLTF(PLAYER_MODEL_PATH);
   const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -82,21 +81,37 @@ export default function OtherPlayer({
       weaponRef.current.position.lerp(new THREE.Vector3(0.25, 0.4, aimZ), 0.15);
     }
 
-    const clipName =
-      !direction || (direction.x === 0 && direction.z === 0)
-        ? "idle"
-        : direction.z < 0
-          ? "run_forward"
-          : direction.z > 0
-            ? "run_backward"
-            : direction.x < 0
-              ? "run_left"
-              : "run_right";
+    const currentPos = new THREE.Vector3(position.x, position.y, position.z);
+    let clipName = "idle";
+
+    if (prevPositionRef.current) {
+      const delta = currentPos.clone().sub(prevPositionRef.current);
+      delta.y = 0;
+      if (delta.length() > 0.001) {
+        const inverseQuat = new THREE.Quaternion(
+          rotation.x,
+          rotation.y,
+          rotation.z,
+          rotation.w,
+        ).invert();
+        const localDelta = delta.clone().applyQuaternion(inverseQuat);
+        if (Math.abs(localDelta.z) >= Math.abs(localDelta.x)) {
+          clipName = localDelta.z < 0 ? "run_forward" : "run_backward";
+        } else {
+          clipName = localDelta.x < 0 ? "run_left" : "run_right";
+        }
+      }
+    }
+    prevPositionRef.current = currentPos;
 
     if (currentClipRef.current === null) {
-      actions["idle"]?.play();
+      const idleAction = actions["idle"];
+      if (!idleAction) return;
+      idleAction.play();
       currentClipRef.current = "idle";
-    } else if (clipName !== currentClipRef.current) {
+      return;
+    }
+    if (clipName !== currentClipRef.current) {
       actions[currentClipRef.current]?.fadeOut(0.2);
       actions[clipName]?.reset().fadeIn(0.2).play();
       currentClipRef.current = clipName;

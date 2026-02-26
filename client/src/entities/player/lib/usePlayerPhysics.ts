@@ -2,39 +2,37 @@ import { RefObject } from "react";
 import { RapierRigidBody, useRapier } from "@react-three/rapier";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { useKeyboardControls } from "@react-three/drei";
 import { usePlayerStore } from "../model/player.store";
-import { PLAYER_PHYSICS } from "../model/player.constants";
+import { Controls, PLAYER_PHYSICS } from "../model/player.constants";
 
 export const usePlayerPhysics = (
   rigidBodyRef: RefObject<RapierRigidBody | null>,
   meshRef: RefObject<THREE.Group | null>,
   camera: THREE.Camera,
 ) => {
-  const { direction, isJumping, isMoving, setJump } = usePlayerStore();
+  const { isJumping, setJump } = usePlayerStore();
   const { world, rapier } = useRapier();
+  const [, get] = useKeyboardControls<Controls>();
 
   useFrame(() => {
-    // 플레이어가 없다면 리턴
     if (!rigidBodyRef.current) return;
 
-    // 카메라 앞 방향 계산
+    const { forward, backward, left, right } = get();
+
     const cameraWorldDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraWorldDirection);
     cameraWorldDirection.y = 0;
     cameraWorldDirection.normalize();
 
-    // 카메라 위와 앞을 기반으로 오른쪽 방향 계산
-    const right = new THREE.Vector3();
-    right.crossVectors(camera.up, cameraWorldDirection).normalize();
+    const rightVec = new THREE.Vector3();
+    rightVec.crossVectors(camera.up, cameraWorldDirection).normalize();
 
-    // 카메라 방향을 기반으로 이동 방향 계산
     const moveDirection = new THREE.Vector3();
-
-    // z축은 카메라 앞/뒤 방향
-    moveDirection.addScaledVector(cameraWorldDirection, -direction.z);
-
-    // x축은 카메라 왼쪽/오른쪽 방향
-    moveDirection.addScaledVector(right, -direction.x);
+    const dz = (backward ? 1 : 0) - (forward ? 1 : 0);
+    const dx = (right ? 1 : 0) - (left ? 1 : 0);
+    moveDirection.addScaledVector(cameraWorldDirection, -dz);
+    moveDirection.addScaledVector(rightVec, -dx);
 
     const currentPos = rigidBodyRef.current.translation();
     const rayOrigin = currentPos;
@@ -51,29 +49,23 @@ export const usePlayerPhysics = (
     );
     const isPlayerGrounded = hit !== null;
 
-    // 수직 속도 계산
     let verticalVelocity = rigidBodyRef.current.linvel().y;
 
-    // 점프 중이라면
     if (isJumping) {
-      // 땅에 닿아있다면 점프
       if (isPlayerGrounded) {
         verticalVelocity = PLAYER_PHYSICS.JUMP_FORCE;
       }
       setJump(false);
     }
 
-    // 속도 계산, y축은 중력에 의한 속도 유지
     const velocity = {
       x: moveDirection.x * PLAYER_PHYSICS.SPEED,
       y: verticalVelocity,
       z: moveDirection.z * PLAYER_PHYSICS.SPEED,
     };
 
-    // 선형 속도 적용
     rigidBodyRef.current.setLinvel(velocity, true);
 
-    // 메쉬 회전
     const position = currentPos;
 
     if (meshRef.current) {

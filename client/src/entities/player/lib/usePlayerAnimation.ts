@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useKeyboardControls } from "@react-three/drei";
 import type * as THREE from "three";
-import { usePlayerStore } from "../model/player.store";
+import { Controls } from "../model/player.constants";
 
 type AnimationClip =
   | "idle"
@@ -12,11 +13,16 @@ type AnimationClip =
 
 const FADE_DURATION = 0.2;
 
-function resolveClip(direction: { x: number; z: number }): AnimationClip {
-  if (direction.z < 0) return "run_forward";
-  if (direction.z > 0) return "run_backward";
-  if (direction.x < 0) return "run_left";
-  if (direction.x > 0) return "run_right";
+function resolveClip(controls: {
+  forward: boolean;
+  backward: boolean;
+  left: boolean;
+  right: boolean;
+}): AnimationClip {
+  if (controls.forward) return "run_forward";
+  if (controls.backward) return "run_backward";
+  if (controls.left) return "run_left";
+  if (controls.right) return "run_right";
   return "idle";
 }
 
@@ -24,10 +30,10 @@ export function usePlayerAnimation(
   actions: Record<string, THREE.AnimationAction | null>,
 ) {
   const currentClipRef = useRef<AnimationClip | null>(null);
+  const [, get] = useKeyboardControls<Controls>();
 
   useFrame(() => {
-    const { direction } = usePlayerStore.getState();
-    const clipName = resolveClip(direction);
+    const clipName = resolveClip(get());
 
     if (currentClipRef.current === null) {
       const idleAction = actions["idle"];

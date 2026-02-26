@@ -1,5 +1,12 @@
 export const PLAYER_MODEL_PATH = "/models/soldier.glb" as const;
 
+export enum Controls {
+  forward = "forward",
+  backward = "backward",
+  left = "left",
+  right = "right",
+}
+
 export const PLAYER_PHYSICS = {
   SPEED: 5,
   JUMP_FORCE: 6,

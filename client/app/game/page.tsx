@@ -3,7 +3,8 @@
 import FlatGround from "@/entities/world/ui/flat";
 import Target from "@/entities/target/ui/target";
 import Player from "@/entities/player/ui/player";
-import { Sky, View } from "@react-three/drei";
+import { Sky, View, KeyboardControls } from "@react-three/drei";
+import type { KeyboardControlsEntry } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import BulletManager from "@/entities/bullet/ui/bullet.manager";
@@ -11,16 +12,27 @@ import ImpactManager from "@/entities/impact/ui/impact.manager";
 import LoadingScreen from "@/shared/ui/loading";
 import MultiplayerManager from "@/entities/multi-player/ui/multi-player.manager";
 import GameHUD from "@/widgets/game/ui/hud";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { requestJoinRoom } from "@/entities/room/api/room";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { useSocketStore } from "@/shared/model/socket.store";
 import { InventoryHUD } from "@/features/inventory/ui/inventory-hud";
 import { Minimap } from "@/widgets/minimap/ui/minimap";
+import { Controls } from "@/entities/player/model/player.constants";
 
 export default function GamePage() {
   const container = useRef<HTMLDivElement>(null!);
   const connect = useSocketStore((state) => state.connect);
+
+  const map = useMemo<KeyboardControlsEntry<Controls>[]>(
+    () => [
+      { name: Controls.forward, keys: ["KeyW"] },
+      { name: Controls.backward, keys: ["KeyS"] },
+      { name: Controls.left, keys: ["KeyA"] },
+      { name: Controls.right, keys: ["KeyD"] },
+    ],
+    [],
+  );
 
   useEffect(() => {
     const handleGameConnect = async () => {
@@ -31,6 +43,7 @@ export default function GamePage() {
   }, [connect]);
 
   return (
+    <KeyboardControls map={map}>
     <div className="w-screen h-screen" ref={container}>
       <LoadingScreen />
       <GameHUD />
@@ -65,5 +78,6 @@ export default function GamePage() {
         <View.Port />
       </Canvas>
     </div>
+    </KeyboardControls>
   );
 }

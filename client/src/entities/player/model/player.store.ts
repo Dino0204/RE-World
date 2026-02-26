@@ -6,7 +6,6 @@ import { SESSION_IDENTIFIER } from "@/shared/config/session";
 import { Vector3 } from "three";
 
 interface PlayerActions {
-  setDirection: (direction: { x: number; z: number }) => void;
   setPosition: (position: Vector3) => void;
   setRotation: (rotation: Vector3) => void;
   setJump: (isJumping: boolean) => void;
@@ -19,9 +18,7 @@ interface PlayerActions {
 
 const initialState: PlayerState = {
   id: "player",
-  isMoving: false,
   isJumping: false,
-  direction: { x: 0, z: 0 },
   position: new Vector3(0, 0, 0),
   rotation: new Vector3(0, 0, 1),
   equippedItems: [],
@@ -42,13 +39,6 @@ const sendPlayerAction = (action: PlayerAction) => {
 
 export const usePlayerStore = create<PlayerState & PlayerActions>((set) => ({
   ...initialState,
-  setDirection: (direction) => {
-    set(() => ({
-      direction,
-      isMoving: direction.x !== 0 || direction.z !== 0,
-    }));
-    sendPlayerAction({ type: "SET_DIRECTION", direction });
-  },
   setPosition: (position) => {
     set(() => ({
       position,
