@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Vector3Schema, QuaternionSchema, DirectionSchema } from "./primitives";
+import { Vector3Schema, QuaternionSchema } from "./primitives";
 import { WeaponSchema } from "./item";
 import { WebSocketMessageSchema } from "./message";
 
@@ -12,9 +12,9 @@ export const PlayerStateSchema = z.object({
   id: z.string(),
   currentHealth: z.number(),
   maxHealth: z.number(),
-  isMoving: z.boolean(),
   isJumping: z.boolean(),
-  direction: DirectionSchema,
+  position: Vector3Schema,
+  rotation: Vector3Schema,
   equippedItems: z.array(WeaponSchema),
   isAiming: z.boolean(),
   cameraMode: CameraModeSchema,
@@ -23,7 +23,6 @@ export type PlayerState = z.infer<typeof PlayerStateSchema>;
 
 // --- Player Action ---
 export const PlayerActionSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("SET_DIRECTION"), direction: DirectionSchema }),
   z.object({ type: z.literal("JUMP") }),
   z.object({ type: z.literal("RESET_JUMP") }),
   z.object({ type: z.literal("EQUIP_ITEM"), item: WeaponSchema }),
@@ -39,9 +38,7 @@ export const PlayerStateMessageSchema = WebSocketMessageSchema.extend({
   rotation: QuaternionSchema,
   currentHealth: z.number(),
   maxHealth: z.number(),
-  isMoving: z.boolean(),
   isJumping: z.boolean(),
-  direction: DirectionSchema,
   equippedItems: z.array(WeaponSchema),
   isAiming: z.boolean(),
   cameraMode: CameraModeSchema,

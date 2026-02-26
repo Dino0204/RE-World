@@ -1,10 +1,20 @@
+export const PLAYER_MODEL_PATH = "/models/soldier.glb" as const;
+
+export enum Controls {
+  forward = "forward",
+  backward = "backward",
+  left = "left",
+  right = "right",
+  jump = "jump",
+}
+
 export const PLAYER_PHYSICS = {
   SPEED: 5,
   JUMP_FORCE: 6,
 } as const;
 
 export const CAMERA_CONFIG = {
-  FIRST_PERSON_HEIGHT: 0.5,
+  FIRST_PERSON_HEIGHT: 1.6,
   THIRD_PERSON_DISTANCE: 3,
   THIRD_PERSON_HEIGHT: 1.6,
   FOV_NORMAL: 75,

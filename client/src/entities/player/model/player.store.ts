@@ -3,9 +3,11 @@ import type { Weapon } from "re-world-shared/item";
 import type { PlayerState, PlayerAction } from "re-world-shared/player";
 import { useSocketStore } from "@/shared/model/socket.store";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
+import { Vector3 } from "three";
 
 interface PlayerActions {
-  setDirection: (direction: { x: number; z: number }) => void;
+  setPosition: (position: Vector3) => void;
+  setRotation: (rotation: Vector3) => void;
   setJump: (isJumping: boolean) => void;
   setHandItem: (item: Weapon | null) => void;
   setAiming: (isAiming: boolean) => void;
@@ -16,9 +18,9 @@ interface PlayerActions {
 
 const initialState: PlayerState = {
   id: "player",
-  isMoving: false,
   isJumping: false,
-  direction: { x: 0, z: 0 },
+  position: new Vector3(0, 0, 0),
+  rotation: new Vector3(0, 0, 1),
   equippedItems: [],
   isAiming: false,
   cameraMode: "FIRST_PERSON",
@@ -37,12 +39,15 @@ const sendPlayerAction = (action: PlayerAction) => {
 
 export const usePlayerStore = create<PlayerState & PlayerActions>((set) => ({
   ...initialState,
-  setDirection: (direction) => {
+  setPosition: (position) => {
     set(() => ({
-      direction,
-      isMoving: direction.x !== 0 || direction.z !== 0,
+      position,
     }));
-    sendPlayerAction({ type: "SET_DIRECTION", direction });
+  },
+  setRotation: (rotation) => {
+    set(() => ({
+      rotation,
+    }));
   },
   setJump: (isJumping) => {
     set({ isJumping });

@@ -54,9 +54,7 @@ export default function MultiplayerManager() {
               rotation: data.rotation,
               currentHealth: data.currentHealth,
               maxHealth: data.maxHealth,
-              isMoving: data.isMoving,
               isJumping: data.isJumping,
-              direction: data.direction,
               equippedItems: data.equippedItems,
               isAiming: data.isAiming,
               cameraMode: data.cameraMode,
@@ -96,7 +94,6 @@ export default function MultiplayerManager() {
           playerId={playerId}
           position={state.position}
           rotation={state.rotation}
-          direction={state.direction}
           isJumping={state.isJumping}
           equippedItems={state.equippedItems}
           isAiming={state.isAiming}

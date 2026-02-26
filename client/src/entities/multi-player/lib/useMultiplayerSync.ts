@@ -11,15 +11,13 @@ import { PlayerStateMessage } from "re-world-shared/player";
 
 export const useMultiplayerSync = (
   rigidBodyRef: React.RefObject<RapierRigidBody | null>,
-  meshRef: React.RefObject<THREE.Mesh | null>,
+  meshRef: React.RefObject<THREE.Group | null>,
 ) => {
   const { isConnected } = useSocketStore();
   const {
     currentHealth,
     maxHealth,
-    isMoving,
     isJumping,
-    direction,
     equippedItems,
     isAiming,
     cameraMode,
@@ -36,19 +34,14 @@ export const useMultiplayerSync = (
     if (!gameWebsocket) return;
 
     const position = rigidBodyRef.current.translation();
-    const rotation = rigidBodyRef.current.rotation();
+    const { x: rx, y: ry, z: rz, w: rw } = meshRef.current.quaternion;
 
     if (currentTime - lastUpdateTime.current > 0.05) {
       const message: GameMessage = {
         type: "GAME",
         playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
-        rotation: {
-          x: rotation.x,
-          y: rotation.y,
-          z: rotation.z,
-          w: rotation.w,
-        },
+        rotation: { x: rx, y: ry, z: rz, w: rw },
       };
       gameWebsocket.send(message);
       lastUpdateTime.current = currentTime;
@@ -59,17 +52,10 @@ export const useMultiplayerSync = (
         type: "PLAYER_STATE",
         playerId: SESSION_IDENTIFIER,
         position: { x: position.x, y: position.y, z: position.z },
-        rotation: {
-          x: rotation.x,
-          y: rotation.y,
-          z: rotation.z,
-          w: rotation.w,
-        },
+        rotation: { x: rx, y: ry, z: rz, w: rw },
         currentHealth,
         maxHealth,
-        isMoving,
         isJumping,
-        direction,
         equippedItems,
         isAiming,
         cameraMode,

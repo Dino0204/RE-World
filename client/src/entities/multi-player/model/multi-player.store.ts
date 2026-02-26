@@ -27,17 +27,7 @@ export const useMultiplayerStore = create<MultiplayerStore>((set, get) => ({
   updatePlayerFromAction: (playerId, action) => {
     const current = get().players.get(playerId);
     if (!current) return;
-    if (action.type === "SET_DIRECTION") {
-      set((prev) => {
-        const next = new Map(prev.players);
-        next.set(playerId, {
-          ...current,
-          direction: action.direction,
-          isMoving: action.direction.x !== 0 || action.direction.z !== 0,
-        });
-        return { players: next };
-      });
-    } else if (action.type === "JUMP") {
+    if (action.type === "JUMP") {
       set((prev) => {
         const next = new Map(prev.players);
         next.set(playerId, { ...current, isJumping: true });
