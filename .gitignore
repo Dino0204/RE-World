@@ -5,6 +5,7 @@ server/node_modules
 client/.next
 server/dist
 
+client/public/models/soldier.glb
 
 # tests
 playwright-report/
