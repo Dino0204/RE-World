@@ -34,7 +34,9 @@ export default function OtherPlayer({
   const weaponRef = useRef<THREE.Mesh>(null);
   const cloneRef = useRef<THREE.Group>(null);
   const currentClipRef = useRef<string | null>(null);
-  const prevPositionRef = useRef<THREE.Vector3 | null>(null);
+  const lastNetworkPositionRef = useRef<THREE.Vector3 | null>(null);
+  const lastMovementTimeRef = useRef<number>(-999);
+  const movementDirRef = useRef<string>("idle");
 
   const { scene, animations } = useGLTF(PLAYER_MODEL_PATH);
   const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -61,7 +63,7 @@ export default function OtherPlayer({
     handleHitRef.current?.(damage);
   }, []);
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     if (currentHealth <= 0) return;
     if (rigidBodyRef.current) {
       const baseY = position.y + (isJumping ? 0.3 : 0);
@@ -81,36 +83,55 @@ export default function OtherPlayer({
       weaponRef.current.position.lerp(new THREE.Vector3(0.25, 0.4, aimZ), 0.15);
     }
 
-    const currentPos = new THREE.Vector3(position.x, position.y, position.z);
-    let clipName = "idle";
+    const storePlayer = useMultiplayerStore.getState().players.get(playerId);
+    const storePosition = storePlayer?.position;
+    const storeRotation = storePlayer?.rotation ?? rotation;
+    if (!storePosition) return;
 
-    if (prevPositionRef.current) {
-      const delta = currentPos.clone().sub(prevPositionRef.current);
-      delta.y = 0;
-      if (delta.length() > 0.001) {
-        const inverseQuat = new THREE.Quaternion(
-          rotation.x,
-          rotation.y,
-          rotation.z,
-          rotation.w,
-        ).invert();
-        const localDelta = delta.clone().applyQuaternion(inverseQuat);
-        if (Math.abs(localDelta.z) >= Math.abs(localDelta.x)) {
-          clipName = localDelta.z < 0 ? "run_forward" : "run_backward";
-        } else {
-          clipName = localDelta.x < 0 ? "run_left" : "run_right";
-        }
-      }
-    }
-    prevPositionRef.current = currentPos;
+    const currentPos = new THREE.Vector3(storePosition.x, storePosition.y, storePosition.z);
 
     if (currentClipRef.current === null) {
-      const idleAction = actions["idle"];
-      if (!idleAction) return;
-      idleAction.play();
+      lastNetworkPositionRef.current = currentPos.clone();
+      actions["idle"]?.play();
       currentClipRef.current = "idle";
       return;
     }
+
+    const networkPosChanged =
+      !lastNetworkPositionRef.current ||
+      lastNetworkPositionRef.current.x !== storePosition.x ||
+      lastNetworkPositionRef.current.y !== storePosition.y ||
+      lastNetworkPositionRef.current.z !== storePosition.z;
+
+    if (networkPosChanged) {
+      if (lastNetworkPositionRef.current) {
+        const delta = currentPos.clone().sub(lastNetworkPositionRef.current);
+        delta.y = 0;
+        if (delta.length() > 0.001) {
+          lastMovementTimeRef.current = clock.elapsedTime;
+          const inverseQuat = new THREE.Quaternion(
+            storeRotation.x,
+            storeRotation.y,
+            storeRotation.z,
+            storeRotation.w,
+          ).invert();
+          const localDelta = delta.clone().applyQuaternion(inverseQuat);
+          if (Math.abs(localDelta.z) >= Math.abs(localDelta.x)) {
+            movementDirRef.current = localDelta.z < 0 ? "run_forward" : "run_backward";
+          } else {
+            movementDirRef.current = localDelta.x < 0 ? "run_left" : "run_right";
+          }
+        }
+      }
+      lastNetworkPositionRef.current = currentPos.clone();
+    }
+
+    const MOVEMENT_TIMEOUT = 0.15;
+    const clipName =
+      clock.elapsedTime - lastMovementTimeRef.current < MOVEMENT_TIMEOUT
+        ? movementDirRef.current
+        : "idle";
+
     if (clipName !== currentClipRef.current) {
       actions[currentClipRef.current]?.fadeOut(0.2);
       actions[clipName]?.reset().fadeIn(0.2).play();
