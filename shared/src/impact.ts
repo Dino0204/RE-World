@@ -23,6 +23,7 @@ export type ImpactData = z.infer<typeof ImpactDataSchema>;
 // --- Impact Message ---
 export const ImpactMessageSchema = WebSocketMessageSchema.extend({
   type: z.literal("IMPACT"),
+  playerId: z.string(),
   data: ImpactDataSchema,
 });
 export type ImpactMessage = z.infer<typeof ImpactMessageSchema>;
