@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useRef } from "react";
 import { RapierRigidBody, useRapier } from "@react-three/rapier";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -11,14 +11,16 @@ export const usePlayerPhysics = (
   meshRef: RefObject<THREE.Group | null>,
   camera: THREE.Camera,
 ) => {
-  const { isJumping, setJump } = usePlayerStore();
+  const { setJump } = usePlayerStore();
   const { world, rapier } = useRapier();
   const [, get] = useKeyboardControls<Controls>();
+  const prevJumpRef = useRef(false);
+  const jumpAppliedRef = useRef(false);
 
   useFrame(() => {
     if (!rigidBodyRef.current) return;
 
-    const { forward, backward, left, right } = get();
+    const { forward, backward, left, right, jump } = get();
 
     const cameraWorldDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraWorldDirection);
@@ -35,7 +37,7 @@ export const usePlayerPhysics = (
     moveDirection.addScaledVector(rightVec, -dx);
 
     const currentPos = rigidBodyRef.current.translation();
-    const rayOrigin = currentPos;
+    const rayOrigin = { x: currentPos.x, y: currentPos.y + 0.95, z: currentPos.z };
     const rayDirection = { x: 0, y: -1, z: 0 };
     const ray = new rapier.Ray(rayOrigin, rayDirection);
     const hit = world.castRay(
@@ -51,11 +53,16 @@ export const usePlayerPhysics = (
 
     let verticalVelocity = rigidBodyRef.current.linvel().y;
 
-    if (isJumping) {
-      if (isPlayerGrounded) {
-        verticalVelocity = PLAYER_PHYSICS.JUMP_FORCE;
-      }
+    const jumpJustPressed = jump && !prevJumpRef.current;
+    prevJumpRef.current = jump;
+
+    if (jumpJustPressed && isPlayerGrounded) {
+      verticalVelocity = PLAYER_PHYSICS.JUMP_FORCE;
+      setJump(true);
+      jumpAppliedRef.current = true;
+    } else if (jumpAppliedRef.current) {
       setJump(false);
+      jumpAppliedRef.current = false;
     }
 
     const velocity = {
