@@ -1,4 +1,4 @@
-import { useGLTF } from "@react-three/drei";
+import { Clone, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 
 export default function PortGround() {
@@ -10,7 +10,7 @@ export default function PortGround() {
       colliders={"trimesh"}
       userData={{ material: "concrete" }}
     >
-      <primitive object={scene} />
+      <Clone object={scene} />
     </RigidBody>
   );
 }
