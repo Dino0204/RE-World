@@ -1,20 +1,13 @@
 "use client";
 
 import { useProgress } from "@react-three/drei";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSocketStore } from "../model/socket.store";
 
 export default function LoadingScreen() {
   const { progress, active } = useProgress();
   const { isConnected } = useSocketStore();
   const [shown, setShown] = useState(true);
-
-  useEffect(() => {
-    if (!active && progress === 100 && isConnected) {
-      const timeout = setTimeout(() => setShown(false), 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [progress, active, isConnected]);
 
   if (!shown) return null;
 
@@ -25,6 +18,9 @@ export default function LoadingScreen() {
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
       }`}
+      onTransitionEnd={() => {
+        if (!active && progress === 100 && isConnected) setShown(false);
+      }}
     >
       <div className="w-75 h-0.5 bg-white/10 rounded-full overflow-hidden mb-5">
         <div
