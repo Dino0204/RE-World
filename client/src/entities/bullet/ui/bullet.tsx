@@ -57,10 +57,7 @@ export default function Bullet({ data }: BulletProps) {
           });
         }
 
-        if (
-          (userData?.type === "target" || userData?.type === "player") &&
-          userData.onHit
-        ) {
+        if (userData?.type === "player" && userData.onHit) {
           userData.onHit(data.damage);
         }
 
