@@ -6,6 +6,7 @@ client/.next
 server/dist
 
 client/public/models/soldier.glb
+client/public/models/chicken_gun_portbase.glb
 
 # tests
 playwright-report/
