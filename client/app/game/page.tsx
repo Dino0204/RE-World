@@ -49,7 +49,6 @@ export default function GamePage() {
         <GameHUD />
         <InventoryHUD />
 
-        {/* game view */}
         <View className="absolute inset-0">
           <Sky sunPosition={[100, 20, 100]} />
           <ambientLight intensity={1.5} />
@@ -62,7 +61,6 @@ export default function GamePage() {
           </Physics>
         </View>
 
-        {/* mini-map */}
         <View className="absolute w-100 h-100 top-5 left-5 z-10 shadow-2xl">
           <Minimap />
         </View>
