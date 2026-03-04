@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const navItems = ["PLAY", "CUSTOMIZE", "ARMORY", "RECORDS", "SYSTEM"];
 
-export const Header = () => {
+export const Header = ({ version }: { version: string }) => {
   const [activeTab, setActiveTab] = useState("PLAY");
 
   return (
@@ -31,12 +31,7 @@ export const Header = () => {
 
       {/* Top Right Info */}
       <div className="flex items-center gap-4 text-xs font-bold text-brand-charcoal-muted">
-        <span className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-brand-charcoal rounded-full animate-pulse"></div>{" "}
-          ONLINE
-        </span>
-        <span className="opacity-30 mx-2">|</span>
-        <span>VER. 9.02.4</span>
+        <span>VER. {version}</span>
       </div>
     </div>
   );
