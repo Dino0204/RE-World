@@ -129,6 +129,22 @@ export const app = new Elysia()
       }),
     },
   )
+  .get("/auth/me", async ({ jwt, cookie: { auth }, set }) => {
+    const payload = await jwt.verify(auth.value as string | undefined);
+    if (!payload) {
+      set.status = 401;
+      return { success: false };
+    }
+    return {
+      success: true,
+      user: {
+        id: payload.userId,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+      },
+    };
+  })
   .get("auth/signout", ({ cookie: { auth } }) => {
     auth.remove();
 
