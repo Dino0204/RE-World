@@ -1,4 +1,4 @@
-import { RefObject, useRef } from "react";
+import { RefObject, useCallback, useRef } from "react";
 import { RapierRigidBody, useRapier } from "@react-three/rapier";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -16,9 +16,14 @@ export const usePlayerPhysics = (
   const [, get] = useKeyboardControls<Controls>();
   const prevJumpRef = useRef(false);
   const jumpAppliedRef = useRef(false);
+  const prevVelocityYRef = useRef(0);
 
   useFrame(() => {
     if (!rigidBodyRef.current) return;
+
+    prevVelocityYRef.current = rigidBodyRef.current.linvel().y;
+
+    // console.log(prevVelocityYRef.current);
 
     const { forward, backward, left, right, jump } = get();
 
@@ -37,7 +42,11 @@ export const usePlayerPhysics = (
     moveDirection.addScaledVector(rightVec, -dx);
 
     const currentPos = rigidBodyRef.current.translation();
-    const rayOrigin = { x: currentPos.x, y: currentPos.y + 0.95, z: currentPos.z };
+    const rayOrigin = {
+      x: currentPos.x,
+      y: currentPos.y + 0.95,
+      z: currentPos.z,
+    };
     const rayDirection = { x: 0, y: -1, z: 0 };
     const ray = new rapier.Ray(rayOrigin, rayDirection);
     const hit = world.castRay(
@@ -90,4 +99,25 @@ export const usePlayerPhysics = (
       meshRef.current.quaternion.slerp(targetQuaternion, 0.2);
     }
   });
+
+  const handleCollisionEnter = useCallback(() => {
+    if (prevVelocityYRef.current >= 0) return;
+
+    const fallSpeed = Math.abs(prevVelocityYRef.current);
+
+    if (fallSpeed <= PLAYER_PHYSICS.FALL_DAMAGE_THRESHOLD) return;
+
+    const damage = Math.min(
+      (fallSpeed - PLAYER_PHYSICS.FALL_DAMAGE_THRESHOLD) *
+        PLAYER_PHYSICS.FALL_DAMAGE_MULTIPLIER,
+      PLAYER_PHYSICS.FALL_DAMAGE_MAX,
+    );
+
+    console.log(fallSpeed, damage);
+
+    const { currentHealth, setHealth } = usePlayerStore.getState();
+    setHealth(Math.max(0, currentHealth - damage));
+  }, []);
+
+  return { handleCollisionEnter };
 };

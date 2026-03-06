@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useMultiplayerStore } from "@/entities/multi-player/model/multi-player.store";
-import { useTargetStore } from "@/entities/target/model/target.store";
 import { useSocketStore } from "@/shared/model/socket.store";
 import OtherPlayer from "@/entities/multi-player/ui/multi-player";
 import { SESSION_IDENTIFIER } from "@/shared/config/session";
@@ -37,13 +36,6 @@ export default function MultiplayerManager() {
           if (data.playerId !== SESSION_IDENTIFIER) {
             updatePlayer(data.playerId, { equippedItems: [data.weapon] });
           }
-          break;
-        }
-        case "TARGET": {
-          useTargetStore.getState().setTarget(data.data.id, {
-            currentHealth: data.data.currentHealth,
-            maxHealth: data.data.maxHealth,
-          });
           break;
         }
         case "PLAYER_STATE": {

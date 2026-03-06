@@ -9,8 +9,11 @@ export enum Controls {
 }
 
 export const PLAYER_PHYSICS = {
-  SPEED: 5,
+  SPEED: 10,
   JUMP_FORCE: 6,
+  FALL_DAMAGE_THRESHOLD: 15,
+  FALL_DAMAGE_MULTIPLIER: 2,
+  FALL_DAMAGE_MAX: 100,
 } as const;
 
 export const CAMERA_CONFIG = {

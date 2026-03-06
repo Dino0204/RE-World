@@ -11,6 +11,14 @@
         "PLAYWRIGHT_HEADLESS": "true",
         "PLAYWRIGHT_SCREENSHOT_DIR": "./screenshots"
       }
+    },
+    "agentation": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "agentation-mcp",
+        "server"
+      ]
     }
   }
 }

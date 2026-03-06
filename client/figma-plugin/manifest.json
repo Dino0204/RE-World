@@ -1,0 +1,7 @@
+{
+  "name": "RE-World UI Generator",
+  "id": "re-world-ui-generator",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

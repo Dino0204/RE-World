@@ -63,7 +63,11 @@ export default function Player() {
   }, []);
 
   usePlayerAnimation(actions);
-  usePlayerPhysics(rigidBodyRef, groupRef, camera);
+  const { handleCollisionEnter } = usePlayerPhysics(
+    rigidBodyRef,
+    groupRef,
+    camera,
+  );
   usePlayerCamera(
     rigidBodyRef,
     recoilRecoveryOffsetRef,
@@ -105,7 +109,9 @@ export default function Player() {
         type="dynamic"
         colliders={false}
         lockRotations
+        position={[0, -5, 50]}
         userData={{ type: "player", onHit: handleHit, material: "concrete" }}
+        onCollisionEnter={handleCollisionEnter}
       >
         <CapsuleCollider args={[0.5, 0.4]} position={[0, 0.95, 0]} />
         <group ref={groupRef} visible={cameraMode !== "FIRST_PERSON"}>
