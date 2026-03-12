@@ -11,8 +11,8 @@ export const app = new Elysia()
   .use(openapi({ provider: "swagger-ui", path: "/swagger" }))
   .use(authRouter)
   .use(gameRouter)
-  .listen(3001);
+  .listen(process.env.PORT ?? 3001);
 
-console.log(`[${getTimestamp()}] 🚀 서버가 포트 3001에서 실행 중입니다`);
+console.log(`[${getTimestamp()}] 🚀 서버가 포트 ${process.env.PORT ?? 3001}에서 실행 중입니다`);
 
 export type App = typeof app;
