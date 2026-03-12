@@ -29,7 +29,7 @@ export const Main = () => {
       if (data?.success && data.user) {
         setUser(
           data.user as {
-            id: string;
+            id: number;
             name: string;
             email: string;
             picture: string;
