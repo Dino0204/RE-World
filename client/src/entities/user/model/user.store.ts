@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface UserState {
-  id: string | null;
+  id: number | null;
   name: string | null;
   email: string | null;
   picture: string | null;
