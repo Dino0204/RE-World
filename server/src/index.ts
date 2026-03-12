@@ -7,7 +7,7 @@ import { gameRouter } from "./entities/game/router";
 const getTimestamp = () => new Date().toLocaleTimeString("ko-KR");
 
 export const app = new Elysia()
-  .use(cors({ credentials: true }))
+  .use(cors({ credentials: true, origin: process.env.CLIENT_URL ?? "http://localhost:3000" }))
   .use(openapi({ provider: "swagger-ui", path: "/swagger" }))
   .use(authRouter)
   .use(gameRouter)
